@@ -28,3 +28,22 @@ table {
   text-align: center;
   color: var(--mat-sys-on-surface-variant);
 }
+
+.schedule-card {
+  margin-top: 20px;
+}
+
+.schedule-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.schedule-head h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.schedule-active {
+  color: var(--mat-sys-primary);
+}

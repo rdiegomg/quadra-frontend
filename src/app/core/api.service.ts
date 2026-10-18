@@ -13,6 +13,7 @@ import {
   ObligationCreate,
   ObligationEvent,
   ObligationStatus,
+  PaymentScheduleItem,
   Sector,
 } from './models';
 
@@ -51,6 +52,12 @@ export class ApiService {
     return this.http.get<ObligationEvent[]>(`${this.api}/obligations/${id}/events`);
   }
 
+  getSchedules(obligationId: number): Observable<PaymentScheduleItem[]> {
+    return this.http.get<PaymentScheduleItem[]>(
+      `${this.api}/obligations/${obligationId}/schedules`,
+    );
+  }
+
   uploadDocument(obligationId: number, file: File): Observable<unknown> {
     const form = new FormData();
     form.append('file', file);
@@ -61,6 +68,12 @@ export class ApiService {
 
   getAdminCompanies(): Observable<Company[]> {
     return this.http.get<Company[]>(`${this.api}/admin/companies`);
+  }
+
+  getAdminObligations(status?: ObligationStatus): Observable<Obligation[]> {
+    let params = new HttpParams();
+    if (status) params = params.set('status_filter', status);
+    return this.http.get<Obligation[]>(`${this.api}/admin/obligations`, { params });
   }
 
   getNetworkGraph(): Observable<NetworkGraph> {

@@ -13,9 +13,11 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ApiService } from '../../core/api.service';
 import {
+  InstallmentStatus,
   Obligation,
   ObligationStatus,
   PaymentFrequency,
+  PaymentScheduleItem,
 } from '../../core/models';
 
 const FREQUENCIES: { value: PaymentFrequency; label: string }[] = [
@@ -35,6 +37,12 @@ const STATUS_LABELS: Record<ObligationStatus, string> = {
 };
 
 const CLOSABLE: ObligationStatus[] = ['PENDING', 'PARTIAL', 'OVERDUE'];
+
+const INSTALLMENT_LABELS: Record<InstallmentStatus, string> = {
+  PENDING: 'Pendiente',
+  PAID: 'Pagada',
+  OVERDUE: 'Vencida',
+};
 
 @Component({
   selector: 'app-obligations',
@@ -65,10 +73,14 @@ export class ObligationsComponent {
   readonly receivable = signal<Obligation[]>([]);
   readonly payable = signal<Obligation[]>([]);
   readonly saving = signal(false);
+  readonly scheduleObligation = signal<Obligation | null>(null);
+  readonly schedules = signal<PaymentScheduleItem[]>([]);
+  readonly schedulesLoading = signal(false);
 
   readonly frequencies = FREQUENCIES;
   readonly statusLabels = STATUS_LABELS;
   readonly columns = ['counterparty', 'amount', 'balance', 'due', 'status', 'actions'];
+  readonly scheduleColumns = ['installment', 'sDue', 'sAmount', 'sStatus'];
 
   readonly form = this.fb.nonNullable.group({
     counterparty_nit: ['', [Validators.required, Validators.minLength(4)]],
@@ -96,6 +108,44 @@ export class ObligationsComponent {
 
   labelOf(o: Obligation): string {
     return STATUS_LABELS[o.status];
+  }
+
+  installmentLabel(s: InstallmentStatus): string {
+    return INSTALLMENT_LABELS[s];
+  }
+
+  toggleSchedules(o: Obligation): void {
+    if (this.scheduleObligation()?.id === o.id) {
+      this.scheduleObligation.set(null);
+      return;
+    }
+    this.scheduleObligation.set(o);
+    this.schedulesLoading.set(true);
+    this.api.getSchedules(o.id).subscribe({
+      next: (s) => {
+        this.schedules.set(s);
+        this.schedulesLoading.set(false);
+      },
+      error: () => {
+        this.schedules.set([]);
+        this.schedulesLoading.set(false);
+      },
+    });
+  }
+
+  cancel(o: Obligation): void {
+    if (!window.confirm(`¿Anular la obligación #${o.id}?`)) return;
+    this.api.updateStatus(o.id, 'CANCELLED').subscribe({
+      next: () => {
+        this.snack.open(`Obligación #${o.id} anulada`, 'OK', { duration: 3000 });
+        if (this.scheduleObligation()?.id === o.id) this.scheduleObligation.set(null);
+        this.reload();
+      },
+      error: (err) =>
+        this.snack.open(err.error?.detail ?? 'No se pudo anular', 'OK', {
+          duration: 4000,
+        }),
+    });
   }
 
   markPaid(o: Obligation): void {

@@ -1,4 +1,4 @@
-import { DecimalPipe, KeyValuePipe } from '@angular/common';
+import { DatePipe, DecimalPipe, KeyValuePipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
@@ -9,11 +9,21 @@ import {
   Company,
   Cycle,
   NetworkStatistics,
+  Obligation,
+  ObligationStatus,
 } from '../../core/models';
+
+const STATUS_LABELS: Record<ObligationStatus, string> = {
+  PENDING: 'Pendiente',
+  PARTIAL: 'Parcial',
+  PAID: 'Pagada',
+  OVERDUE: 'Vencida',
+  CANCELLED: 'Cancelada',
+};
 
 @Component({
   selector: 'app-admin-dashboard',
-  imports: [DecimalPipe, KeyValuePipe, MatCardModule, MatTabsModule, MatTableModule],
+  imports: [DatePipe, DecimalPipe, KeyValuePipe, MatCardModule, MatTabsModule, MatTableModule],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.css',
 })
@@ -24,19 +34,26 @@ export class AdminDashboardComponent {
   readonly companies = signal<Company[]>([]);
   readonly cycles = signal<Cycle[]>([]);
   readonly chains = signal<Chain[]>([]);
+  readonly openObligations = signal<Obligation[]>([]);
 
   readonly companyColumns = ['name', 'nit', 'legal_type', 'sector'];
   readonly cycleColumns = ['cycle', 'length', 'volume', 'compensation'];
   readonly chainColumns = ['chain', 'length', 'volume', 'ends_in_cycle'];
+  readonly obligationColumns = ['debtor', 'creditor', 'balance', 'due', 'status'];
 
   constructor() {
     this.api.getNetworkStatistics().subscribe((s) => this.stats.set(s));
     this.api.getAdminCompanies().subscribe((c) => this.companies.set(c));
     this.api.getCycles().subscribe((c) => this.cycles.set(c));
     this.api.getOpenChains().subscribe((c) => this.chains.set(c));
+    this.api.getAdminObligations().subscribe((o) => this.openObligations.set(o));
   }
 
   asNumber(value: string | undefined): number {
     return value ? parseFloat(value) : 0;
+  }
+
+  statusLabel(s: ObligationStatus): string {
+    return STATUS_LABELS[s];
   }
 }

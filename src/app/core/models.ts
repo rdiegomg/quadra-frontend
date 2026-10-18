@@ -77,6 +77,17 @@ export interface ObligationCreate {
   payment_frequency: PaymentFrequency;
 }
 
+export type InstallmentStatus = 'PENDING' | 'PAID' | 'OVERDUE';
+
+export interface PaymentScheduleItem {
+  id: number;
+  installment_number: number;
+  due_date: string;
+  amount: string;
+  status: InstallmentStatus;
+  paid_at: string | null;
+}
+
 export interface ObligationEvent {
   id: number;
   event_type: string;
