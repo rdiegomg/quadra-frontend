@@ -159,13 +159,17 @@ export class DashboardComponent implements OnDestroy {
       : chain.edges;
 
     const total = isCycle ? n : n + 1; // cadena abierta: +1 nodo fantasma
-    const useRing = total <= 6;
+    // Anillo solo si caben las etiquetas (~140 px de arco por nodo);
+    // si no, serpiente en filas que nunca se enciman
+    const ringRadius = Math.max(96, 23 * total);
+    const useRing = total <= 5;
     const dark = this.theme.isDark();
 
-    // Serpiente: crece el canvas segun las filas que hagan falta
     let cols = 1;
     let rows = 1;
-    if (!useRing) {
+    if (useRing) {
+      el.style.height = `${Math.max(340, ringRadius * 2 + 175)}px`;
+    } else {
       cols = Math.max(3, Math.min(6, Math.floor((el.clientWidth || 600) / 150)));
       rows = Math.ceil(total / cols);
       el.style.height = `${Math.max(340, 150 + rows * 150)}px`;
@@ -173,7 +177,6 @@ export class DashboardComponent implements OnDestroy {
 
     const w = el.clientWidth || 600;
     const h = el.clientHeight || 340;
-    const r = Math.min(w, h) / 2 - 78;
     const cx = w / 2;
     const cy = h / 2 + 6;
 
@@ -181,8 +184,8 @@ export class DashboardComponent implements OnDestroy {
       if (useRing) {
         const angle = (-90 + (360 / total) * pos) * (Math.PI / 180);
         return {
-          x: cx + r * Math.cos(angle),
-          y: cy + r * Math.sin(angle),
+          x: cx + ringRadius * Math.cos(angle),
+          y: cy + ringRadius * Math.sin(angle),
           zone: `pos-${this.angleZone(angle)}`,
         };
       }
@@ -412,11 +415,13 @@ export class DashboardComponent implements OnDestroy {
           'target-arrow-color': '#f5f0ea',
           'mid-target-arrow-shape': 'triangle',
           'mid-target-arrow-color': '#f5f0ea',
-          'arrow-scale': 0.9,
+          'arrow-scale': 1.1,
           label: 'data(label)',
           'font-size': 10,
           'font-weight': 600,
           color: ink,
+          // desliza la pastilla del monto mas alla del medio para no tapar la flecha
+          ...({ 'edge-text-offset': 30 } as object),
           'text-background-color': dark ? '#23293a' : '#ffffff',
           'text-background-opacity': 1,
           'text-background-padding': '5px',
