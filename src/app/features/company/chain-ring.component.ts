@@ -147,12 +147,12 @@ export class ChainRingComponent {
       : chain.edges;
     const total = isCycle ? n : n + 1;
 
-    // geometria
+    // geometria: margenes suficientes para las etiquetas exteriores
     const ringR = Math.max(104, 24 * total);
-    const cx = ringR + 155;
-    const cy = ringR + 72;
+    const cx = ringR + 198;
+    const cy = ringR + 96;
     const w = cx * 2;
-    const h = cy + ringR + 88;
+    const h = cy + ringR + 100;
 
     const deg2rad = (d: number) => (d * Math.PI) / 180;
     const nodeAngle = (pos: number) => -90 + (360 / total) * pos;
