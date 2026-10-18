@@ -280,12 +280,14 @@ export class MyNetworkComponent implements OnDestroy {
           width: 'mapData(weight, 0, 200000, 1.2, 4)',
           'curve-style': 'bezier',
           'target-arrow-shape': 'triangle',
+          'mid-target-arrow-shape': 'triangle',
           'arrow-scale': 0.7,
           opacity: 0.9,
           label: 'data(label)',
           'font-size': 7.5,
           'font-weight': 600,
           'text-rotation': 'autorotate',
+          'text-margin-y': -7,
           'text-background-color': edgeLabelBg,
           'text-background-opacity': 1,
           'text-background-padding': '2px',
@@ -293,6 +295,7 @@ export class MyNetworkComponent implements OnDestroy {
           color: textColor,
           'line-color': other,
           'target-arrow-color': other,
+          'mid-target-arrow-color': other,
         },
       },
       {
@@ -300,6 +303,7 @@ export class MyNetworkComponent implements OnDestroy {
         style: {
           'line-color': closed,
           'target-arrow-color': closed,
+          'mid-target-arrow-color': closed,
           'line-style': 'solid',
           width: 'mapData(weight, 0, 200000, 2.5, 5)',
         },
@@ -309,6 +313,7 @@ export class MyNetworkComponent implements OnDestroy {
         style: {
           'line-color': open,
           'target-arrow-color': open,
+          'mid-target-arrow-color': open,
           'line-style': 'solid',
           width: 'mapData(weight, 0, 200000, 2, 4.5)',
         },
