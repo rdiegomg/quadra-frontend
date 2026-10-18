@@ -159,10 +159,11 @@ export class DashboardComponent implements OnDestroy {
       : chain.edges;
 
     const total = isCycle ? n : n + 1; // cadena abierta: +1 nodo fantasma
-    // Anillo solo si caben las etiquetas (~140 px de arco por nodo);
-    // si no, serpiente en filas que nunca se enciman
-    const ringRadius = Math.max(96, 23 * total);
-    const useRing = total <= 5;
+    // Ciclos siempre en anillo (el radio crece con los eslabones);
+    // abiertas cortas tambien en anillo; abiertas largas en serpiente
+    const w0 = el.clientWidth || 600;
+    const ringRadius = Math.min(Math.max(96, 23 * total), w0 / 2 - 150);
+    const useRing = isCycle || total <= 5;
     const dark = this.theme.isDark();
 
     let cols = 1;
@@ -170,7 +171,7 @@ export class DashboardComponent implements OnDestroy {
     if (useRing) {
       el.style.height = `${Math.max(340, ringRadius * 2 + 175)}px`;
     } else {
-      cols = Math.max(3, Math.min(6, Math.floor((el.clientWidth || 600) / 150)));
+      cols = Math.max(3, Math.min(6, Math.floor(w0 / 150)));
       rows = Math.ceil(total / cols);
       el.style.height = `${Math.max(340, 150 + rows * 150)}px`;
     }
