@@ -40,6 +40,7 @@ export class DashboardComponent implements OnDestroy {
 
   private chainCanvas = viewChildren<ElementRef<HTMLDivElement>>('chainCanvas');
   private chainCy: Core | null = null;
+  private sectors = new Map<string, string>();
 
   readonly company = signal<Company | null>(null);
   readonly summary = signal<CompanySummary | null>(null);
@@ -68,6 +69,11 @@ export class DashboardComponent implements OnDestroy {
     this.api.getMyCompany().subscribe((c) => this.company.set(c));
     this.api.getMySummary().subscribe((s) => this.summary.set(s));
     this.api.getMyChains().subscribe((c) => this.chains.set(c));
+    this.api.getMyNetwork().subscribe((n) =>
+      n.nodes.forEach((nd) => {
+        if (nd.sector) this.sectors.set(nd.label, nd.sector);
+      }),
+    );
 
     // Cuando el canvas del detalle expandido existe en el DOM, dibujo el anillo
     effect(() => {
@@ -205,7 +211,11 @@ export class DashboardComponent implements OnDestroy {
       const anonymous = label.startsWith('Empresa de ');
       const isMe = idx === meIdx;
       const { x, y, zone } = posOf(pos);
-      const sub = isMe ? 'Tú' : anonymous ? 'Identidad protegida' : 'Contraparte';
+      const sub = isMe
+        ? 'Tú'
+        : anonymous
+          ? 'Identidad protegida'
+          : (this.sectors.get(label) ?? 'Contraparte');
       return {
         data: { id: `n${pos}`, display: `${label}\n${sub}` },
         position: { x, y },
@@ -237,6 +247,16 @@ export class DashboardComponent implements OnDestroy {
       });
     }
 
+    // sag del arco: distancia del punto medio de la cuerda al circulo,
+    // hace que las aristas sigan la curvatura del anillo
+    const sag = Math.max(10, ringRadius * (1 - Math.cos(Math.PI / total)));
+    const arcStyle = useRing
+      ? {
+          'curve-style': 'unbundled-bezier',
+          'control-point-distances': `${sag}`,
+          'control-point-weights': '0.5',
+        }
+      : {};
     const edgeDefs: cytoscape.ElementDefinition[] = edges.map((e, k) => ({
       data: {
         id: `e${k}`,
@@ -245,6 +265,7 @@ export class DashboardComponent implements OnDestroy {
         label: e.balance !== null ? `Bs ${this.fmt(e.balance)}` : 'Monto privado',
       },
       classes: e.balance !== null ? 'mine' : 'priv',
+      style: { ...arcStyle },
     }));
     if (isCycle) {
       // ultima arista del ciclo cierra: n{n-1} -> n0
@@ -260,6 +281,7 @@ export class DashboardComponent implements OnDestroy {
             label: '',
           },
           classes: 'ghost',
+          style: { ...arcStyle },
         },
         {
           data: {
@@ -269,6 +291,7 @@ export class DashboardComponent implements OnDestroy {
             label: 'Falta este eslabón',
           },
           classes: 'ghost',
+          style: { ...arcStyle },
         },
       );
     }
@@ -410,13 +433,14 @@ export class DashboardComponent implements OnDestroy {
       {
         selector: 'edge',
         style: {
-          width: 9,
+          width: 12,
           'curve-style': 'bezier',
-          'target-arrow-shape': 'triangle',
-          'target-arrow-color': '#f5f0ea',
+          'target-arrow-shape': 'none',
           'mid-target-arrow-shape': 'triangle',
           'mid-target-arrow-color': '#f5f0ea',
-          'arrow-scale': 1.1,
+          'arrow-scale': 1.3,
+          'source-distance-from-node': 14,
+          'target-distance-from-node': 14,
           label: 'data(label)',
           'font-size': 10,
           'font-weight': 600,
@@ -457,8 +481,7 @@ export class DashboardComponent implements OnDestroy {
         style: {
           'line-color': dark ? '#5f6b85' : '#b9bfcc',
           'line-style': 'dashed',
-          width: 2.5,
-          'target-arrow-shape': 'none',
+          width: 3.5,
           'mid-target-arrow-color': dark ? '#5f6b85' : '#b9bfcc',
           opacity: 0.8,
         },
