@@ -451,7 +451,8 @@ export class DashboardComponent implements OnDestroy {
         selector: 'edge.arc',
         style: {
           'curve-style': 'unbundled-bezier',
-          'control-point-distances': `${sag}`,
+          // distancia negativa = la normal derecha del arco horario => bulge hacia afuera
+          'control-point-distances': `${-sag}`,
           'control-point-weights': '0.5',
         },
       },
