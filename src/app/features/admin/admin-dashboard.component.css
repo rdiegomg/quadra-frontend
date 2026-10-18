@@ -1,0 +1,41 @@
+.two-col {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+h3 {
+  margin: 0 0 12px;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.top-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  font-size: 0.9rem;
+}
+
+.top-row:last-child {
+  border-bottom: none;
+}
+
+.cycle-cell {
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.compensation {
+  font-weight: 700;
+  color: var(--quadra-copper);
+}
+
+html.dark-theme .compensation {
+  color: var(--quadra-copper-light);
+}

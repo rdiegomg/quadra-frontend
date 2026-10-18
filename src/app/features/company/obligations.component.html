@@ -1,0 +1,166 @@
+<div class="page">
+  <h1 class="page-title">Obligaciones</h1>
+  <p class="page-subtitle">Cuentas por cobrar y por pagar de tu empresa</p>
+
+  <mat-accordion class="new-ob-accordion">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon>add</mat-icon>&nbsp;Registrar nueva obligación
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" class="ob-form">
+        <div class="grid">
+          <mat-form-field appearance="outline">
+            <mat-label>NIT de la contraparte</mat-label>
+            <input matInput formControlName="counterparty_nit" placeholder="DEMO-000042" />
+            @if (form.controls.counterparty_nit.invalid && form.controls.counterparty_nit.touched) {
+              <mat-error>NIT requerido (mín. 4)</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Tipo</mat-label>
+            <mat-select formControlName="direction">
+              <mat-option value="PAYABLE">Yo debo (por pagar)</mat-option>
+              <mat-option value="RECEIVABLE">Me deben (por cobrar)</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Monto</mat-label>
+            <input matInput type="number" formControlName="amount" min="0" />
+            @if (form.controls.amount.invalid && form.controls.amount.touched) {
+              <mat-error>Monto válido requerido</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Moneda</mat-label>
+            <mat-select formControlName="currency">
+              <mat-option value="BOB">BOB</mat-option>
+              <mat-option value="USD">USD</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Interés % (opcional)</mat-label>
+            <input matInput type="number" formControlName="interest_rate" min="0" max="100" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Periodicidad</mat-label>
+            <mat-select formControlName="payment_frequency">
+              @for (f of frequencies; track f.value) {
+                <mat-option [value]="f.value">{{ f.label }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Fecha de origen</mat-label>
+            <input matInput type="date" formControlName="origin_date" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Fecha de vencimiento</mat-label>
+            <input matInput type="date" formControlName="due_date" />
+            @if (form.controls.due_date.invalid && form.controls.due_date.touched) {
+              <mat-error>Requerida</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <button mat-flat-button type="submit" [disabled]="saving()">
+          Registrar obligación
+        </button>
+      </form>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <mat-tab-group>
+    <mat-tab label="Por cobrar ({{ receivable().length }})">
+      <ng-template matTabContent>
+        <ng-container
+          [ngTemplateOutlet]="obTable"
+          [ngTemplateOutletContext]="{ items: receivable(), view: 'receivable' }"
+        />
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Por pagar ({{ payable().length }})">
+      <ng-template matTabContent>
+        <ng-container
+          [ngTemplateOutlet]="obTable"
+          [ngTemplateOutletContext]="{ items: payable(), view: 'payable' }"
+        />
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+
+<ng-template #obTable let-items="items" let-view="view">
+  @if (items.length === 0) {
+    <p class="empty">Sin obligaciones registradas.</p>
+  } @else {
+    <table mat-table [dataSource]="items" class="full-width-table">
+      <ng-container matColumnDef="counterparty">
+        <th mat-header-cell *matHeaderCellDef>Contraparte</th>
+        <td mat-cell *matCellDef="let o">
+          {{ counterpartyOf(o, view).name }}
+          <small class="nit">{{ counterpartyOf(o, view).nit }}</small>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef>Monto</th>
+        <td mat-cell *matCellDef="let o">
+          {{ asNumber(o.amount) | number: '1.2-2' }} {{ o.currency }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="balance">
+        <th mat-header-cell *matHeaderCellDef>Saldo</th>
+        <td mat-cell *matCellDef="let o">
+          {{ asNumber(o.balance) | number: '1.2-2' }} {{ o.currency }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="due">
+        <th mat-header-cell *matHeaderCellDef>Vence</th>
+        <td mat-cell *matCellDef="let o">{{ o.due_date | date: 'dd/MM/yyyy' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Estado</th>
+        <td mat-cell *matCellDef="let o">
+          <span class="status-chip status-{{ o.status }}">
+            {{ labelOf(o) }}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let o">
+          @if (canClose(o)) {
+            <button mat-button color="primary" (click)="markPaid(o)">
+              Marcar pagada
+            </button>
+          }
+          <button
+            mat-icon-button
+            aria-label="Adjuntar documento"
+            (click)="attachDocument(o, fileInput)"
+          >
+            <mat-icon>attach_file</mat-icon>
+          </button>
+          <input #fileInput type="file" accept=".pdf,image/*" hidden />
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columns"></tr>
+      <tr mat-row *matRowDef="let row; columns: columns"></tr>
+    </table>
+  }
+</ng-template>

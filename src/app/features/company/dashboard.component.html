@@ -1,0 +1,61 @@
+<div class="page">
+  <h1 class="page-title">{{ company()?.name ?? 'Mi empresa' }}</h1>
+  <p class="page-subtitle">
+    @if (company(); as c) {
+      NIT {{ c.nit }} · {{ c.legal_type }} · {{ c.sector_name }}
+    }
+  </p>
+
+  @if (summary(); as s) {
+    <div class="stat-grid">
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <span class="stat-label">Total por cobrar</span>
+          <span class="stat-value positive">
+            {{ asNumber(s.total_receivable) | number: '1.2-2' }} BOB
+          </span>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <span class="stat-label">Total por pagar</span>
+          <span class="stat-value">
+            {{ asNumber(s.total_payable) | number: '1.2-2' }} BOB
+          </span>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <span class="stat-label">Saldo neto</span>
+          <span
+            class="stat-value"
+            [class.positive]="asNumber(s.net_balance) > 0"
+            [class.negative]="asNumber(s.net_balance) < 0"
+          >
+            {{ asNumber(s.net_balance) | number: '1.2-2' }} BOB
+          </span>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <span class="stat-label">Obligaciones pendientes</span>
+          <span class="stat-value">{{ s.pending_obligations }}</span>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <span class="stat-label">Obligaciones vencidas</span>
+          <span class="stat-value" [class.negative]="s.overdue_obligations > 0">
+            {{ s.overdue_obligations }}
+          </span>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  } @else {
+    <p>Cargando resumen…</p>
+  }
+</div>

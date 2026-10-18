@@ -1,0 +1,56 @@
+.app-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--mat-sys-surface-container);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  padding: 0 16px;
+  gap: 8px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.brand-logo {
+  height: 40px;
+  width: auto;
+  display: block;
+  border-radius: 8px;
+}
+
+.brand-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--quadra-ink);
+}
+
+html.dark-theme .brand-name {
+  color: #ece7e2;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.active-link {
+  color: var(--mat-sys-primary);
+  font-weight: 600;
+}
+
+.user-menu-header {
+  padding: 8px 16px;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.user-menu-header small {
+  color: var(--mat-sys-on-surface-variant);
+}
