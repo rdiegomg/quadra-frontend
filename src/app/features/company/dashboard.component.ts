@@ -247,9 +247,6 @@ export class DashboardComponent implements OnDestroy {
       });
     }
 
-    // sag del arco: distancia del punto medio de la cuerda al circulo,
-    // hace que las aristas sigan la curvatura del anillo
-    const sag = Math.max(10, ringRadius * (1 - Math.cos(Math.PI / total)));
     const edgeDefs: cytoscape.ElementDefinition[] = edges.map((e, k) => ({
       data: {
         id: `e${k}`,
@@ -257,7 +254,7 @@ export class DashboardComponent implements OnDestroy {
         target: `n${k + 1}`,
         label: e.balance !== null ? `Bs ${this.fmt(e.balance)}` : 'Monto privado',
       },
-      classes: `${e.balance !== null ? 'mine' : 'priv'}${useRing ? ' arc' : ''}`,
+      classes: e.balance !== null ? 'mine' : 'priv',
     }));
     if (isCycle) {
       // ultima arista del ciclo cierra: n{n-1} -> n0
@@ -272,7 +269,7 @@ export class DashboardComponent implements OnDestroy {
             target: 'ghost',
             label: '',
           },
-          classes: `ghost${useRing ? ' arc' : ''}`,
+          classes: 'ghost',
         },
         {
           data: {
@@ -281,7 +278,7 @@ export class DashboardComponent implements OnDestroy {
             target: 'n0',
             label: 'Falta este eslabón',
           },
-          classes: `ghost${useRing ? ' arc' : ''}`,
+          classes: 'ghost',
         },
       );
     }
@@ -289,7 +286,7 @@ export class DashboardComponent implements OnDestroy {
     this.chainCy = cytoscape({
       container: el,
       elements: [...nodeDefs, ...edgeDefs],
-      style: this.chainStylesheet(dark, sag),
+      style: this.chainStylesheet(dark),
       layout: { name: 'preset' } as cytoscape.LayoutOptions,
       userZoomingEnabled: false,
       userPanningEnabled: false,
@@ -339,7 +336,7 @@ export class DashboardComponent implements OnDestroy {
     return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
   }
 
-  private chainStylesheet(dark: boolean, sag: number): StylesheetJson {
+  private chainStylesheet(dark: boolean): StylesheetJson {
     const ink = dark ? '#e6e9f2' : '#23293a';
     const meFill = dark ? '#23293a' : '#23293a';
     const labelColor = dark ? '#e6e9f2' : '#2a2f3d';
@@ -423,18 +420,14 @@ export class DashboardComponent implements OnDestroy {
       {
         selector: 'edge',
         style: {
-          width: 12,
+          width: 9,
           'curve-style': 'bezier',
-          'target-arrow-shape': 'none',
+          'target-arrow-shape': 'triangle',
+          'target-arrow-color': '#f5f0ea',
           'mid-target-arrow-shape': 'triangle',
           'mid-target-arrow-color': '#f5f0ea',
-          'arrow-scale': 1.3,
-          'source-distance-from-node': 14,
-          'target-distance-from-node': 14,
-          // la pastilla va cerca del origen del arco (como el prototipo),
-          // asi la chevron del medio queda siempre visible
-          'source-label': 'data(label)',
-          'source-text-offset': 38,
+          'arrow-scale': 0.9,
+          label: 'data(label)',
           'font-size': 10,
           'font-weight': 600,
           color: ink,
@@ -445,15 +438,6 @@ export class DashboardComponent implements OnDestroy {
           'text-border-width': 1,
           'text-border-color': dark ? '#3d465c' : '#e3e6ee',
           events: 'no',
-        },
-      },
-      {
-        selector: 'edge.arc',
-        style: {
-          'curve-style': 'unbundled-bezier',
-          // distancia negativa = la normal derecha del arco horario => bulge hacia afuera
-          'control-point-distances': `${-sag}`,
-          'control-point-weights': '0.5',
         },
       },
       {
@@ -481,7 +465,8 @@ export class DashboardComponent implements OnDestroy {
         style: {
           'line-color': dark ? '#5f6b85' : '#b9bfcc',
           'line-style': 'dashed',
-          width: 3.5,
+          width: 2.5,
+          'target-arrow-shape': 'none',
           'mid-target-arrow-color': dark ? '#5f6b85' : '#b9bfcc',
           opacity: 0.8,
         },
