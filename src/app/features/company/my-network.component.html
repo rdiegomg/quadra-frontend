@@ -1,0 +1,82 @@
+<div class="page">
+  <h1 class="page-title">Tu red</h1>
+  <p class="page-subtitle">
+    Ves tu empresa, tus contrapartes y las cadenas donde participas.
+    Las demás empresas de la red aparecen con identidad protegida.
+  </p>
+
+  @if (loadError()) {
+    <mat-card>
+      <mat-card-content>
+        <p class="empty">No se pudo cargar el mapa. Intenta de nuevo.</p>
+      </mat-card-content>
+    </mat-card>
+  } @else if (loading()) {
+    <mat-card>
+      <mat-card-content>
+        <p class="empty">Cargando el mapa de tu red…</p>
+      </mat-card-content>
+    </mat-card>
+  } @else {
+    <div class="map-layout">
+      <mat-card class="map-card">
+        <div #graphCanvas class="graph-canvas"></div>
+        <div class="map-legend">
+          <span><i class="dot me"></i> Tu empresa</span>
+          <span><i class="dot cp"></i> Contrapartes</span>
+          <span><i class="dot anon"></i> Identidad protegida</span>
+          <span><i class="line priv"></i> Monto privado</span>
+        </div>
+      </mat-card>
+
+      <div class="side">
+        <div class="actions">
+          <button mat-stroked-button (click)="fit()">
+            <mat-icon>fit_screen</mat-icon> Ajustar
+          </button>
+          <button mat-stroked-button (click)="relayout()">
+            <mat-icon>restart_alt</mat-icon> Reordenar
+          </button>
+        </div>
+
+        @if (anonymousCount() > 0) {
+          <mat-card class="info-card">
+            <mat-card-content>
+              <mat-icon>lock</mat-icon>
+              <p>
+                {{ anonymousCount() }} empresas de la red aparecen
+                <strong>sin nombre</strong> — solo ves su rubro. Ellas tampoco
+                ven los datos de tu empresa.
+              </p>
+            </mat-card-content>
+          </mat-card>
+        }
+
+        @if (selected(); as sel) {
+          <mat-card class="detail-card">
+            <mat-card-content>
+              <div class="detail-head">
+                <h3>{{ sel.label }}</h3>
+                <button mat-icon-button (click)="closeDetail()" aria-label="Cerrar">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+              @if (sel.isMe) {
+                <p><span class="chip you">Tu empresa</span></p>
+              }
+              @if (sel.sector) {
+                <p class="meta">Rubro: {{ sel.sector }}</p>
+              }
+              @if (sel.anonymous) {
+                <p class="protected">
+                  <mat-icon>lock</mat-icon> Identidad protegida — solo sabes que
+                  comparte una cadena contigo.
+                </p>
+              }
+            </mat-card-content>
+          </mat-card>
+        }
+      </div>
+    </div>
+  }
+</div>

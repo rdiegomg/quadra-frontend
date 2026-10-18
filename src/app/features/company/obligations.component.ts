@@ -3,6 +3,7 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,6 +13,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ApiService } from '../../core/api.service';
+import { ImportDialogComponent } from './import-dialog.component';
 import {
   InstallmentStatus,
   Obligation,
@@ -61,6 +63,7 @@ const INSTALLMENT_LABELS: Record<InstallmentStatus, string> = {
     MatSelectModule,
     MatExpansionModule,
     MatSnackBarModule,
+    MatDialogModule,
   ],
   templateUrl: './obligations.component.html',
   styleUrl: './obligations.component.css',
@@ -69,6 +72,7 @@ export class ObligationsComponent {
   private readonly api = inject(ApiService);
   private readonly fb = inject(FormBuilder);
   private readonly snack = inject(MatSnackBar);
+  private readonly dialog = inject(MatDialog);
 
   readonly receivable = signal<Obligation[]>([]);
   readonly payable = signal<Obligation[]>([]);
@@ -81,9 +85,11 @@ export class ObligationsComponent {
   readonly statusLabels = STATUS_LABELS;
   readonly columns = ['counterparty', 'amount', 'balance', 'due', 'status', 'actions'];
   readonly scheduleColumns = ['installment', 'sDue', 'sAmount', 'sStatus'];
+  readonly OPEN_STATUSES: ObligationStatus[] = ['PENDING', 'PARTIAL', 'OVERDUE'];
 
   readonly form = this.fb.nonNullable.group({
     counterparty_nit: ['', [Validators.required, Validators.minLength(4)]],
+    reference: [''],
     direction: ['PAYABLE' as 'PAYABLE' | 'RECEIVABLE', Validators.required],
     amount: [null as number | null, [Validators.required, Validators.min(0.01)]],
     currency: ['BOB', Validators.required],
@@ -104,6 +110,30 @@ export class ObligationsComponent {
 
   canClose(o: Obligation): boolean {
     return CLOSABLE.includes(o.status);
+  }
+
+  dueLabel(o: Obligation): string {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const due = new Date(o.due_date + 'T00:00:00');
+    const days = Math.round((due.getTime() - today.getTime()) / 86400000);
+    if (days === 0) return 'Vence hoy';
+    if (days === 1) return 'Vence mañana';
+    if (days > 1) return `Vence en ${days} días`;
+    if (days === -1) return 'Vencida ayer';
+    return `Vencida hace ${-days} días`;
+  }
+
+  openImport(): void {
+    this.dialog
+      .open(ImportDialogComponent, { width: '520px' })
+      .afterClosed()
+      .subscribe((reload) => {
+        if (reload) {
+          this.reload();
+          this.snack.open('Planilla importada', 'OK', { duration: 3000 });
+        }
+      });
   }
 
   labelOf(o: Obligation): string {
@@ -192,6 +222,7 @@ export class ObligationsComponent {
     this.api
       .createObligation({
         counterparty_nit: v.counterparty_nit,
+        reference: v.reference || undefined,
         direction: v.direction,
         amount: v.amount!,
         currency: v.currency,

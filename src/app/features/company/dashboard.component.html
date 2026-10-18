@@ -1,137 +1,166 @@
 <div class="page">
-  <h1 class="page-title">{{ company()?.name ?? 'Mi empresa' }}</h1>
-  <p class="page-subtitle">
-    @if (company(); as c) {
-      NIT {{ c.nit }} · {{ c.legal_type }} · {{ c.sector_name }}
-    }
-  </p>
-
-  @if (proposal(); as p) {
-    @if (proposalState() === 'idle') {
-      <mat-card class="proposal-card">
-        <mat-card-content>
-          <div class="proposal-head">
-            <div class="proposal-icon"><mat-icon>autorenew</mat-icon></div>
-            <div>
-              <h2>Propuesta de compensación disponible</h2>
-              <p class="proposal-cycle">
-                Ciclo de {{ p.cycle_length }} empresas: {{ p.cycle_companies.join(' → ') }}
-              </p>
+  @if (company(); as c) {
+    <mat-card class="profile-card">
+      <mat-card-content>
+        <div class="profile-head">
+          <div class="avatar">{{ initials() }}</div>
+          <div class="profile-info">
+            <h1>{{ c.name }}</h1>
+            <p>NIT {{ c.nit }} · {{ c.legal_type }} · {{ c.sector_name }}</p>
+            <span class="verified"><mat-icon>verified</mat-icon> NIT verificado</span>
+          </div>
+        </div>
+        @if (summary(); as s) {
+          <div class="kpi-row">
+            <div class="kpi">
+              <span>Por cobrar</span>
+              <strong class="good">{{ asNumber(s.total_receivable) | number: '1.0-0' }} BOB</strong>
+            </div>
+            <div class="kpi">
+              <span>Por pagar</span>
+              <strong>{{ asNumber(s.total_payable) | number: '1.0-0' }} BOB</strong>
+            </div>
+            <div class="kpi">
+              <span>Posición neta</span>
+              <strong [class.good]="asNumber(s.net_balance) >= 0" [class.bad]="asNumber(s.net_balance) < 0">
+                {{ asNumber(s.net_balance) | number: '1.0-0' }} BOB
+              </strong>
+              <small>{{ asNumber(s.net_balance) >= 0 ? 'Te deben más de lo que debes' : 'Debes más de lo que te deben' }}</small>
+            </div>
+            <div class="kpi highlight">
+              <span>Compensable con Quadra</span>
+              <strong>{{ compensableTotal() | number: '1.0-0' }} BOB</strong>
+              <small>en {{ chains().length }} {{ chains().length === 1 ? 'cadena' : 'cadenas' }}, sin mover dinero</small>
             </div>
           </div>
-          <div class="proposal-figures">
-            <div class="pfig">
-              <span>Deuda que se te cancela</span>
-              <strong>{{ asNumber(p.cancelled_amount) | number: '1.0-0' }} {{ p.currency }}</strong>
-            </div>
-            <div class="pfig">
-              <span>Dejas de cobrar</span>
-              <strong>{{ asNumber(p.receivable_forgone) | number: '1.0-0' }} {{ p.currency }}</strong>
-            </div>
-            <div class="pfig">
-              <span>Ahorro financiero estimado</span>
-              <strong class="good">{{ asNumber(p.est_financial_savings) | number: '1.0-0' }} {{ p.currency }}</strong>
-            </div>
-            <div class="pfig">
-              <span>Comisión QUADRA (1.5%)</span>
-              <strong>{{ asNumber(p.commission) | number: '1.0-0' }} {{ p.currency }}</strong>
-            </div>
+          <div class="mini-stats">
+            <span class="mini-chip">
+              <mat-icon>pending_actions</mat-icon> {{ s.pending_obligations }} obligaciones abiertas
+            </span>
+            <span class="mini-chip" [class.warn]="s.overdue_obligations > 0">
+              <mat-icon>event_busy</mat-icon> {{ s.overdue_obligations }} vencidas
+            </span>
           </div>
-          <p class="proposal-note">
-            Tu posición neta no cambia: cancelas deuda y renuncias a la misma
-            cantidad de cobro. Simulado — no modifica obligaciones.
-          </p>
-          <div class="proposal-actions">
-            <button mat-flat-button (click)="respondProposal(true)">
-              <mat-icon>check</mat-icon> Aceptar propuesta
-            </button>
-            <button mat-stroked-button (click)="respondProposal(false)">Rechazar</button>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    } @else if (proposalState() === 'accepted') {
-      <mat-card class="proposal-card accepted">
-        <mat-card-content>
-          <div class="proposal-head">
-            <div class="proposal-icon"><mat-icon>check_circle</mat-icon></div>
-            <div>
-              <h2>Propuesta aceptada</h2>
-              <p class="proposal-cycle">
-                En un escenario real se emitiría la documentación legal que
-                extingue las obligaciones. (Simulación)
-              </p>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    }
+        }
+      </mat-card-content>
+    </mat-card>
   }
 
-  @if (summary(); as s) {
-    <div class="stat-grid">
-      <mat-card class="stat-card">
-        <mat-card-content>
-          <div class="stat-row">
-            <mat-icon class="stat-icon green">call_received</mat-icon>
-            <span class="stat-label">Total por cobrar</span>
-          </div>
-          <span class="stat-value positive">
-            {{ asNumber(s.total_receivable) | number: '1.2-2' }} BOB
-          </span>
-        </mat-card-content>
-      </mat-card>
+  <div class="section-head">
+    <h2>Tus cadenas</h2>
+    @if (chains().length > 0) {
+      <p class="section-sub">
+        Quadra encontró {{ chains().length }} {{ chains().length === 1 ? 'cadena' : 'cadenas' }}
+        donde participas. Puedes cancelar hasta {{ compensableTotal() | number: '1.0-0' }} BOB
+        de deuda sin mover dinero.
+      </p>
+    }
+  </div>
 
-      <mat-card class="stat-card">
-        <mat-card-content>
-          <div class="stat-row">
-            <mat-icon class="stat-icon">call_made</mat-icon>
-            <span class="stat-label">Total por pagar</span>
-          </div>
-          <span class="stat-value">
-            {{ asNumber(s.total_payable) | number: '1.2-2' }} BOB
-          </span>
-        </mat-card-content>
-      </mat-card>
-
-      <mat-card class="stat-card">
-        <mat-card-content>
-          <div class="stat-row">
-            <mat-icon class="stat-icon">balance</mat-icon>
-            <span class="stat-label">Saldo neto</span>
-          </div>
-          <span
-            class="stat-value"
-            [class.positive]="asNumber(s.net_balance) > 0"
-            [class.negative]="asNumber(s.net_balance) < 0"
-          >
-            {{ asNumber(s.net_balance) | number: '1.2-2' }} BOB
-          </span>
-        </mat-card-content>
-      </mat-card>
-
-      <mat-card class="stat-card">
-        <mat-card-content>
-          <div class="stat-row">
-            <mat-icon class="stat-icon">pending_actions</mat-icon>
-            <span class="stat-label">Obligaciones pendientes</span>
-          </div>
-          <span class="stat-value">{{ s.pending_obligations }}</span>
-        </mat-card-content>
-      </mat-card>
-
-      <mat-card class="stat-card">
-        <mat-card-content>
-          <div class="stat-row">
-            <mat-icon class="stat-icon red">event_busy</mat-icon>
-            <span class="stat-label">Obligaciones vencidas</span>
-          </div>
-          <span class="stat-value" [class.negative]="s.overdue_obligations > 0">
-            {{ s.overdue_obligations }}
-          </span>
-        </mat-card-content>
-      </mat-card>
-    </div>
+  @if (chains().length === 0) {
+    <mat-card class="empty-chains">
+      <mat-card-content>
+        <mat-icon>link_off</mat-icon>
+        <h3>Todavía no hay cadenas para tu empresa</h3>
+        <p>
+          Cuando el motor encuentre círculos o cadenas de deuda donde participes,
+          aparecerán aquí con la propuesta de compensación.
+        </p>
+      </mat-card-content>
+    </mat-card>
   } @else {
-    <p>Cargando resumen…</p>
+    <div class="chains-list">
+      @for (ch of chains(); track $index) {
+        <mat-card class="chain-card" [class.expanded]="expanded() === $index" [class.accepted]="accepted().has($index)">
+          <mat-card-content>
+            <div class="chain-head">
+              <div class="chain-badges">
+                <span class="chain-kind" [class.open]="ch.kind === 'chain'">
+                  <mat-icon>{{ ch.kind === 'cycle' ? 'autorenew' : 'linear_scale' }}</mat-icon>
+                  {{ chainTitle(ch) }}
+                </span>
+                <span class="chain-status" [class.open]="ch.status === 'compensable'">
+                  {{ ch.status === 'ready' ? 'Lista para cerrar' : 'Compensable' }}
+                </span>
+              </div>
+              @if (ch.first_due_date) {
+                <span class="chain-due">Primer vencimiento: {{ ch.first_due_date | date: 'd MMM y' }}</span>
+              }
+            </div>
+
+            <p class="chain-participants">{{ participantsLine(ch) }}</p>
+
+            <div class="chain-figures">
+              @if (asNumber(ch.cancelled_amount) > 0) {
+                <div class="cfig">
+                  <span>Deuda que se te cancela</span>
+                  <strong class="good">{{ asNumber(ch.cancelled_amount) | number: '1.0-0' }} {{ ch.currency }}</strong>
+                </div>
+              }
+              @if (asNumber(ch.receivable_forgone) > 0) {
+                <div class="cfig">
+                  <span>Dejas de cobrar</span>
+                  <strong>{{ asNumber(ch.receivable_forgone) | number: '1.0-0' }} {{ ch.currency }}</strong>
+                </div>
+              }
+              <div class="cfig">
+                <span>Comisión Quadra (1.5%)</span>
+                <strong>{{ asNumber(ch.commission) | number: '1.0-0' }} {{ ch.currency }}</strong>
+              </div>
+            </div>
+
+            <p class="chain-note">{{ positionNote(ch) }}</p>
+
+            @if (expanded() === $index) {
+              <div class="chain-detail">
+                <h4>Cómo se forma esta cadena</h4>
+                <div class="edge-list">
+                  @for (e of ch.edges; track $index) {
+                    <div class="edge-row" [class.mine]="e.debtor_is_me || e.creditor_is_me">
+                      <span class="edge-parties">
+                        {{ e.debtor_label }}@if (e.debtor_is_me) { <em>(tú)</em> }
+                        <mat-icon>arrow_forward</mat-icon>
+                        {{ e.creditor_label }}@if (e.creditor_is_me) { <em>(tú)</em> }
+                      </span>
+                      <span class="edge-amounts">
+                        @if (e.balance === null) {
+                          <span class="private">Monto privado</span>
+                        } @else {
+                          {{ asNumber(e.balance) | number: '1.0-0' }}
+                        }
+                        <span class="edge-cancel">
+                          se cancelan {{ asNumber(e.cancelled) | number: '1.0-0' }}
+                          @if (e.remainder !== null && asNumber(e.remainder) > 0) {
+                            · queda {{ asNumber(e.remainder) | number: '1.0-0' }}
+                          }
+                        </span>
+                      </span>
+                    </div>
+                  }
+                </div>
+                <p class="privacy-note">
+                  <mat-icon>lock</mat-icon>
+                  Solo ves los montos de los tramos donde participas. Las demás
+                  empresas ven lo suyo, nunca lo tuyo.
+                </p>
+              </div>
+            }
+
+            <div class="chain-actions">
+              <button mat-button (click)="toggleDetail($index)">
+                {{ expanded() === $index ? 'Ocultar detalle' : 'Ver cómo se forma' }}
+              </button>
+              @if (!accepted().has($index)) {
+                <button mat-flat-button (click)="acceptChain($index)">
+                  <mat-icon>check</mat-icon> Aceptar y cerrar cadena
+                </button>
+              } @else {
+                <span class="accepted-tag"><mat-icon>check_circle</mat-icon> Aceptada (simulado)</span>
+              }
+            </div>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
   }
 </div>

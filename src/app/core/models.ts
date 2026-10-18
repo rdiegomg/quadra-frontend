@@ -58,11 +58,13 @@ export interface Obligation {
   amount: string;
   balance: string;
   currency: string;
+  reference: string | null;
   interest_rate: string | null;
   origin_date: string;
   due_date: string;
   payment_frequency: PaymentFrequency;
   status: ObligationStatus;
+  in_chain: boolean;
   created_at: string;
 }
 
@@ -71,6 +73,7 @@ export interface ObligationCreate {
   direction: ObligationDirection;
   amount: number;
   currency: string;
+  reference?: string | null;
   interest_rate?: number | null;
   origin_date: string;
   due_date: string;
@@ -189,4 +192,57 @@ export interface SimulationResult {
   estimated_commission: string;
   currency: string;
   note: string;
+}
+
+export interface MyChainEdge {
+  debtor_label: string;
+  creditor_label: string;
+  debtor_is_me: boolean;
+  creditor_is_me: boolean;
+  balance: string | null;
+  cancelled: string;
+  remainder: string | null;
+}
+
+export interface MyChain {
+  kind: 'cycle' | 'chain';
+  labels: string[];
+  named_participants: string[];
+  anonymized_count: number;
+  length: number;
+  my_position: 'member' | 'source' | 'middle' | 'sink';
+  cancelled_amount: string;
+  receivable_forgone: string;
+  potential_compensation: string;
+  commission: string;
+  status: 'ready' | 'compensable';
+  first_due_date: string | null;
+  edges: MyChainEdge[];
+  currency: string;
+}
+
+export interface MyNetworkNode {
+  id: string;
+  label: string;
+  sector: string | null;
+  is_me: boolean;
+  is_counterparty: boolean;
+  anonymous: boolean;
+}
+
+export interface MyNetworkEdge {
+  id: string;
+  source: string;
+  target: string;
+  balance: string | null;
+}
+
+export interface MyNetwork {
+  nodes: MyNetworkNode[];
+  edges: MyNetworkEdge[];
+}
+
+export interface ImportResult {
+  created: number;
+  skipped: { row: number; reason: string }[];
 }

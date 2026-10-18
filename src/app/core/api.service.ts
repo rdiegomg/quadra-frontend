@@ -8,6 +8,9 @@ import {
   CompanySummary,
   CompensationProposal,
   Cycle,
+  ImportResult,
+  MyChain,
+  MyNetwork,
   NetworkGraph,
   NetworkStatistics,
   Obligation,
@@ -40,6 +43,20 @@ export class ApiService {
     return this.http.get<CompensationProposal | null>(
       `${this.api}/companies/me/proposal`,
     );
+  }
+
+  getMyChains(): Observable<MyChain[]> {
+    return this.http.get<MyChain[]>(`${this.api}/companies/me/chains`);
+  }
+
+  getMyNetwork(): Observable<MyNetwork> {
+    return this.http.get<MyNetwork>(`${this.api}/companies/me/network`);
+  }
+
+  importObligationsCsv(file: File): Observable<ImportResult> {
+    const form = new FormData();
+    form.append('file', file);
+    return this.http.post<ImportResult>(`${this.api}/obligations/import`, form);
   }
 
   getObligations(view: 'receivable' | 'payable', status?: ObligationStatus): Observable<Obligation[]> {

@@ -37,6 +37,14 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'mi-red',
+    canActivate: [companyGuard],
+    loadComponent: () =>
+      import('./features/company/my-network.component').then(
+        (m) => m.MyNetworkComponent,
+      ),
+  },
+  {
     path: 'admin',
     canActivate: [adminGuard],
     loadComponent: () =>

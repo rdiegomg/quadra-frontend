@@ -47,3 +47,42 @@ table {
 .schedule-active {
   color: var(--mat-sys-primary);
 }
+
+.page-head-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.import-btn {
+  margin-top: 8px;
+  flex-shrink: 0;
+}
+
+.due-rel {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.due-rel.late {
+  color: var(--mat-sys-error);
+  font-weight: 600;
+}
+
+.chain-chip {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.72rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.chain-chip.in {
+  color: var(--quadra-copper);
+  font-weight: 600;
+}
+
+html.dark-theme .chain-chip.in {
+  color: var(--quadra-copper-light);
+}
