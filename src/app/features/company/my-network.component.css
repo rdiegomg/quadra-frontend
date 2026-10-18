@@ -12,7 +12,7 @@
 
 .map-card {
   position: relative;
-  min-height: 560px;
+  min-height: 600px;
   overflow: hidden;
 }
 
@@ -21,53 +21,138 @@
   inset: 0;
 }
 
+/* ---- Leyenda superior (estilo prototipo) ---- */
 .map-legend {
   position: absolute;
+  top: 12px;
   left: 14px;
-  bottom: 12px;
+  right: 14px;
   display: flex;
   gap: 14px;
   flex-wrap: wrap;
   font-size: 0.72rem;
   color: var(--mat-sys-on-surface-variant);
-  background: color-mix(in srgb, var(--mat-sys-surface) 80%, transparent);
-  padding: 6px 10px;
-  border-radius: 8px;
-  backdrop-filter: blur(4px);
+  z-index: 5;
 }
 
 .map-legend span {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
+  background: color-mix(in srgb, var(--mat-sys-surface) 82%, transparent);
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  backdrop-filter: blur(4px);
 }
 
-.dot {
+.leg-line {
+  width: 18px;
+  display: inline-block;
+  border-top: 3px solid;
+  border-radius: 2px;
+}
+
+.leg-line.closed {
+  border-color: #b5653f;
+}
+
+.leg-line.open {
+  border-color: #3d465c;
+}
+
+.leg-line.other {
+  border-color: #c3c9d8;
+  border-top-style: dashed;
+}
+
+.leg-dot.anon {
   width: 9px;
   height: 9px;
-  border-radius: 50%;
-  display: inline-block;
-}
-
-.dot.me {
-  background: #b5653f;
-}
-
-.dot.cp {
-  background: #5f6b85;
-}
-
-.dot.anon {
-  background: #c3c9d8;
+  border-radius: 4px;
   border: 1px dashed #9aa3b8;
-}
-
-.line.priv {
-  width: 14px;
-  border-top: 2px dashed #9aa3b8;
   display: inline-block;
+  background: transparent;
 }
 
+html.dark-theme .leg-line.open {
+  border-color: #8fa2c7;
+}
+
+/* ---- Barra inferior con mi posición ---- */
+.me-bar {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--mat-sys-surface) 88%, transparent);
+  border: 1px solid var(--mat-sys-outline-variant);
+  backdrop-filter: blur(6px);
+  z-index: 5;
+}
+
+.me-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--quadra-copper), var(--quadra-copper-dark));
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+
+.me-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.me-info strong {
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.me-info em {
+  font-style: normal;
+  color: var(--quadra-copper);
+}
+
+.me-info span {
+  font-size: 0.75rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.me-pos {
+  margin-left: auto;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.me-pos strong {
+  display: block;
+  font-size: 1.05rem;
+}
+
+.me-pos strong.bad {
+  color: var(--mat-sys-error);
+}
+
+.me-pos span {
+  font-size: 0.7rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+/* ---- Panel lateral ---- */
 .side {
   display: flex;
   flex-direction: column;

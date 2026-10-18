@@ -1,8 +1,8 @@
 <div class="page">
-  <h1 class="page-title">Tu red</h1>
+  <h1 class="page-title">Mapa de tu red</h1>
   <p class="page-subtitle">
-    Ves tu empresa, tus contrapartes y las cadenas donde participas.
-    Las demás empresas de la red aparecen con identidad protegida.
+    Ves tu empresa, tus contrapartes y tus cadenas.
+    Las demás empresas aparecen con identidad protegida.
   </p>
 
   @if (loadError()) {
@@ -20,12 +20,27 @@
   } @else {
     <div class="map-layout">
       <mat-card class="map-card">
-        <div #graphCanvas class="graph-canvas"></div>
         <div class="map-legend">
-          <span><i class="dot me"></i> Tu empresa</span>
-          <span><i class="dot cp"></i> Contrapartes</span>
-          <span><i class="dot anon"></i> Identidad protegida</span>
-          <span><i class="line priv"></i> Monto privado</span>
+          <span><i class="leg-line closed"></i> Cadena cerrada</span>
+          <span><i class="leg-line open"></i> Cadena abierta</span>
+          <span><i class="leg-line other"></i> Otras facturas</span>
+          <span><i class="leg-dot anon"></i> Identidad protegida</span>
+        </div>
+        <div #graphCanvas class="graph-canvas"></div>
+        <div class="me-bar">
+          <div class="me-avatar">{{ myInitials() }}</div>
+          <div class="me-info">
+            <strong>{{ myName() }} <em>· Tú</em></strong>
+            <span>{{ chains().length }} {{ chains().length === 1 ? 'cadena' : 'cadenas' }}</span>
+          </div>
+          @if (summary(); as s) {
+            <div class="me-pos">
+              <strong [class.bad]="netPosition() < 0">
+                {{ asNumber(s.net_balance) | number: '1.0-0' }} BOB
+              </strong>
+              <span>posición en la red</span>
+            </div>
+          }
         </div>
       </mat-card>
 

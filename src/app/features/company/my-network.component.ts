@@ -1,3 +1,4 @@
+import { DecimalPipe } from '@angular/common';
 import {
   Component,
   ElementRef,
@@ -11,9 +12,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import cytoscape, { Core, NodeSingular, StylesheetJson } from 'cytoscape';
+import { forkJoin } from 'rxjs';
 import { ApiService } from '../../core/api.service';
 import { ThemeService } from '../../core/theme.service';
-import { MyNetwork, MyNetworkNode } from '../../core/models';
+import {
+  CompanySummary,
+  MyChain,
+  MyNetwork,
+  MyNetworkNode,
+} from '../../core/models';
 
 interface SelectedInfo {
   label: string;
@@ -22,9 +29,12 @@ interface SelectedInfo {
   isMe: boolean;
 }
 
+const LEGAL_SUFFIX =
+  /\s+(S\.?A\.?|S\.?R\.?L\.?|S\.?C\.?A\.?|LTDA\.?|SRL|SA|SCA)$/i;
+
 @Component({
   selector: 'app-my-network',
-  imports: [MatButtonModule, MatCardModule, MatIconModule],
+  imports: [DecimalPipe, MatButtonModule, MatCardModule, MatIconModule],
   templateUrl: './my-network.component.html',
   styleUrl: './my-network.component.css',
 })
@@ -40,14 +50,29 @@ export class MyNetworkComponent implements OnDestroy {
   readonly loading = signal(true);
   readonly loadError = signal(false);
   readonly selected = signal<SelectedInfo | null>(null);
+  readonly summary = signal<CompanySummary | null>(null);
+  readonly chains = signal<MyChain[]>([]);
 
   readonly anonymousCount = signal(0);
+  readonly myName = signal('');
+  readonly myInitials = signal('');
 
   constructor() {
-    this.api.getMyNetwork().subscribe({
-      next: (g) => {
-        this.graph.set(g);
-        this.anonymousCount.set(g.nodes.filter((n) => n.anonymous).length);
+    forkJoin({
+      graph: this.api.getMyNetwork(),
+      summary: this.api.getMySummary(),
+      chains: this.api.getMyChains(),
+    }).subscribe({
+      next: ({ graph, summary, chains }) => {
+        this.graph.set(graph);
+        this.summary.set(summary);
+        this.chains.set(chains);
+        this.anonymousCount.set(graph.nodes.filter((n) => n.anonymous).length);
+        const me = graph.nodes.find((n) => n.is_me);
+        if (me) {
+          this.myName.set(me.label);
+          this.myInitials.set(this.initials(me.label));
+        }
         this.loading.set(false);
       },
       error: () => this.loadError.set(true),
@@ -80,13 +105,43 @@ export class MyNetworkComponent implements OnDestroy {
     this.selected.set(null);
   }
 
+  asNumber(value: string | undefined): number {
+    return value ? parseFloat(value) : 0;
+  }
+
+  netPosition(): number {
+    return this.asNumber(this.summary()?.net_balance);
+  }
+
+  private initials(name: string): string {
+    return name
+      .replace(LEGAL_SUFFIX, '')
+      .split(/\s+/)
+      .filter((w) => /^[A-Za-zÁÉÍÓÚÑ0-9]/.test(w))
+      .slice(0, 2)
+      .map((w) => w[0].toUpperCase())
+      .join('');
+  }
+
+  private shortName(name: string): string {
+    return name.replace(LEGAL_SUFFIX, '').trim();
+  }
+
+  private pillLabel(n: MyNetworkNode): string {
+    if (n.is_me) return this.initials(n.label);
+    if (n.anonymous) {
+      return (n.sector ?? 'Rubro').replace(/^Empresa de /, '');
+    }
+    return `${this.initials(n.label)} · ${this.shortName(n.label)}`;
+  }
+
   private renderGraph(
     graph: MyNetwork,
     canvas: ElementRef<HTMLDivElement>,
   ): void {
     const elements = [
       ...graph.nodes.map((n: MyNetworkNode) => ({
-        data: { ...n, balance: 0 },
+        data: { ...n, pill: this.pillLabel(n) },
         classes: [
           n.is_me ? 'me' : '',
           n.anonymous ? 'anonymous' : '',
@@ -98,13 +153,15 @@ export class MyNetworkComponent implements OnDestroy {
       ...graph.edges.map((e) => ({
         data: {
           ...e,
-          weight: e.balance ? Math.min(Number(e.balance), 150000) : 0,
+          weight: e.balance ? Math.min(Number(e.balance), 200000) : 0,
           label:
             e.balance !== null
-              ? `Bs ${Number(e.balance).toLocaleString('es-BO', { maximumFractionDigits: 0 })}`
+              ? `Bs ${this.compact(Number(e.balance))}`
               : '',
         },
-        classes: e.balance === null ? 'private' : '',
+        classes: [e.role, e.balance === null ? 'private' : '']
+          .filter(Boolean)
+          .join(' '),
       })),
     ];
 
@@ -132,83 +189,141 @@ export class MyNetworkComponent implements OnDestroy {
     });
   }
 
+  private compact(value: number): string {
+    if (Math.abs(value) >= 1000) {
+      return `${(value / 1000).toLocaleString('es-BO', { maximumFractionDigits: 0 })}k`;
+    }
+    return value.toLocaleString('es-BO', { maximumFractionDigits: 0 });
+  }
+
   private layoutOptions(animate: boolean) {
     return {
-      name: 'cose',
+      name: 'concentric',
       animate,
-      animationDuration: 600,
-      nodeRepulsion: () => 9000,
-      idealEdgeLength: () => 100,
-      componentSpacing: 70,
-      padding: 30,
+      animationDuration: 500,
+      concentric: (node: NodeSingular) =>
+        node.data('is_me') ? 2 : node.data('is_counterparty') ? 1 : 0,
+      levelWidth: () => 1,
+      minNodeSpacing: 26,
+      padding: 60,
+      startAngle: Math.PI / 2,
+      clockwise: true,
     } as cytoscape.LayoutOptions;
   }
 
   private stylesheet(dark: boolean): StylesheetJson {
+    const copper = '#b5653f';
+    const copperLight = '#cf8a63';
+    const closed = dark ? copperLight : copper;
+    const open = dark ? '#8fa2c7' : '#3d465c';
+    const other = dark ? '#4d566d' : '#c3c9d8';
+    const pillBg = dark ? '#23293a' : '#ffffff';
+    const pillBorder = dark ? '#3d465c' : '#d5dae4';
     const textColor = dark ? '#e6e9f2' : '#2a2f3d';
-    const labelBg = dark ? 'rgba(27,30,41,0.75)' : 'rgba(255,255,255,0.75)';
-    const edgeColor = dark ? '#4d566d' : '#c3c9d8';
+    const edgeLabelBg = dark ? 'rgba(27,30,41,0.8)' : 'rgba(255,255,255,0.85)';
+
     return [
       {
         selector: 'node',
         style: {
-          'background-color': dark ? '#8fa2c7' : '#5f6b85',
-          label: 'data(label)',
-          'font-size': 9,
+          shape: 'round-rectangle',
+          width: 92,
+          height: 24,
+          'background-color': pillBg,
+          'border-width': 1,
+          'border-color': pillBorder,
+          label: 'data(pill)',
+          'text-valign': 'center',
+          'text-halign': 'center',
+          'font-size': 8.5,
+          'font-weight': 500,
           color: textColor,
-          'text-valign': 'bottom',
-          'text-margin-y': 4,
           'text-wrap': 'ellipsis',
-          'text-max-width': '90px',
-          'text-background-color': labelBg,
-          'text-background-opacity': 1,
-          'text-background-padding': '2px',
-          'text-background-shape': 'roundrectangle',
-          width: 18,
-          height: 18,
+          'text-max-width': '80px',
         },
       },
       {
         selector: 'node.me',
         style: {
-          'background-color': '#b5653f',
-          width: 30,
-          height: 30,
-          'font-size': 10,
+          shape: 'ellipse',
+          width: 40,
+          height: 40,
+          'background-color': closed,
+          'border-width': 3,
+          'border-color': dark ? '#1b1e29' : '#ffffff',
+          'font-size': 12,
           'font-weight': 'bold',
+          color: '#ffffff',
+          'text-outline-width': 0,
+        },
+      },
+      {
+        selector: 'node.counterparty',
+        style: {
+          'border-width': 1.5,
+          'border-color': dark ? '#5f6b85' : '#9aa3b8',
         },
       },
       {
         selector: 'node.anonymous',
         style: {
-          'background-color': dark ? '#3d465c' : '#c3c9d8',
-          'border-width': 1,
-          'border-color': dark ? '#5f6b85' : '#9aa3b8',
+          'background-color': dark ? '#1f2330' : '#f2f3f6',
           'border-style': 'dashed',
+          'font-style': 'italic',
+          color: dark ? '#9aa3b8' : '#6b7280',
+          'font-size': 7.5,
         },
       },
       {
         selector: 'edge',
         style: {
-          width: 'mapData(weight, 0, 150000, 1, 5)',
-          'line-color': edgeColor,
-          'target-arrow-color': edgeColor,
-          'target-arrow-shape': 'triangle',
-          'arrow-scale': 0.8,
+          width: 'mapData(weight, 0, 200000, 1.2, 4)',
           'curve-style': 'bezier',
-          opacity: 0.8,
+          'target-arrow-shape': 'triangle',
+          'arrow-scale': 0.7,
+          opacity: 0.9,
           label: 'data(label)',
-          'font-size': 8,
+          'font-size': 7.5,
+          'font-weight': 600,
           'text-rotation': 'autorotate',
-          'text-background-color': labelBg,
+          'text-background-color': edgeLabelBg,
           'text-background-opacity': 1,
-          'text-background-padding': '1px',
+          'text-background-padding': '2px',
+          'text-background-shape': 'roundrectangle',
           color: textColor,
+          'line-color': other,
+          'target-arrow-color': other,
+        },
+      },
+      {
+        selector: 'edge.cycle',
+        style: {
+          'line-color': closed,
+          'target-arrow-color': closed,
+          'line-style': 'solid',
+          width: 'mapData(weight, 0, 200000, 2.5, 5)',
+        },
+      },
+      {
+        selector: 'edge.chain',
+        style: {
+          'line-color': open,
+          'target-arrow-color': open,
+          'line-style': 'solid',
+          width: 'mapData(weight, 0, 200000, 2, 4.5)',
+        },
+      },
+      {
+        selector: 'edge.other',
+        style: {
+          'line-style': 'dashed',
+          'target-arrow-shape': 'none',
+          opacity: 0.55,
         },
       },
       {
         selector: 'edge.private',
-        style: { 'line-style': 'dashed', opacity: 0.35 },
+        style: { opacity: 0.4 },
       },
     ];
   }

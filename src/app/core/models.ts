@@ -235,6 +235,7 @@ export interface MyNetworkEdge {
   source: string;
   target: string;
   balance: string | null;
+  role: 'cycle' | 'chain' | 'other';
 }
 
 export interface MyNetwork {
