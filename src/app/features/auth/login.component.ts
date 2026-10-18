@@ -35,7 +35,7 @@ export class LoginComponent {
   readonly error = signal<string | null>(null);
   readonly hidePassword = signal(true);
   readonly logoSrc = computed(() =>
-    this.theme.isDark() ? 'assets/logo-dark.png' : 'assets/logo-light.png',
+    this.theme.isDark() ? 'assets/logo-dark.jpeg' : 'assets/logo-light.png',
   );
 
   readonly form = this.fb.nonNullable.group({

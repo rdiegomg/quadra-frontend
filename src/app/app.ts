@@ -26,6 +26,6 @@ export class App {
   protected readonly theme = inject(ThemeService);
 
   readonly logoSrc = computed(() =>
-    this.theme.isDark() ? 'assets/logo-dark.png' : 'assets/logo-light.png',
+    this.theme.isDark() ? 'assets/logo-dark.jpeg' : 'assets/logo-light.png',
   );
 }
