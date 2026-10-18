@@ -312,6 +312,15 @@ html.dark-theme .chain-kind {
   color: var(--mat-sys-on-surface-variant);
 }
 
+.chain-map {
+  height: 360px;
+  border-radius: 12px;
+  margin-bottom: 14px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--quadra-copper) 7%, var(--mat-sys-surface));
+  border: 1px solid var(--mat-sys-outline-variant);
+}
+
 .edge-list {
   display: flex;
   flex-direction: column;
