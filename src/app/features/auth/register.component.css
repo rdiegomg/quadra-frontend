@@ -3,19 +3,83 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: 32px 24px;
+}
+
+.auth-shell {
+  display: grid;
+  grid-template-columns: 380px 480px;
+  width: 100%;
+  max-width: 900px;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--mat-sys-outline-variant);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.16);
+}
+
+.brand-panel {
+  padding: 48px 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+  background: linear-gradient(160deg, #23293a 0%, #1b1e29 55%, #2b1e15 100%);
+  color: #ece7e2;
+}
+
+.brand-logo {
+  width: 84px;
+  border-radius: 18px;
+  margin-bottom: 6px;
+}
+
+.brand-panel h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.tagline {
+  margin: 0;
+  font-size: 1rem;
+  background: linear-gradient(90deg, var(--quadra-copper-light), #e8b48f);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 600;
+}
+
+.points {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.points li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: #c9cdd8;
+}
+
+.points mat-icon {
+  color: var(--quadra-copper-light);
+  flex-shrink: 0;
 }
 
 .auth-card {
-  width: 100%;
-  max-width: 460px;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
 }
 
-.auth-logo {
-  display: block;
-  width: 88px;
-  margin: 8px auto 16px;
-  border-radius: 16px;
+.auth-card mat-card-content {
+  padding: 36px;
 }
 
 h1 {
@@ -33,7 +97,7 @@ html.dark-theme h1 {
   text-align: center;
   color: var(--mat-sys-on-surface-variant);
   font-size: 0.85rem;
-  margin: 4px 0 24px;
+  margin: 4px 0 20px;
 }
 
 form {
@@ -64,4 +128,14 @@ button[type='submit'] {
   text-align: center;
   font-size: 0.85rem;
   margin-top: 20px;
+}
+
+@media (max-width: 860px) {
+  .auth-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .brand-panel {
+    display: none;
+  }
 }

@@ -39,3 +39,94 @@ h3 {
 html.dark-theme .compensation {
   color: var(--quadra-copper-light);
 }
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stat-icon {
+  color: var(--quadra-copper);
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.stat-note {
+  font-size: 0.75rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.highlight-grid .stat-card.metric {
+  border: 1px solid color-mix(in srgb, var(--quadra-copper) 35%, transparent);
+  background: linear-gradient(
+    140deg,
+    color-mix(in srgb, var(--quadra-copper) 6%, var(--mat-sys-surface)),
+    var(--mat-sys-surface)
+  );
+}
+
+.sim-card mat-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sim-btn {
+  align-self: flex-start;
+}
+
+.sim-result {
+  margin-bottom: 24px;
+  border-left: 4px solid #2e7d4f;
+}
+
+.sim-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.sim-head mat-icon {
+  color: #2e7d4f;
+}
+
+.sim-head h3 {
+  margin: 0;
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: 1.05rem;
+  color: inherit;
+}
+
+.sim-figures {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+.sfig {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sfig span {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.sfig strong {
+  font-size: 1.15rem;
+}
+
+.sim-note {
+  font-size: 0.8rem;
+  color: var(--mat-sys-on-surface-variant);
+  margin: 0;
+}

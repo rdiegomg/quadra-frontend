@@ -1,59 +1,71 @@
 <div class="auth-page">
-  <mat-card class="auth-card">
-    <mat-card-content>
-      <img [src]="logoSrc()" alt="QUADRA" class="auth-logo" />
-      <h1>Acceso empresarial</h1>
-      <p class="hint">Compensación multilateral de obligaciones</p>
+  <div class="auth-shell">
+    <aside class="brand-panel">
+      <img [src]="logoSrc()" alt="QUADRA" class="brand-logo" />
+      <h2>Cancelamos deudas entre empresas</h2>
+      <p class="tagline">sin que circule dinero</p>
+      <ul class="points">
+        <li><mat-icon>hub</mat-icon><span>Detectamos círculos y cadenas de deuda compensables</span></li>
+        <li><mat-icon>lock</mat-icon><span>Nadie ve los datos de otra empresa</span></li>
+        <li><mat-icon>savings</mat-icon><span>Pagas solo por la deuda efectivamente cancelada</span></li>
+      </ul>
+    </aside>
 
-      <form [formGroup]="form" (ngSubmit)="submit()">
-        <mat-form-field appearance="outline">
-          <mat-label>Correo electrónico</mat-label>
-          <input matInput type="email" formControlName="email" autocomplete="email" />
-          @if (form.controls.email.hasError('required')) {
-            <mat-error>Requerido</mat-error>
-          }
-          @if (form.controls.email.hasError('email')) {
-            <mat-error>Email inválido</mat-error>
-          }
-        </mat-form-field>
+    <mat-card class="auth-card">
+      <mat-card-content>
+        <h1>Acceso empresarial</h1>
+        <p class="hint">Compensación multilateral de obligaciones</p>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Contraseña</mat-label>
-          <input matInput [type]="hidePassword() ? 'password' : 'text'" formControlName="password" autocomplete="current-password" />
-          <button
-            mat-icon-button
-            matSuffix
-            type="button"
-            (click)="hidePassword.set(!hidePassword())"
-            [attr.aria-label]="hidePassword() ? 'Mostrar contraseña' : 'Ocultar contraseña'"
-          >
-            <mat-icon>{{ hidePassword() ? 'visibility' : 'visibility_off' }}</mat-icon>
+        <form [formGroup]="form" (ngSubmit)="submit()">
+          <mat-form-field appearance="outline">
+            <mat-label>Correo electrónico</mat-label>
+            <input matInput type="email" formControlName="email" autocomplete="email" />
+            @if (form.controls.email.hasError('required')) {
+              <mat-error>Requerido</mat-error>
+            }
+            @if (form.controls.email.hasError('email')) {
+              <mat-error>Email inválido</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Contraseña</mat-label>
+            <input matInput [type]="hidePassword() ? 'password' : 'text'" formControlName="password" autocomplete="current-password" />
+            <button
+              mat-icon-button
+              matSuffix
+              type="button"
+              (click)="hidePassword.set(!hidePassword())"
+              [attr.aria-label]="hidePassword() ? 'Mostrar contraseña' : 'Ocultar contraseña'"
+            >
+              <mat-icon>{{ hidePassword() ? 'visibility' : 'visibility_off' }}</mat-icon>
+            </button>
+            @if (form.controls.password.hasError('required')) {
+              <mat-error>Requerida</mat-error>
+            }
+          </mat-form-field>
+
+          @if (error()) {
+            <p class="error">{{ error() }}</p>
+          }
+
+          <button mat-flat-button type="submit" [disabled]="loading()">
+            @if (loading()) {
+              <mat-spinner diameter="20" />
+            } @else {
+              Ingresar
+            }
           </button>
-          @if (form.controls.password.hasError('required')) {
-            <mat-error>Requerida</mat-error>
-          }
-        </mat-form-field>
+        </form>
 
-        @if (error()) {
-          <p class="error">{{ error() }}</p>
-        }
-
-        <button mat-flat-button type="submit" [disabled]="loading()">
-          @if (loading()) {
-            <mat-spinner diameter="20" />
-          } @else {
-            Ingresar
-          }
-        </button>
-      </form>
-
-      <p class="switch">
-        ¿Tu empresa no está registrada?
-        <a routerLink="/register">Crear cuenta</a>
-      </p>
-      <p class="demo-hint">
-        Demo: admin@quadra.demo / admin1234 — toyosa@quadra.demo / demo1234
-      </p>
-    </mat-card-content>
-  </mat-card>
+        <p class="switch">
+          ¿Tu empresa no está registrada?
+          <a routerLink="/register">Crear cuenta</a>
+        </p>
+        <p class="demo-hint">
+          Demo: admin@quadra.demo / admin1234 — toyosa@quadra.demo / demo1234
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </div>
 </div>

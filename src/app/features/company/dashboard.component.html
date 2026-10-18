@@ -6,11 +6,75 @@
     }
   </p>
 
+  @if (proposal(); as p) {
+    @if (proposalState() === 'idle') {
+      <mat-card class="proposal-card">
+        <mat-card-content>
+          <div class="proposal-head">
+            <div class="proposal-icon"><mat-icon>autorenew</mat-icon></div>
+            <div>
+              <h2>Propuesta de compensación disponible</h2>
+              <p class="proposal-cycle">
+                Ciclo de {{ p.cycle_length }} empresas: {{ p.cycle_companies.join(' → ') }}
+              </p>
+            </div>
+          </div>
+          <div class="proposal-figures">
+            <div class="pfig">
+              <span>Deuda que se te cancela</span>
+              <strong>{{ asNumber(p.cancelled_amount) | number: '1.0-0' }} {{ p.currency }}</strong>
+            </div>
+            <div class="pfig">
+              <span>Dejas de cobrar</span>
+              <strong>{{ asNumber(p.receivable_forgone) | number: '1.0-0' }} {{ p.currency }}</strong>
+            </div>
+            <div class="pfig">
+              <span>Ahorro financiero estimado</span>
+              <strong class="good">{{ asNumber(p.est_financial_savings) | number: '1.0-0' }} {{ p.currency }}</strong>
+            </div>
+            <div class="pfig">
+              <span>Comisión QUADRA (1.5%)</span>
+              <strong>{{ asNumber(p.commission) | number: '1.0-0' }} {{ p.currency }}</strong>
+            </div>
+          </div>
+          <p class="proposal-note">
+            Tu posición neta no cambia: cancelas deuda y renuncias a la misma
+            cantidad de cobro. Simulado — no modifica obligaciones.
+          </p>
+          <div class="proposal-actions">
+            <button mat-flat-button (click)="respondProposal(true)">
+              <mat-icon>check</mat-icon> Aceptar propuesta
+            </button>
+            <button mat-stroked-button (click)="respondProposal(false)">Rechazar</button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    } @else if (proposalState() === 'accepted') {
+      <mat-card class="proposal-card accepted">
+        <mat-card-content>
+          <div class="proposal-head">
+            <div class="proposal-icon"><mat-icon>check_circle</mat-icon></div>
+            <div>
+              <h2>Propuesta aceptada</h2>
+              <p class="proposal-cycle">
+                En un escenario real se emitiría la documentación legal que
+                extingue las obligaciones. (Simulación)
+              </p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    }
+  }
+
   @if (summary(); as s) {
     <div class="stat-grid">
       <mat-card class="stat-card">
         <mat-card-content>
-          <span class="stat-label">Total por cobrar</span>
+          <div class="stat-row">
+            <mat-icon class="stat-icon green">call_received</mat-icon>
+            <span class="stat-label">Total por cobrar</span>
+          </div>
           <span class="stat-value positive">
             {{ asNumber(s.total_receivable) | number: '1.2-2' }} BOB
           </span>
@@ -19,7 +83,10 @@
 
       <mat-card class="stat-card">
         <mat-card-content>
-          <span class="stat-label">Total por pagar</span>
+          <div class="stat-row">
+            <mat-icon class="stat-icon">call_made</mat-icon>
+            <span class="stat-label">Total por pagar</span>
+          </div>
           <span class="stat-value">
             {{ asNumber(s.total_payable) | number: '1.2-2' }} BOB
           </span>
@@ -28,7 +95,10 @@
 
       <mat-card class="stat-card">
         <mat-card-content>
-          <span class="stat-label">Saldo neto</span>
+          <div class="stat-row">
+            <mat-icon class="stat-icon">balance</mat-icon>
+            <span class="stat-label">Saldo neto</span>
+          </div>
           <span
             class="stat-value"
             [class.positive]="asNumber(s.net_balance) > 0"
@@ -41,14 +111,20 @@
 
       <mat-card class="stat-card">
         <mat-card-content>
-          <span class="stat-label">Obligaciones pendientes</span>
+          <div class="stat-row">
+            <mat-icon class="stat-icon">pending_actions</mat-icon>
+            <span class="stat-label">Obligaciones pendientes</span>
+          </div>
           <span class="stat-value">{{ s.pending_obligations }}</span>
         </mat-card-content>
       </mat-card>
 
       <mat-card class="stat-card">
         <mat-card-content>
-          <span class="stat-label">Obligaciones vencidas</span>
+          <div class="stat-row">
+            <mat-icon class="stat-icon red">event_busy</mat-icon>
+            <span class="stat-label">Obligaciones vencidas</span>
+          </div>
           <span class="stat-value" [class.negative]="s.overdue_obligations > 0">
             {{ s.overdue_obligations }}
           </span>

@@ -1,0 +1,51 @@
+<div class="landing">
+  <section class="hero">
+    <img [src]="logoSrc()" alt="QUADRA" class="hero-logo" />
+    <h1>Cancelamos deudas entre empresas<br /><span>sin que circule dinero</span></h1>
+    <p class="hero-sub">
+      QUADRA es una cámara de compensación de obligaciones empresariales.
+      Detecta los círculos de deuda que se anulan solos dentro de tu red
+      comercial y ejecuta la compensación multilateral.
+    </p>
+    <div class="hero-cta">
+      @if (auth.isAuthenticated()) {
+        <a mat-flat-button [routerLink]="homeLink()">
+          <mat-icon>dashboard</mat-icon> Ir a mi panel
+        </a>
+      } @else {
+        <a mat-flat-button routerLink="/register">
+          <mat-icon>business</mat-icon> Registrar mi empresa
+        </a>
+        <a mat-stroked-button routerLink="/login">Ingresar</a>
+      }
+    </div>
+  </section>
+
+  <section class="how">
+    <h2>Cómo funciona</h2>
+    <div class="steps">
+      @for (s of steps; track s.title) {
+        <div class="step-card">
+          <div class="step-icon"><mat-icon>{{ s.icon }}</mat-icon></div>
+          <h3>{{ s.title }}</h3>
+          <p>{{ s.text }}</p>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section class="why">
+    <h2>Por qué existe</h2>
+    <p class="why-text">
+      Una ferretería le debe a un distribuidor, el distribuidor le debe a un
+      transportista y el transportista le debe a la ferretería. Las tres creen
+      tener un problema de caja. Lo que tienen es un problema de información.
+      QUADRA dibuja el mapa completo y hace visible la deuda que se anula sola.
+    </p>
+  </section>
+
+  <footer class="landing-footer">
+    <span>QUADRA · Santa Cruz de la Sierra, Bolivia</span>
+    <span class="demo-note">PoC de demostración — todas las empresas, NITs, montos y credenciales son ficticios</span>
+  </footer>
+</div>

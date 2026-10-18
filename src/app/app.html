@@ -1,5 +1,5 @@
 <mat-toolbar class="app-toolbar">
-  <a class="brand" [routerLink]="auth.isAuthenticated() ? (auth.isAdmin() ? '/admin' : '/dashboard') : '/login'">
+  <a class="brand" [routerLink]="auth.isAuthenticated() ? (auth.isAdmin() ? '/admin' : '/dashboard') : '/'">
     <img [src]="logoSrc()" alt="QUADRA" class="brand-logo" />
     <span class="brand-name">QUADRA</span>
   </a>
@@ -29,6 +29,9 @@
         <span>Cerrar sesión</span>
       </button>
     </mat-menu>
+  } @else {
+    <a mat-button routerLink="/register">Registrar empresa</a>
+    <a mat-flat-button routerLink="/login" class="login-btn">Ingresar</a>
   }
 
   <button mat-icon-button (click)="theme.toggle()" [attr.aria-label]="theme.isDark() ? 'Modo claro' : 'Modo oscuro'">

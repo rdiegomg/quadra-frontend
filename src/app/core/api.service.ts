@@ -6,6 +6,7 @@ import {
   Chain,
   Company,
   CompanySummary,
+  CompensationProposal,
   Cycle,
   NetworkGraph,
   NetworkStatistics,
@@ -15,6 +16,7 @@ import {
   ObligationStatus,
   PaymentScheduleItem,
   Sector,
+  SimulationResult,
 } from './models';
 
 @Injectable({ providedIn: 'root' })
@@ -32,6 +34,12 @@ export class ApiService {
 
   getMySummary(): Observable<CompanySummary> {
     return this.http.get<CompanySummary>(`${this.api}/companies/me/summary`);
+  }
+
+  getMyProposal(): Observable<CompensationProposal | null> {
+    return this.http.get<CompensationProposal | null>(
+      `${this.api}/companies/me/proposal`,
+    );
   }
 
   getObligations(view: 'receivable' | 'payable', status?: ObligationStatus): Observable<Obligation[]> {
@@ -90,5 +98,9 @@ export class ApiService {
 
   getOpenChains(): Observable<Chain[]> {
     return this.http.get<Chain[]>(`${this.api}/admin/network/open-chains`);
+  }
+
+  runSimulation(): Observable<SimulationResult> {
+    return this.http.get<SimulationResult>(`${this.api}/admin/network/simulation`);
   }
 }

@@ -6,19 +6,28 @@
     <div class="stat-grid">
       <mat-card class="stat-card">
         <mat-card-content>
-          <span class="stat-label">Empresas</span>
+          <div class="stat-row">
+            <mat-icon class="stat-icon">business</mat-icon>
+            <span class="stat-label">Empresas</span>
+          </div>
           <span class="stat-value">{{ s.companies_total }}</span>
         </mat-card-content>
       </mat-card>
       <mat-card class="stat-card">
         <mat-card-content>
-          <span class="stat-label">Conexiones abiertas</span>
+          <div class="stat-row">
+            <mat-icon class="stat-icon">hub</mat-icon>
+            <span class="stat-label">Conexiones abiertas</span>
+          </div>
           <span class="stat-value">{{ s.open_connections }}</span>
         </mat-card-content>
       </mat-card>
       <mat-card class="stat-card">
         <mat-card-content>
-          <span class="stat-label">Volumen abierto</span>
+          <div class="stat-row">
+            <mat-icon class="stat-icon">payments</mat-icon>
+            <span class="stat-label">Volumen abierto</span>
+          </div>
           <span class="stat-value">
             {{ asNumber(s.total_open_volume) | number: '1.0-0' }} BOB
           </span>
@@ -26,11 +35,105 @@
       </mat-card>
       <mat-card class="stat-card">
         <mat-card-content>
-          <span class="stat-label">Empresas en ciclos</span>
+          <div class="stat-row">
+            <mat-icon class="stat-icon">sync_alt</mat-icon>
+            <span class="stat-label">Empresas en ciclos</span>
+          </div>
           <span class="stat-value positive">{{ s.companies_in_cycles }}</span>
         </mat-card-content>
       </mat-card>
     </div>
+
+    <div class="stat-grid highlight-grid">
+      <mat-card class="stat-card metric">
+        <mat-card-content>
+          <div class="stat-row">
+            <mat-icon class="stat-icon">autorenew</mat-icon>
+            <span class="stat-label">Volumen compensable</span>
+          </div>
+          <span class="stat-value positive">
+            {{ asNumber(s.compensable_volume) | number: '1.0-0' }} BOB
+          </span>
+          <span class="stat-note">
+            {{ s.cycles_in_estimate }} ciclos + {{ s.chains_in_estimate }} cadenas
+          </span>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="stat-card metric">
+        <mat-card-content>
+          <div class="stat-row">
+            <mat-icon class="stat-icon">percent</mat-icon>
+            <span class="stat-label">Tasa de compensación</span>
+          </div>
+          <span class="stat-value positive">
+            {{ asNumber(s.compensation_rate) | percent: '1.1-2' }}
+          </span>
+          <span class="stat-note">deuda cancelable / volumen abierto</span>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="stat-card metric">
+        <mat-card-content>
+          <div class="stat-row">
+            <mat-icon class="stat-icon">monetization_on</mat-icon>
+            <span class="stat-label">Comisión estimada (1.5%)</span>
+          </div>
+          <span class="stat-value">
+            {{ asNumber(s.estimated_commission) | number: '1.0-0' }} BOB
+          </span>
+          <span class="stat-note">sobre deuda compensable</span>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="stat-card metric sim-card">
+        <mat-card-content>
+          <div class="stat-row">
+            <mat-icon class="stat-icon">play_circle</mat-icon>
+            <span class="stat-label">Ciclo mensual</span>
+          </div>
+          <button
+            mat-flat-button
+            class="sim-btn"
+            (click)="runSimulation()"
+            [disabled]="simulating()"
+          >
+            @if (simulating()) {
+              <mat-spinner diameter="18" />
+            } @else {
+              Simular ciclo
+            }
+          </button>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    @if (simulation(); as sim) {
+      <mat-card class="sim-result">
+        <mat-card-content>
+          <div class="sim-head">
+            <mat-icon>check_circle</mat-icon>
+            <h3>Simulación del ciclo mensual</h3>
+          </div>
+          <div class="sim-figures">
+            <div class="sfig">
+              <span>Deuda cancelada</span>
+              <strong>{{ asNumber(sim.total_cancelled) | number: '1.0-0' }} {{ sim.currency }}</strong>
+            </div>
+            <div class="sfig">
+              <span>Empresas participantes</span>
+              <strong>{{ sim.companies_participating }}</strong>
+            </div>
+            <div class="sfig">
+              <span>Ciclos / cadenas usados</span>
+              <strong>{{ sim.cycles_used }} / {{ sim.chains_used }}</strong>
+            </div>
+            <div class="sfig">
+              <span>Comisión QUADRA</span>
+              <strong>{{ asNumber(sim.estimated_commission) | number: '1.0-0' }} {{ sim.currency }}</strong>
+            </div>
+          </div>
+          <p class="sim-note">{{ sim.note }}</p>
+        </mat-card-content>
+      </mat-card>
+    }
 
     <div class="two-col">
       <mat-card>
@@ -118,6 +221,12 @@
             <th mat-header-cell *matHeaderCellDef>Volumen</th>
             <td mat-cell *matCellDef="let c">
               {{ asNumber(c.total_volume) | number: '1.2-2' }} BOB
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="compensation">
+            <th mat-header-cell *matHeaderCellDef>Compensable</th>
+            <td mat-cell *matCellDef="let c" class="compensation">
+              {{ asNumber(c.potential_compensation) | number: '1.2-2' }} BOB
             </td>
           </ng-container>
           <ng-container matColumnDef="ends_in_cycle">

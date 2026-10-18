@@ -1,3 +1,105 @@
 :host {
   display: block;
 }
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stat-icon {
+  color: var(--quadra-copper);
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.stat-icon.green {
+  color: #2e7d4f;
+}
+
+.stat-icon.red {
+  color: var(--mat-sys-error);
+}
+
+.proposal-card {
+  margin-bottom: 24px;
+  border-left: 4px solid var(--quadra-copper);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--quadra-copper) 7%, var(--mat-sys-surface)),
+    var(--mat-sys-surface)
+  );
+}
+
+.proposal-card.accepted {
+  border-left-color: #2e7d4f;
+}
+
+.proposal-head {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.proposal-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--quadra-copper), var(--quadra-copper-dark));
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.proposal-head h2 {
+  margin: 0 0 4px;
+  font-size: 1.1rem;
+}
+
+.proposal-cycle {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.proposal-figures {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin: 18px 0 6px;
+}
+
+.pfig {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pfig span {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.pfig strong {
+  font-size: 1.15rem;
+}
+
+.pfig .good {
+  color: #2e7d4f;
+}
+
+.proposal-note {
+  font-size: 0.8rem;
+  color: var(--mat-sys-on-surface-variant);
+  margin: 4px 0 14px;
+}
+
+.proposal-actions {
+  display: flex;
+  gap: 10px;
+}

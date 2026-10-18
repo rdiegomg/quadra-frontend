@@ -3,6 +3,12 @@ import { adminGuard, companyGuard, guestGuard } from './core/auth/guards';
 
 export const routes: Routes = [
   {
+    path: '',
+    pathMatch: 'full',
+    loadComponent: () =>
+      import('./features/landing/landing.component').then((m) => m.LandingComponent),
+  },
+  {
     path: 'login',
     canActivate: [guestGuard],
     loadComponent: () =>
@@ -46,6 +52,5 @@ export const routes: Routes = [
         (m) => m.NetworkComponent,
       ),
   },
-  { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
-  { path: '**', redirectTo: 'dashboard' },
+  { path: '**', redirectTo: '' },
 ];

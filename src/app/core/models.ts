@@ -119,6 +119,7 @@ export interface Chain {
   companies: string[];
   length: number;
   total_volume: string;
+  potential_compensation: string;
   ends_in_cycle: boolean;
   edges: { debtor_name: string; creditor_name: string; balance: string }[];
 }
@@ -160,7 +161,32 @@ export interface NetworkStatistics {
   obligations_open: number;
   total_open_volume: string;
   companies_in_cycles: number;
+  compensable_volume: string;
+  compensation_rate: string;
+  estimated_commission: string;
+  cycles_in_estimate: number;
+  chains_in_estimate: number;
   top_debtors: TopCompany[];
   top_creditors: TopCompany[];
   companies_by_sector: Record<string, number>;
+}
+
+export interface CompensationProposal {
+  cycle_companies: string[];
+  cycle_length: number;
+  cancelled_amount: string;
+  receivable_forgone: string;
+  commission: string;
+  est_financial_savings: string;
+  currency: string;
+}
+
+export interface SimulationResult {
+  cycles_used: number;
+  chains_used: number;
+  companies_participating: number;
+  total_cancelled: string;
+  estimated_commission: string;
+  currency: string;
+  note: string;
 }

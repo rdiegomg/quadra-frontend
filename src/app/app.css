@@ -54,3 +54,7 @@ html.dark-theme .brand-name {
 .user-menu-header small {
   color: var(--mat-sys-on-surface-variant);
 }
+
+.login-btn {
+  margin-left: 4px;
+}
