@@ -158,28 +158,54 @@ export class DashboardComponent implements OnDestroy {
       ? [...chain.edges.slice(meIdx), ...chain.edges.slice(0, meIdx)]
       : chain.edges;
 
+    const total = isCycle ? n : n + 1; // cadena abierta: +1 nodo fantasma
+    const useRing = total <= 6;
+    const dark = this.theme.isDark();
+
+    // Serpiente: crece el canvas segun las filas que hagan falta
+    let cols = 1;
+    let rows = 1;
+    if (!useRing) {
+      cols = Math.max(3, Math.min(6, Math.floor((el.clientWidth || 600) / 150)));
+      rows = Math.ceil(total / cols);
+      el.style.height = `${Math.max(340, 150 + rows * 150)}px`;
+    }
+
     const w = el.clientWidth || 600;
     const h = el.clientHeight || 340;
     const r = Math.min(w, h) / 2 - 78;
     const cx = w / 2;
     const cy = h / 2 + 6;
 
-    const total = isCycle ? n : n + 1; // cadena abierta: +1 nodo fantasma
-    const dark = this.theme.isDark();
+    const posOf = (pos: number): { x: number; y: number; zone: string } => {
+      if (useRing) {
+        const angle = (-90 + (360 / total) * pos) * (Math.PI / 180);
+        return {
+          x: cx + r * Math.cos(angle),
+          y: cy + r * Math.sin(angle),
+          zone: `pos-${this.angleZone(angle)}`,
+        };
+      }
+      const row = Math.floor(pos / cols);
+      const raw = pos % cols;
+      const col = row % 2 === 0 ? raw : cols - 1 - raw;
+      return {
+        x: cols === 1 ? cx : 90 + (col * (w - 180)) / (cols - 1),
+        y: rows === 1 ? cy : 85 + (row * (h - 170)) / (rows - 1),
+        zone: '',
+      };
+    };
+
     const nodeDefs: cytoscape.ElementDefinition[] = order.map((idx, pos) => {
       const label = chain.labels[idx];
       const anonymous = label.startsWith('Empresa de ');
       const isMe = idx === meIdx;
-      const angle = (-90 + (360 / total) * pos) * (Math.PI / 180);
+      const { x, y, zone } = posOf(pos);
       const sub = isMe ? 'Tú' : anonymous ? 'Identidad protegida' : 'Contraparte';
       return {
         data: { id: `n${pos}`, display: `${label}\n${sub}` },
-        position: { x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) },
-        classes: [
-          isMe ? 'me' : '',
-          anonymous ? 'anon' : '',
-          `pos-${this.angleZone(angle)}`,
-        ]
+        position: { x, y },
+        classes: [isMe ? 'me' : '', anonymous ? 'anon' : '', zone]
           .filter(Boolean)
           .join(' '),
         style: anonymous
@@ -198,10 +224,10 @@ export class DashboardComponent implements OnDestroy {
 
     if (!isCycle) {
       // nodo fantasma donde faltaria el eslabon que cierra la cadena
-      const angle = (-90 + (360 / total) * n) * (Math.PI / 180);
+      const g = posOf(n);
       nodeDefs.push({
         data: { id: 'ghost', display: '' },
-        position: { x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) },
+        position: { x: g.x, y: g.y },
         classes: 'ghost',
         style: {},
       });
