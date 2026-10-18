@@ -1,12 +1,11 @@
 import {
-  AfterViewInit,
   Component,
   ElementRef,
   OnDestroy,
-  ViewChild,
   effect,
   inject,
   signal,
+  viewChild,
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -29,14 +28,13 @@ interface SelectedInfo {
   templateUrl: './my-network.component.html',
   styleUrl: './my-network.component.css',
 })
-export class MyNetworkComponent implements AfterViewInit, OnDestroy {
+export class MyNetworkComponent implements OnDestroy {
   private readonly api = inject(ApiService);
   private readonly theme = inject(ThemeService);
 
-  @ViewChild('graphCanvas') private graphCanvas!: ElementRef<HTMLDivElement>;
+  private graphCanvas = viewChild<ElementRef<HTMLDivElement>>('graphCanvas');
 
   private cy: Core | null = null;
-  private readonly viewReady = signal(false);
   private readonly graph = signal<MyNetwork | null>(null);
 
   readonly loading = signal(true);
@@ -57,16 +55,13 @@ export class MyNetworkComponent implements AfterViewInit, OnDestroy {
 
     effect(() => {
       const g = this.graph();
-      if (g && this.viewReady()) this.renderGraph(g);
+      const canvas = this.graphCanvas();
+      if (g && canvas) this.renderGraph(g, canvas);
     });
     effect(() => {
       const dark = this.theme.isDark();
       this.cy?.style(this.stylesheet(dark));
     });
-  }
-
-  ngAfterViewInit(): void {
-    this.viewReady.set(true);
   }
 
   ngOnDestroy(): void {
@@ -85,7 +80,10 @@ export class MyNetworkComponent implements AfterViewInit, OnDestroy {
     this.selected.set(null);
   }
 
-  private renderGraph(graph: MyNetwork): void {
+  private renderGraph(
+    graph: MyNetwork,
+    canvas: ElementRef<HTMLDivElement>,
+  ): void {
     const elements = [
       ...graph.nodes.map((n: MyNetworkNode) => ({
         data: { ...n, balance: 0 },
@@ -111,7 +109,7 @@ export class MyNetworkComponent implements AfterViewInit, OnDestroy {
     ];
 
     this.cy = cytoscape({
-      container: this.graphCanvas.nativeElement,
+      container: canvas.nativeElement,
       elements,
       style: this.stylesheet(this.theme.isDark()),
       layout: this.layoutOptions(false),
