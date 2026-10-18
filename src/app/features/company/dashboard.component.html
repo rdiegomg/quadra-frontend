@@ -114,7 +114,7 @@
             @if (expanded() === $index) {
               <div class="chain-detail">
                 <h4>Cómo se forma esta cadena</h4>
-                <div #chainCanvas class="chain-map"></div>
+                <app-chain-ring [chain]="ch" [sectors]="sectors()"></app-chain-ring>
                 <div class="edge-list">
                   @for (e of ch.edges; track $index) {
                     <div class="edge-row" [class.mine]="e.debtor_is_me || e.creditor_is_me">
