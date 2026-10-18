@@ -118,6 +118,29 @@ export interface TopCompany {
   amount: string;
 }
 
+export interface GraphNodeData {
+  id: string;
+  label: string;
+  nit: string;
+  sector: string | null;
+  in_cycle: boolean;
+}
+
+export interface GraphEdgeData {
+  id: string;
+  source: string;
+  target: string;
+  balance: string;
+  count: number;
+  obligation_ids: number[];
+  currency: string;
+}
+
+export interface NetworkGraph {
+  nodes: { data: GraphNodeData }[];
+  edges: { data: GraphEdgeData }[];
+}
+
 export interface NetworkStatistics {
   companies_in_network: number;
   companies_total: number;

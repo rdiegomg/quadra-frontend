@@ -7,6 +7,7 @@ import {
   Company,
   CompanySummary,
   Cycle,
+  NetworkGraph,
   NetworkStatistics,
   Obligation,
   ObligationCreate,
@@ -60,6 +61,10 @@ export class ApiService {
 
   getAdminCompanies(): Observable<Company[]> {
     return this.http.get<Company[]>(`${this.api}/admin/companies`);
+  }
+
+  getNetworkGraph(): Observable<NetworkGraph> {
+    return this.http.get<NetworkGraph>(`${this.api}/admin/network`);
   }
 
   getNetworkStatistics(): Observable<NetworkStatistics> {
