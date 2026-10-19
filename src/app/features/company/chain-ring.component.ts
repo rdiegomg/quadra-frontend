@@ -147,19 +147,18 @@ export class ChainRingComponent {
       : chain.edges;
     const total = isCycle ? n : n + 1;
 
-    // geometria: margenes suficientes para las etiquetas exteriores
+    // geometria relativa al centro: primero mido cuanto espacio
+    // necesitan las etiquetas y despues fijo el viewBox exacto
     const ringR = Math.max(104, 24 * total);
-    const cx = ringR + 198;
-    const cy = ringR + 96;
-    const w = cx * 2;
-    const h = cy + ringR + 100;
 
     const deg2rad = (d: number) => (d * Math.PI) / 180;
     const nodeAngle = (pos: number) => -90 + (360 / total) * pos;
-    const pointAt = (deg: number, rad: number) => ({
-      x: cx + rad * Math.cos(deg2rad(deg)),
-      y: cy + rad * Math.sin(deg2rad(deg)),
+    // coords relativas al centro del anillo (0,0)
+    const relAt = (deg: number, rad: number) => ({
+      x: rad * Math.cos(deg2rad(deg)),
+      y: rad * Math.sin(deg2rad(deg)),
     });
+    const textW = (s: string, pxPerChar: number) => s.length * pxPerChar;
 
     const meFill = '#23293a';
     const cpFill = '#b5653f';
@@ -174,7 +173,7 @@ export class ChainRingComponent {
       const isMe = idx === meIdx;
       const ang = nodeAngle(pos);
       const rad = isMe ? 34 : 31;
-      const p = pointAt(ang, ringR);
+      const p = relAt(ang, ringR);
       const sub = isMe
         ? 'Tú'
         : anonymous
@@ -184,7 +183,7 @@ export class ChainRingComponent {
       // etiqueta radial hacia afuera
       const cos = Math.cos(deg2rad(ang));
       const sin = Math.sin(deg2rad(ang));
-      const lp = pointAt(ang, ringR + rad + 20);
+      const lp = relAt(ang, ringR + rad + 22);
       let anchor: RingNode['anchor'] = 'middle';
       let nameY = 0;
       let subY = 14;
@@ -222,7 +221,7 @@ export class ChainRingComponent {
     });
 
     if (!isCycle) {
-      const p = pointAt(nodeAngle(n), ringR);
+      const p = relAt(nodeAngle(n), ringR);
       nodes.push({
         x: p.x,
         y: p.y,
@@ -255,13 +254,13 @@ export class ChainRingComponent {
       const a1 = nodeAngle(from) + gapFor(from);
       let a2 = nodeAngle(to) - gapFor(to);
       while (a2 < a1) a2 += 360; // wrap del ultimo arco del ciclo
-      const p1 = pointAt(a1, ringR);
-      const p2 = pointAt(a2, ringR);
+      const p1 = relAt(a1, ringR);
+      const p2 = relAt(a2, ringR);
       const am = (a1 + a2) / 2;
-      const cm = pointAt(am, ringR);
+      const cm = relAt(am, ringR);
       const ap = a1 + 0.35 * (a2 - a1);
-      const pp = pointAt(ap, ringR + 42);
-      const pillW = label ? label.length * 6.4 + 20 : 0;
+      const pp = relAt(ap, ringR + 42);
+      const pillW = label ? textW(label, 6.4) + 20 : 0;
       arcs.push({
         d: `M ${p1.x.toFixed(1)} ${p1.y.toFixed(1)} A ${ringR} ${ringR} 0 0 1 ${p2.x.toFixed(1)} ${p2.y.toFixed(1)}`,
         cls,
@@ -280,6 +279,57 @@ export class ChainRingComponent {
     if (!isCycle) {
       addArc(n - 1, n, '', 'ghost');
       addArc(n, 0, 'Falta este eslabón', 'ghost');
+    }
+
+    // viewBox calculado para que nada se recorte
+    let needX = ringR + 60;
+    let needTop = ringR + 60;
+    let needBottom = ringR + 60;
+    for (const nd of nodes) {
+      needX = Math.max(needX, Math.abs(nd.x) + nd.r + 8);
+      needTop = Math.max(needTop, -nd.y + nd.r + 8);
+      needBottom = Math.max(needBottom, nd.y + nd.r + 8);
+      if (nd.label) {
+        const labelW = Math.max(textW(nd.label, 6.6), textW(nd.sub, 5.3));
+        const half = nd.anchor === 'middle' ? labelW / 2 : labelW;
+        needX = Math.max(needX, Math.abs(nd.lx) + half + 6);
+        needTop = Math.max(needTop, -(nd.ly + nd.nameY) + 14);
+        needBottom = Math.max(needBottom, nd.ly + nd.subY + 6);
+      }
+    }
+    for (const a of arcs) {
+      if (a.pill) {
+        needX = Math.max(needX, Math.abs(a.pill.x) + a.pill.w / 2 + 6);
+        needTop = Math.max(needTop, -(a.pill.y) + 18);
+        needBottom = Math.max(needBottom, a.pill.y + 18);
+      }
+    }
+
+    const cx = needX;
+    const cy = needTop;
+    const w = needX * 2;
+    const h = needTop + needBottom;
+
+    // trasladar coords relativas -> absolutas
+    for (const nd of nodes) {
+      nd.x += cx;
+      nd.y += cy;
+      nd.lx += cx;
+      nd.ly += cy;
+    }
+    const arcNum = /M ([\d.-]+) ([\d.-]+) A [\d.]+ [\d.]+ 0 0 1 ([\d.-]+) ([\d.-]+)/;
+    for (const a of arcs) {
+      a.d = a.d.replace(arcNum, (_m, x1, y1, x2, y2) =>
+        `M ${(+x1 + cx).toFixed(1)} ${(+y1 + cy).toFixed(1)} A ${ringR} ${ringR} 0 0 1 ${(+x2 + cx).toFixed(1)} ${(+y2 + cy).toFixed(1)}`,
+      );
+      if (a.chevron) {
+        a.chevron.x += cx;
+        a.chevron.y += cy;
+      }
+      if (a.pill) {
+        a.pill.x += cx;
+        a.pill.y += cy;
+      }
     }
 
     return { w, h, nodes, arcs };
