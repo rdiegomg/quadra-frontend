@@ -15,6 +15,7 @@
       <a mat-button routerLink="/obligations" routerLinkActive="active-link">Obligaciones</a>
       <a mat-button routerLink="/mi-red" routerLinkActive="active-link">Mi red</a>
     }
+    <a mat-button routerLink="/guia" routerLinkActive="active-link">Guía</a>
     <button mat-icon-button [matMenuTriggerFor]="userMenu" aria-label="Cuenta">
       <mat-icon>account_circle</mat-icon>
     </button>
@@ -31,6 +32,7 @@
       </button>
     </mat-menu>
   } @else {
+    <a mat-button routerLink="/guia" routerLinkActive="active-link">Guía</a>
     <a mat-button routerLink="/register">Registrar empresa</a>
     <a mat-flat-button routerLink="/login" class="login-btn">Ingresar</a>
   }

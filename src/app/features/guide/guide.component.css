@@ -1,0 +1,217 @@
+:host {
+  display: block;
+}
+
+.guide {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.guide-hero {
+  text-align: center;
+  margin: 24px 0 32px;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--quadra-copper);
+  background: color-mix(in srgb, var(--quadra-copper) 12%, transparent);
+  padding: 4px 14px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+}
+
+html.dark-theme .eyebrow {
+  color: var(--quadra-copper-light);
+}
+
+.guide-hero h1 {
+  margin: 0 0 12px;
+  font-size: 1.9rem;
+  line-height: 1.25;
+}
+
+.guide-hero p {
+  margin: 0 auto;
+  max-width: 620px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.section {
+  margin-bottom: 20px;
+}
+
+.section h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  font-size: 1.1rem;
+}
+
+.section h2 mat-icon {
+  color: var(--quadra-copper);
+}
+
+html.dark-theme .section h2 mat-icon {
+  color: var(--quadra-copper-light);
+}
+
+.section p {
+  color: var(--mat-sys-on-surface-variant);
+  line-height: 1.55;
+}
+
+.example {
+  margin-top: 12px;
+  padding: 12px 16px;
+  border-left: 3px solid var(--quadra-copper);
+  border-radius: 0 10px 10px 0;
+  background: color-mix(in srgb, var(--quadra-copper) 7%, transparent);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+/* ---- Pasos ---- */
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 6px;
+}
+
+.step {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.step-num {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, var(--quadra-copper), var(--quadra-copper-dark));
+  flex-shrink: 0;
+}
+
+.step h3,
+.term h3,
+.stop h3 {
+  margin: 0 0 2px;
+  font-size: 0.95rem;
+}
+
+.step p,
+.term p,
+.stop p {
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+/* ---- Glosario ---- */
+.glossary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 16px;
+  margin-top: 6px;
+}
+
+.term {
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--mat-sys-surface-container-low);
+}
+
+.term h3 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.term h3 mat-icon {
+  font-size: 17px;
+  width: 17px;
+  height: 17px;
+  color: var(--quadra-copper);
+}
+
+.dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot.closed {
+  background: var(--quadra-copper);
+}
+
+.dot.open {
+  background: #2563eb;
+}
+
+/* ---- Recorrido ---- */
+.tour {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 6px;
+}
+
+.stop {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.stop > mat-icon {
+  width: 38px;
+  height: 38px;
+  font-size: 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  color: var(--quadra-copper);
+  background: color-mix(in srgb, var(--quadra-copper) 12%, transparent);
+  flex-shrink: 0;
+}
+
+html.dark-theme .stop > mat-icon {
+  color: var(--quadra-copper-light);
+}
+
+/* ---- Privacidad / demo ---- */
+.privacy-list {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 0.9rem;
+}
+
+.demo-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 8px 0 32px;
+  font-size: 0.82rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.demo-note mat-icon {
+  font-size: 17px;
+  width: 17px;
+  height: 17px;
+}
