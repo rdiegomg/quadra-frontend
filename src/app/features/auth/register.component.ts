@@ -10,6 +10,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { Router, RouterLink } from '@angular/router';
 import { ApiService } from '../../core/api.service';
 import { AuthService } from '../../core/auth/auth.service';
+import { I18nService, TranslatePipe } from '../../core/i18n';
 import { Sector } from '../../core/models';
 import { ThemeService } from '../../core/theme.service';
 
@@ -27,6 +28,7 @@ const LEGAL_TYPES = ['SRL', 'SA', 'SCA', 'OTRO'];
     MatIconModule,
     MatButtonModule,
     MatProgressSpinnerModule,
+    TranslatePipe,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
@@ -35,6 +37,7 @@ export class RegisterComponent {
   private readonly fb = inject(FormBuilder);
   private readonly api = inject(ApiService);
   private readonly auth = inject(AuthService);
+  protected readonly i18n = inject(I18nService);
   private readonly router = inject(Router);
   private readonly theme = inject(ThemeService);
 
@@ -71,7 +74,7 @@ export class RegisterComponent {
       next: () => this.router.navigate(['/login']),
       error: (err) => {
         this.loading.set(false);
-        this.error.set(err.error?.detail ?? 'No se pudo completar el registro');
+        this.error.set(err.error?.detail ?? this.i18n.t('reg.error'));
       },
     });
   }

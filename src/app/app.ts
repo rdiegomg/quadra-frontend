@@ -5,6 +5,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from './core/auth/auth.service';
+import { I18nService, TranslatePipe } from './core/i18n';
 import { ThemeService } from './core/theme.service';
 
 @Component({
@@ -17,6 +18,7 @@ import { ThemeService } from './core/theme.service';
     MatButtonModule,
     MatIconModule,
     MatMenuModule,
+    TranslatePipe,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
@@ -24,6 +26,7 @@ import { ThemeService } from './core/theme.service';
 export class App {
   protected readonly auth = inject(AuthService);
   protected readonly theme = inject(ThemeService);
+  protected readonly i18n = inject(I18nService);
 
   readonly logoSrc = computed(() =>
     this.theme.isDark() ? 'assets/logo-dark.jpeg' : 'assets/logo-light.png',

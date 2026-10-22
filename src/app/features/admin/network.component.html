@@ -1,41 +1,40 @@
 <div class="page network-page">
   <div class="page-head">
     <div>
-      <h1 class="page-title">Red empresarial</h1>
+      <h1 class="page-title">{{ 'anet.title' | t }}</h1>
       <p class="page-subtitle">
-        Mapa de obligaciones abiertas. Cada flecha va del deudor al acreedor;
-        los nodos cobre participan en ciclos compensables.
+        {{ 'anet.subtitle' | t }}
       </p>
     </div>
     <div class="controls">
       <button mat-stroked-button (click)="fit()">
-        <mat-icon>center_focus_strong</mat-icon> Ajustar
+        <mat-icon>center_focus_strong</mat-icon> {{ 'net.fit' | t }}
       </button>
       <button mat-stroked-button (click)="relayout()">
-        <mat-icon>autorenew</mat-icon> Reordenar
+        <mat-icon>autorenew</mat-icon> {{ 'net.relayout' | t }}
       </button>
       <button mat-stroked-button [class.active]="onlyCycles()" (click)="toggleOnlyCycles()">
-        <mat-icon>filter_alt</mat-icon> Solo ciclos
+        <mat-icon>filter_alt</mat-icon> {{ 'anet.onlyCycles' | t }}
       </button>
     </div>
   </div>
 
   @if (loadError()) {
     <mat-card>
-      <mat-card-content>No se pudo cargar la red. Intenta de nuevo.</mat-card-content>
+      <mat-card-content>{{ 'anet.error' | t }}</mat-card-content>
     </mat-card>
   } @else {
     <div class="graph-layout">
       <div class="graph-wrap">
         @if (loading()) {
-          <div class="graph-loading">Cargando red…</div>
+          <div class="graph-loading">{{ 'anet.loading' | t }}</div>
         }
         <div #graphCanvas class="graph-canvas"></div>
 
         <div class="legend">
-          <span class="legend-item"><span class="dot dot-cycle"></span> En ciclo</span>
-          <span class="legend-item"><span class="dot dot-plain"></span> Sin ciclo</span>
-          <span class="legend-item hint">Rueda = zoom · arrastra para mover</span>
+          <span class="legend-item"><span class="dot dot-cycle"></span> {{ 'anet.leg.cycle' | t }}</span>
+          <span class="legend-item"><span class="dot dot-plain"></span> {{ 'anet.leg.plain' | t }}</span>
+          <span class="legend-item hint">{{ 'anet.leg.hint' | t }}</span>
         </div>
 
         @if (selectedNode(); as n) {
@@ -43,22 +42,22 @@
             <mat-card-content>
               <div class="node-card-head">
                 <strong>{{ n.name }}</strong>
-                <button mat-icon-button (click)="closeNodeDetail()" aria-label="Cerrar">
+                <button mat-icon-button (click)="closeNodeDetail()" [attr.aria-label]="'f.close' | t">
                   <mat-icon>close</mat-icon>
                 </button>
               </div>
-              <p class="node-meta">NIT {{ n.nit }} · {{ n.sector ?? 'Sin rubro' }}</p>
-              <p class="node-total">Por cobrar: <strong>{{ n.receivable | number: '1.0-0' }} BOB</strong></p>
-              <p class="node-total">Por pagar: <strong>{{ n.payable | number: '1.0-0' }} BOB</strong></p>
+              <p class="node-meta">NIT {{ n.nit }} · {{ n.sector ?? ('anet.noSector' | t) }}</p>
+              <p class="node-total">{{ 'anet.receivable' | t }}: <strong>{{ n.receivable | number: '1.0-0' }} BOB</strong></p>
+              <p class="node-total">{{ 'anet.payable' | t }}: <strong>{{ n.payable | number: '1.0-0' }} BOB</strong></p>
             </mat-card-content>
           </mat-card>
         }
       </div>
 
       <aside class="cycles-panel">
-        <h2>Ciclos detectados ({{ cycles().length }})</h2>
+        <h2>{{ 'anet.cyclesTitle' | t }} ({{ cycles().length }})</h2>
         <p class="panel-hint">
-          Compensación simulada = mínimo balance del ciclo. Haz clic para resaltar.
+          {{ 'anet.panelHint' | t }}
         </p>
         <div class="cycle-list">
           @for (c of cycles(); track $index) {
@@ -69,7 +68,7 @@
             >
               <span class="cycle-path">{{ c.companies.join(' → ') }}</span>
               <span class="cycle-meta">
-                {{ c.length }} empresas · compensa
+                {{ 'anet.cycleMeta' | t: { n: c.length } }}
                 <strong>{{ c.potential_compensation | number: '1.0-0' }} BOB</strong>
               </span>
             </button>
@@ -81,7 +80,7 @@
           [disabled]="selectedCycleIndex() === null"
           (click)="clearHighlight()"
         >
-          Limpiar resaltado
+          {{ 'anet.clear' | t }}
         </button>
       </aside>
     </div>

@@ -1,4 +1,5 @@
 import { Component, computed, inject, input } from '@angular/core';
+import { I18nService } from '../../core/i18n';
 import { ThemeService } from '../../core/theme.service';
 import { MyChain } from '../../core/models';
 
@@ -110,6 +111,7 @@ export class ChainRingComponent {
   readonly sectors = input<Map<string, string>>(new Map());
 
   private readonly theme = inject(ThemeService);
+  private readonly i18n = inject(I18nService);
 
   protected readonly inkColor = computed(() =>
     this.theme.isDark() ? '#e6e9f2' : '#23293a',
@@ -133,6 +135,7 @@ export class ChainRingComponent {
     const isCycle = chain.kind === 'cycle';
     const n = chain.labels.length;
     const dark = this.theme.isDark();
+    this.i18n.lang(); // re-render al cambiar idioma
 
     // posicion de "yo" dentro del orden de la cadena
     let meIdx = chain.edges.findIndex((e) => e.debtor_is_me);
@@ -175,10 +178,10 @@ export class ChainRingComponent {
       const rad = isMe ? 34 : 31;
       const p = relAt(ang, ringR);
       const sub = isMe
-        ? 'Tú'
+        ? this.i18n.t('dash.you')
         : anonymous
-          ? 'Identidad protegida'
-          : (this.sectors().get(label) ?? 'Contraparte');
+          ? this.i18n.t('dash.anon')
+          : (this.sectors().get(label) ?? this.i18n.t('ring.cp'));
 
       // etiqueta radial hacia afuera
       const cos = Math.cos(deg2rad(ang));
@@ -273,12 +276,13 @@ export class ChainRingComponent {
     };
 
     edges.forEach((e, k) => {
-      addArc(k, (k + 1) % total, e.balance !== null ? `Bs ${this.fmt(e.balance)}` : 'Monto privado',
+      addArc(k, (k + 1) % total,
+        e.balance !== null ? `Bs ${this.fmt(e.balance)}` : this.i18n.t('dash.privateAmount'),
         e.balance !== null ? 'mine' : 'priv');
     });
     if (!isCycle) {
       addArc(n - 1, n, '', 'ghost');
-      addArc(n, 0, 'Falta este eslabón', 'ghost');
+      addArc(n, 0, this.i18n.t('ring.missing'), 'ghost');
     }
 
     // viewBox calculado para que nada se recorte

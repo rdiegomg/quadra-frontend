@@ -2,46 +2,46 @@
   <div class="auth-shell">
     <aside class="brand-panel">
       <img [src]="logoSrc()" alt="QUADRA" class="brand-logo" />
-      <h2>Cancelamos deudas entre empresas</h2>
-      <p class="tagline">sin que circule dinero</p>
+      <h2>{{ 'auth.brand1' | t }}</h2>
+      <p class="tagline">{{ 'auth.brand2' | t }}</p>
       <ul class="points">
-        <li><mat-icon>hub</mat-icon><span>Detectamos círculos y cadenas de deuda compensables</span></li>
-        <li><mat-icon>lock</mat-icon><span>Nadie ve los datos de otra empresa</span></li>
-        <li><mat-icon>savings</mat-icon><span>Pagas solo por la deuda efectivamente cancelada</span></li>
+        <li><mat-icon>hub</mat-icon><span>{{ 'auth.login.li1' | t }}</span></li>
+        <li><mat-icon>lock</mat-icon><span>{{ 'auth.login.li2' | t }}</span></li>
+        <li><mat-icon>savings</mat-icon><span>{{ 'auth.login.li3' | t }}</span></li>
       </ul>
     </aside>
 
     <mat-card class="auth-card">
       <mat-card-content>
-        <h1>Acceso empresarial</h1>
-        <p class="hint">Compensación multilateral de obligaciones</p>
+        <h1>{{ 'login.title' | t }}</h1>
+        <p class="hint">{{ 'login.hint' | t }}</p>
 
         <form [formGroup]="form" (ngSubmit)="submit()">
           <mat-form-field appearance="outline">
-            <mat-label>Correo electrónico</mat-label>
+            <mat-label>{{ 'f.email' | t }}</mat-label>
             <input matInput type="email" formControlName="email" autocomplete="email" />
             @if (form.controls.email.hasError('required')) {
-              <mat-error>Requerido</mat-error>
+              <mat-error>{{ 'f.required' | t }}</mat-error>
             }
             @if (form.controls.email.hasError('email')) {
-              <mat-error>Email inválido</mat-error>
+              <mat-error>{{ 'f.emailInvalid' | t }}</mat-error>
             }
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Contraseña</mat-label>
+            <mat-label>{{ 'f.password' | t }}</mat-label>
             <input matInput [type]="hidePassword() ? 'password' : 'text'" formControlName="password" autocomplete="current-password" />
             <button
               mat-icon-button
               matSuffix
               type="button"
               (click)="hidePassword.set(!hidePassword())"
-              [attr.aria-label]="hidePassword() ? 'Mostrar contraseña' : 'Ocultar contraseña'"
+              [attr.aria-label]="(hidePassword() ? 'f.show' : 'f.hide') | t"
             >
               <mat-icon>{{ hidePassword() ? 'visibility' : 'visibility_off' }}</mat-icon>
             </button>
             @if (form.controls.password.hasError('required')) {
-              <mat-error>Requerida</mat-error>
+              <mat-error>{{ 'f.requiredF' | t }}</mat-error>
             }
           </mat-form-field>
 
@@ -53,17 +53,17 @@
             @if (loading()) {
               <mat-spinner diameter="20" />
             } @else {
-              Ingresar
+              {{ 'login.submit' | t }}
             }
           </button>
         </form>
 
         <p class="switch">
-          ¿Tu empresa no está registrada?
-          <a routerLink="/register">Crear cuenta</a>
+          {{ 'login.noaccount' | t }}
+          <a routerLink="/register">{{ 'login.create' | t }}</a>
         </p>
         <p class="demo-hint">
-          Demo: admin@quadra.com / admin1234 — toyosa@quadra.com / demo1234
+          {{ 'login.demo' | t }}
         </p>
       </mat-card-content>
     </mat-card>

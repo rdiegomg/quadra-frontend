@@ -1,12 +1,15 @@
 import { DatePipe, DecimalPipe, KeyValuePipe, PercentPipe } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ApiService } from '../../core/api.service';
+import { I18nService, TranslatePipe } from '../../core/i18n';
 import {
   Chain,
   Company,
@@ -17,14 +20,6 @@ import {
   SimulationResult,
 } from '../../core/models';
 
-const STATUS_LABELS: Record<ObligationStatus, string> = {
-  PENDING: 'Pendiente',
-  PARTIAL: 'Parcial',
-  PAID: 'Pagada',
-  OVERDUE: 'Vencida',
-  CANCELLED: 'Cancelada',
-};
-
 @Component({
   selector: 'app-admin-dashboard',
   imports: [
@@ -34,16 +29,20 @@ const STATUS_LABELS: Record<ObligationStatus, string> = {
     PercentPipe,
     MatButtonModule,
     MatCardModule,
+    MatFormFieldModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    MatSelectModule,
     MatTabsModule,
     MatTableModule,
+    TranslatePipe,
   ],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.css',
 })
 export class AdminDashboardComponent {
   private readonly api = inject(ApiService);
+  protected readonly i18n = inject(I18nService);
 
   readonly stats = signal<NetworkStatistics | null>(null);
   readonly companies = signal<Company[]>([]);
@@ -52,6 +51,14 @@ export class AdminDashboardComponent {
   readonly openObligations = signal<Obligation[]>([]);
   readonly simulation = signal<SimulationResult | null>(null);
   readonly simulating = signal(false);
+  readonly filterCompanyId = signal<number | null>(null);
+
+  readonly filteredObligations = computed(() => {
+    const f = this.filterCompanyId();
+    const all = this.openObligations();
+    if (f === null) return all;
+    return all.filter((o) => o.debtor.id === f || o.creditor.id === f);
+  });
 
   readonly companyColumns = ['name', 'nit', 'legal_type', 'sector'];
   readonly cycleColumns = ['cycle', 'length', 'volume', 'compensation'];
@@ -82,6 +89,6 @@ export class AdminDashboardComponent {
   }
 
   statusLabel(s: ObligationStatus): string {
-    return STATUS_LABELS[s];
+    return this.i18n.t(`status.${s}`);
   }
 }

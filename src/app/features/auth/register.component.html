@@ -2,26 +2,26 @@
   <div class="auth-shell">
     <aside class="brand-panel">
       <img [src]="logoSrc()" alt="QUADRA" class="brand-logo" />
-      <h2>Cancelamos deudas entre empresas</h2>
-      <p class="tagline">sin que circule dinero</p>
+      <h2>{{ 'auth.brand1' | t }}</h2>
+      <p class="tagline">{{ 'auth.brand2' | t }}</p>
       <ul class="points">
-        <li><mat-icon>upload_file</mat-icon><span>Carga tus cuentas por cobrar y por pagar</span></li>
-        <li><mat-icon>hub</mat-icon><span>Detectamos los círculos de deuda de tu red</span></li>
-        <li><mat-icon>handshake</mat-icon><span>Recibes una propuesta y decides si aceptas</span></li>
+        <li><mat-icon>upload_file</mat-icon><span>{{ 'auth.reg.li1' | t }}</span></li>
+        <li><mat-icon>hub</mat-icon><span>{{ 'auth.reg.li2' | t }}</span></li>
+        <li><mat-icon>handshake</mat-icon><span>{{ 'auth.reg.li3' | t }}</span></li>
       </ul>
     </aside>
 
     <mat-card class="auth-card">
       <mat-card-content>
-        <h1>Registra tu empresa</h1>
-        <p class="hint">Únete a la red de compensación QUADRA</p>
+        <h1>{{ 'reg.title' | t }}</h1>
+        <p class="hint">{{ 'reg.hint' | t }}</p>
 
         <form [formGroup]="form" (ngSubmit)="submit()">
           <mat-form-field appearance="outline">
-            <mat-label>Nombre de la empresa</mat-label>
+            <mat-label>{{ 'reg.company' | t }}</mat-label>
             <input matInput formControlName="company_name" />
             @if (form.controls.company_name.invalid && form.controls.company_name.touched) {
-              <mat-error>Mínimo 2 caracteres</mat-error>
+              <mat-error>{{ 'reg.min2' | t }}</mat-error>
             }
           </mat-form-field>
 
@@ -30,12 +30,12 @@
               <mat-label>NIT</mat-label>
               <input matInput formControlName="nit" />
               @if (form.controls.nit.invalid && form.controls.nit.touched) {
-                <mat-error>Mínimo 4 caracteres</mat-error>
+                <mat-error>{{ 'reg.min4' | t }}</mat-error>
               }
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-              <mat-label>Tipo societario</mat-label>
+              <mat-label>{{ 'reg.legal' | t }}</mat-label>
               <mat-select formControlName="legal_type">
                 @for (t of legalTypes; track t) {
                   <mat-option [value]="t">{{ t }}</mat-option>
@@ -45,39 +45,39 @@
           </div>
 
           <mat-form-field appearance="outline">
-            <mat-label>Rubro empresarial</mat-label>
+            <mat-label>{{ 'reg.sector' | t }}</mat-label>
             <mat-select formControlName="sector_id">
               @for (s of sectors(); track s.id) {
                 <mat-option [value]="s.id">{{ s.name }}</mat-option>
               }
             </mat-select>
             @if (form.controls.sector_id.invalid && form.controls.sector_id.touched) {
-              <mat-error>Selecciona un rubro</mat-error>
+              <mat-error>{{ 'reg.sectorReq' | t }}</mat-error>
             }
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Correo electrónico</mat-label>
+            <mat-label>{{ 'f.email' | t }}</mat-label>
             <input matInput type="email" formControlName="email" autocomplete="email" />
             @if (form.controls.email.invalid && form.controls.email.touched) {
-              <mat-error>Email válido requerido</mat-error>
+              <mat-error>{{ 'reg.emailReq' | t }}</mat-error>
             }
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Contraseña</mat-label>
+            <mat-label>{{ 'f.password' | t }}</mat-label>
             <input matInput [type]="hidePassword() ? 'password' : 'text'" formControlName="password" autocomplete="new-password" />
             <button
               mat-icon-button
               matSuffix
               type="button"
               (click)="hidePassword.set(!hidePassword())"
-              [attr.aria-label]="hidePassword() ? 'Mostrar contraseña' : 'Ocultar contraseña'"
+              [attr.aria-label]="(hidePassword() ? 'f.show' : 'f.hide') | t"
             >
               <mat-icon>{{ hidePassword() ? 'visibility' : 'visibility_off' }}</mat-icon>
             </button>
             @if (form.controls.password.invalid && form.controls.password.touched) {
-              <mat-error>Mínimo 8 caracteres</mat-error>
+              <mat-error>{{ 'reg.min8' | t }}</mat-error>
             }
           </mat-form-field>
 
@@ -89,13 +89,13 @@
             @if (loading()) {
               <mat-spinner diameter="20" />
             } @else {
-              Registrar empresa
+              {{ 'reg.submit' | t }}
             }
           </button>
         </form>
 
         <p class="switch">
-          ¿Ya tienes cuenta? <a routerLink="/login">Iniciar sesión</a>
+          {{ 'reg.has' | t }} <a routerLink="/login">{{ 'reg.login' | t }}</a>
         </p>
       </mat-card-content>
     </mat-card>

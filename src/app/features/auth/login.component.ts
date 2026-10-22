@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
+import { I18nService, TranslatePipe } from '../../core/i18n';
 import { ThemeService } from '../../core/theme.service';
 import { computed } from '@angular/core';
 
@@ -22,6 +23,7 @@ import { computed } from '@angular/core';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    TranslatePipe,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
@@ -29,6 +31,7 @@ import { computed } from '@angular/core';
 export class LoginComponent {
   private readonly fb = inject(FormBuilder);
   protected readonly auth = inject(AuthService);
+  protected readonly i18n = inject(I18nService);
   private readonly theme = inject(ThemeService);
 
   readonly loading = signal(false);
@@ -54,12 +57,12 @@ export class LoginComponent {
           next: () => this.auth.redirectAfterLogin(),
           error: () => {
             this.loading.set(false);
-            this.error.set('No se pudo cargar el perfil');
+            this.error.set(this.i18n.t('login.err.profile'));
           },
         }),
       error: () => {
         this.loading.set(false);
-        this.error.set('Email o contraseña incorrectos');
+        this.error.set(this.i18n.t('login.err.creds'));
       },
     });
   }

@@ -15,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import cytoscape, { Core, NodeSingular, StylesheetJson } from 'cytoscape';
 import { forkJoin } from 'rxjs';
 import { ApiService } from '../../core/api.service';
+import { TranslatePipe } from '../../core/i18n';
 import { ThemeService } from '../../core/theme.service';
 import { Cycle, NetworkGraph } from '../../core/models';
 
@@ -28,7 +29,7 @@ interface NodeDetail {
 
 @Component({
   selector: 'app-network',
-  imports: [DecimalPipe, MatButtonModule, MatCardModule, MatIconModule],
+  imports: [DecimalPipe, MatButtonModule, MatCardModule, MatIconModule, TranslatePipe],
   templateUrl: './network.component.html',
   styleUrl: './network.component.css',
 })

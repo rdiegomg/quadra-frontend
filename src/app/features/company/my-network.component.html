@@ -1,44 +1,43 @@
 <div class="page">
-  <h1 class="page-title">Mapa de tu red</h1>
+  <h1 class="page-title">{{ 'net.title' | t }}</h1>
   <p class="page-subtitle">
-    Ves tu empresa, tus contrapartes y tus cadenas.
-    Las demás empresas aparecen con identidad protegida.
+    {{ 'net.subtitle' | t }}
   </p>
 
   @if (loadError()) {
     <mat-card>
       <mat-card-content>
-        <p class="empty">No se pudo cargar el mapa. Intenta de nuevo.</p>
+        <p class="empty">{{ 'net.error' | t }}</p>
       </mat-card-content>
     </mat-card>
   } @else if (loading()) {
     <mat-card>
       <mat-card-content>
-        <p class="empty">Cargando el mapa de tu red…</p>
+        <p class="empty">{{ 'net.loading' | t }}</p>
       </mat-card-content>
     </mat-card>
   } @else {
     <div class="map-layout">
       <mat-card class="map-card">
         <div class="map-legend">
-          <span><i class="leg-line closed"></i> Cadena cerrada</span>
-          <span><i class="leg-line open"></i> Cadena abierta</span>
-          <span><i class="leg-line other"></i> Otras facturas</span>
-          <span><i class="leg-dot anon"></i> Identidad protegida</span>
+          <span><i class="leg-line closed"></i> {{ 'net.leg.closed' | t }}</span>
+          <span><i class="leg-line open"></i> {{ 'net.leg.open' | t }}</span>
+          <span><i class="leg-line other"></i> {{ 'net.leg.other' | t }}</span>
+          <span><i class="leg-dot anon"></i> {{ 'net.leg.anon' | t }}</span>
         </div>
         <div #graphCanvas class="graph-canvas"></div>
         <div class="me-bar">
           <div class="me-avatar">{{ myInitials() }}</div>
           <div class="me-info">
-            <strong>{{ myName() }} <em>· Tú</em></strong>
-            <span>{{ chains().length }} {{ chains().length === 1 ? 'cadena' : 'cadenas' }}</span>
+            <strong>{{ myName() }} <em>· {{ 'net.you' | t }}</em></strong>
+            <span>{{ (chains().length === 1 ? 'net.chain.one' : 'net.chain.many') | t: { n: chains().length } }}</span>
           </div>
           @if (summary(); as s) {
             <div class="me-pos">
               <strong [class.bad]="netPosition() < 0">
                 {{ asNumber(s.net_balance) | number: '1.0-0' }} BOB
               </strong>
-              <span>posición en la red</span>
+              <span>{{ 'net.position' | t }}</span>
             </div>
           }
         </div>
@@ -47,10 +46,10 @@
       <div class="side">
         <div class="actions">
           <button mat-stroked-button (click)="fit()">
-            <mat-icon>fit_screen</mat-icon> Ajustar
+            <mat-icon>fit_screen</mat-icon> {{ 'net.fit' | t }}
           </button>
           <button mat-stroked-button (click)="relayout()">
-            <mat-icon>restart_alt</mat-icon> Reordenar
+            <mat-icon>restart_alt</mat-icon> {{ 'net.relayout' | t }}
           </button>
         </div>
 
@@ -59,9 +58,7 @@
             <mat-card-content>
               <mat-icon>lock</mat-icon>
               <p>
-                {{ anonymousCount() }} empresas de la red aparecen
-                <strong>sin nombre</strong> — solo ves su rubro. Ellas tampoco
-                ven los datos de tu empresa.
+                {{ 'net.info' | t: { n: anonymousCount() } }}
               </p>
             </mat-card-content>
           </mat-card>
@@ -72,20 +69,19 @@
             <mat-card-content>
               <div class="detail-head">
                 <h3>{{ sel.label }}</h3>
-                <button mat-icon-button (click)="closeDetail()" aria-label="Cerrar">
+                <button mat-icon-button (click)="closeDetail()" [attr.aria-label]="'f.close' | t">
                   <mat-icon>close</mat-icon>
                 </button>
               </div>
               @if (sel.isMe) {
-                <p><span class="chip you">Tu empresa</span></p>
+                <p><span class="chip you">{{ 'net.d.you' | t }}</span></p>
               }
               @if (sel.sector) {
-                <p class="meta">Rubro: {{ sel.sector }}</p>
+                <p class="meta">{{ 'net.d.sector' | t: { s: sel.sector } }}</p>
               }
               @if (sel.anonymous) {
                 <p class="protected">
-                  <mat-icon>lock</mat-icon> Identidad protegida — solo sabes que
-                  comparte una cadena contigo.
+                  <mat-icon>lock</mat-icon> {{ 'net.d.protected' | t }}
                 </p>
               }
             </mat-card-content>

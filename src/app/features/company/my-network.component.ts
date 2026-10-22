@@ -14,6 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import cytoscape, { Core, NodeSingular, StylesheetJson } from 'cytoscape';
 import { forkJoin } from 'rxjs';
 import { ApiService } from '../../core/api.service';
+import { I18nService, TranslatePipe } from '../../core/i18n';
 import { ThemeService } from '../../core/theme.service';
 import {
   CompanySummary,
@@ -34,13 +35,14 @@ const LEGAL_SUFFIX =
 
 @Component({
   selector: 'app-my-network',
-  imports: [DecimalPipe, MatButtonModule, MatCardModule, MatIconModule],
+  imports: [DecimalPipe, MatButtonModule, MatCardModule, MatIconModule, TranslatePipe],
   templateUrl: './my-network.component.html',
   styleUrl: './my-network.component.css',
 })
 export class MyNetworkComponent implements OnDestroy {
   private readonly api = inject(ApiService);
   private readonly theme = inject(ThemeService);
+  protected readonly i18n = inject(I18nService);
 
   private graphCanvas = viewChild<ElementRef<HTMLDivElement>>('graphCanvas');
 

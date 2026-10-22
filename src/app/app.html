@@ -8,14 +8,14 @@
 
   @if (auth.isAuthenticated()) {
     @if (auth.isAdmin()) {
-      <a mat-button routerLink="/admin" routerLinkActive="active-link">Panel admin</a>
-      <a mat-button routerLink="/admin/red" routerLinkActive="active-link">Red y ciclos</a>
+      <a mat-button routerLink="/admin" routerLinkActive="active-link">{{ 'nav.admin' | t }}</a>
+      <a mat-button routerLink="/admin/red" routerLinkActive="active-link">{{ 'nav.network' | t }}</a>
     } @else {
-      <a mat-button routerLink="/dashboard" routerLinkActive="active-link">Mi empresa</a>
-      <a mat-button routerLink="/obligations" routerLinkActive="active-link">Obligaciones</a>
-      <a mat-button routerLink="/mi-red" routerLinkActive="active-link">Mi red</a>
+      <a mat-button routerLink="/dashboard" routerLinkActive="active-link">{{ 'nav.company' | t }}</a>
+      <a mat-button routerLink="/obligations" routerLinkActive="active-link">{{ 'nav.obligations' | t }}</a>
+      <a mat-button routerLink="/mi-red" routerLinkActive="active-link">{{ 'nav.mynetwork' | t }}</a>
     }
-    <a mat-button routerLink="/guia" routerLinkActive="active-link">Guía</a>
+    <a mat-button routerLink="/guia" routerLinkActive="active-link">{{ 'nav.guide' | t }}</a>
     <button mat-icon-button [matMenuTriggerFor]="userMenu" aria-label="Cuenta">
       <mat-icon>account_circle</mat-icon>
     </button>
@@ -28,16 +28,29 @@
       </div>
       <button mat-menu-item (click)="auth.logout()">
         <mat-icon>logout</mat-icon>
-        <span>Cerrar sesión</span>
+        <span>{{ 'nav.logout' | t }}</span>
       </button>
     </mat-menu>
   } @else {
-    <a mat-button routerLink="/guia" routerLinkActive="active-link">Guía</a>
-    <a mat-button routerLink="/register">Registrar empresa</a>
-    <a mat-flat-button routerLink="/login" class="login-btn">Ingresar</a>
+    <a mat-button routerLink="/guia" routerLinkActive="active-link">{{ 'nav.guide' | t }}</a>
+    <a mat-button routerLink="/register">{{ 'nav.register' | t }}</a>
+    <a mat-flat-button routerLink="/login" class="login-btn">{{ 'nav.login' | t }}</a>
   }
 
-  <button mat-icon-button (click)="theme.toggle()" [attr.aria-label]="theme.isDark() ? 'Modo claro' : 'Modo oscuro'">
+  <button
+    mat-button
+    class="lang-btn"
+    (click)="i18n.toggle()"
+    [attr.aria-label]="'nav.lang' | t"
+  >
+    <mat-icon>translate</mat-icon>
+    {{ i18n.lang() === 'es' ? 'EN' : 'ES' }}
+  </button>
+  <button
+    mat-icon-button
+    (click)="theme.toggle()"
+    [attr.aria-label]="'nav.theme' | t"
+  >
     <mat-icon>{{ theme.isDark() ? 'light_mode' : 'dark_mode' }}</mat-icon>
   </button>
 </mat-toolbar>

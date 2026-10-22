@@ -1,6 +1,6 @@
 <div class="page">
-  <h1 class="page-title">Panel administrador</h1>
-  <p class="page-subtitle">Vista global de la red empresarial QUADRA</p>
+  <h1 class="page-title">{{ 'adm.title' | t }}</h1>
+  <p class="page-subtitle">{{ 'adm.subtitle' | t }}</p>
 
   @if (stats(); as s) {
     <div class="stat-grid">
@@ -8,7 +8,7 @@
         <mat-card-content>
           <div class="stat-row">
             <mat-icon class="stat-icon">business</mat-icon>
-            <span class="stat-label">Empresas</span>
+            <span class="stat-label">{{ 'adm.s.companies' | t }}</span>
           </div>
           <span class="stat-value">{{ s.companies_total }}</span>
         </mat-card-content>
@@ -17,7 +17,7 @@
         <mat-card-content>
           <div class="stat-row">
             <mat-icon class="stat-icon">hub</mat-icon>
-            <span class="stat-label">Conexiones abiertas</span>
+            <span class="stat-label">{{ 'adm.s.connections' | t }}</span>
           </div>
           <span class="stat-value">{{ s.open_connections }}</span>
         </mat-card-content>
@@ -26,7 +26,7 @@
         <mat-card-content>
           <div class="stat-row">
             <mat-icon class="stat-icon">payments</mat-icon>
-            <span class="stat-label">Volumen abierto</span>
+            <span class="stat-label">{{ 'adm.s.volume' | t }}</span>
           </div>
           <span class="stat-value">
             {{ asNumber(s.total_open_volume) | number: '1.0-0' }} BOB
@@ -37,7 +37,7 @@
         <mat-card-content>
           <div class="stat-row">
             <mat-icon class="stat-icon">sync_alt</mat-icon>
-            <span class="stat-label">Empresas en ciclos</span>
+            <span class="stat-label">{{ 'adm.s.inCycles' | t }}</span>
           </div>
           <span class="stat-value positive">{{ s.companies_in_cycles }}</span>
         </mat-card-content>
@@ -49,13 +49,13 @@
         <mat-card-content>
           <div class="stat-row">
             <mat-icon class="stat-icon">autorenew</mat-icon>
-            <span class="stat-label">Volumen compensable</span>
+            <span class="stat-label">{{ 'adm.m.compensable' | t }}</span>
           </div>
           <span class="stat-value positive">
             {{ asNumber(s.compensable_volume) | number: '1.0-0' }} BOB
           </span>
           <span class="stat-note">
-            {{ s.cycles_in_estimate }} ciclos + {{ s.chains_in_estimate }} cadenas
+            {{ 'adm.m.breakdown' | t: { c: s.cycles_in_estimate, ch: s.chains_in_estimate } }}
           </span>
         </mat-card-content>
       </mat-card>
@@ -63,31 +63,31 @@
         <mat-card-content>
           <div class="stat-row">
             <mat-icon class="stat-icon">percent</mat-icon>
-            <span class="stat-label">Tasa de compensación</span>
+            <span class="stat-label">{{ 'adm.m.rate' | t }}</span>
           </div>
           <span class="stat-value positive">
             {{ asNumber(s.compensation_rate) | percent: '1.1-2' }}
           </span>
-          <span class="stat-note">deuda cancelable / volumen abierto</span>
+          <span class="stat-note">{{ 'adm.m.rateSub' | t }}</span>
         </mat-card-content>
       </mat-card>
       <mat-card class="stat-card metric">
         <mat-card-content>
           <div class="stat-row">
             <mat-icon class="stat-icon">monetization_on</mat-icon>
-            <span class="stat-label">Comisión estimada (1.5%)</span>
+            <span class="stat-label">{{ 'adm.m.fee' | t }}</span>
           </div>
           <span class="stat-value">
             {{ asNumber(s.estimated_commission) | number: '1.0-0' }} BOB
           </span>
-          <span class="stat-note">sobre deuda compensable</span>
+          <span class="stat-note">{{ 'adm.m.feeSub' | t }}</span>
         </mat-card-content>
       </mat-card>
       <mat-card class="stat-card metric sim-card">
         <mat-card-content>
           <div class="stat-row">
             <mat-icon class="stat-icon">play_circle</mat-icon>
-            <span class="stat-label">Ciclo mensual</span>
+            <span class="stat-label">{{ 'adm.m.cycle' | t }}</span>
           </div>
           <button
             mat-flat-button
@@ -98,7 +98,7 @@
             @if (simulating()) {
               <mat-spinner diameter="18" />
             } @else {
-              Simular ciclo
+              {{ 'adm.sim.btn' | t }}
             }
           </button>
         </mat-card-content>
@@ -110,23 +110,23 @@
         <mat-card-content>
           <div class="sim-head">
             <mat-icon>check_circle</mat-icon>
-            <h3>Simulación del ciclo mensual</h3>
+            <h3>{{ 'adm.sim.title' | t }}</h3>
           </div>
           <div class="sim-figures">
             <div class="sfig">
-              <span>Deuda cancelada</span>
+              <span>{{ 'adm.sim.cancelled' | t }}</span>
               <strong>{{ asNumber(sim.total_cancelled) | number: '1.0-0' }} {{ sim.currency }}</strong>
             </div>
             <div class="sfig">
-              <span>Empresas participantes</span>
+              <span>{{ 'adm.sim.companies' | t }}</span>
               <strong>{{ sim.companies_participating }}</strong>
             </div>
             <div class="sfig">
-              <span>Ciclos / cadenas usados</span>
+              <span>{{ 'adm.sim.used' | t }}</span>
               <strong>{{ sim.cycles_used }} / {{ sim.chains_used }}</strong>
             </div>
             <div class="sfig">
-              <span>Comisión QUADRA</span>
+              <span>{{ 'adm.sim.fee' | t }}</span>
               <strong>{{ asNumber(sim.estimated_commission) | number: '1.0-0' }} {{ sim.currency }}</strong>
             </div>
           </div>
@@ -138,29 +138,29 @@
     <div class="two-col">
       <mat-card>
         <mat-card-content>
-          <h3>Top deudores</h3>
-          @for (t of s.top_debtors; track t.company_id) {
+          <h3>{{ 'adm.top.debtors' | t }}</h3>
+          @for (tp of s.top_debtors; track tp.company_id) {
             <div class="top-row">
-              <span>{{ t.company_name }}</span>
-              <strong>{{ asNumber(t.amount) | number: '1.0-0' }} BOB</strong>
+              <span>{{ tp.company_name }}</span>
+              <strong>{{ asNumber(tp.amount) | number: '1.0-0' }} BOB</strong>
             </div>
           }
         </mat-card-content>
       </mat-card>
       <mat-card>
         <mat-card-content>
-          <h3>Top acreedores</h3>
-          @for (t of s.top_creditors; track t.company_id) {
+          <h3>{{ 'adm.top.creditors' | t }}</h3>
+          @for (tp of s.top_creditors; track tp.company_id) {
             <div class="top-row">
-              <span>{{ t.company_name }}</span>
-              <strong>{{ asNumber(t.amount) | number: '1.0-0' }} BOB</strong>
+              <span>{{ tp.company_name }}</span>
+              <strong>{{ asNumber(tp.amount) | number: '1.0-0' }} BOB</strong>
             </div>
           }
         </mat-card-content>
       </mat-card>
       <mat-card>
         <mat-card-content>
-          <h3>Empresas por rubro</h3>
+          <h3>{{ 'adm.top.sectors' | t }}</h3>
           @for (kv of s.companies_by_sector | keyvalue; track kv.key) {
             <div class="top-row">
               <span>{{ kv.key }}</span>
@@ -173,27 +173,27 @@
   }
 
   <mat-tab-group>
-    <mat-tab label="Ciclos detectados ({{ cycles().length }})">
+    <mat-tab [label]="('adm.tab.cycles' | t) + ' (' + cycles().length + ')'">
       <ng-template matTabContent>
         <table mat-table [dataSource]="cycles()" class="full-width-table">
           <ng-container matColumnDef="cycle">
-            <th mat-header-cell *matHeaderCellDef>Ciclo</th>
+            <th mat-header-cell *matHeaderCellDef>{{ 'adm.col.cycle' | t }}</th>
             <td mat-cell *matCellDef="let c" class="cycle-cell">
               {{ c.companies.join(' → ') }} → {{ c.companies[0] }}
             </td>
           </ng-container>
           <ng-container matColumnDef="length">
-            <th mat-header-cell *matHeaderCellDef>Largo</th>
+            <th mat-header-cell *matHeaderCellDef>{{ 'adm.col.length' | t }}</th>
             <td mat-cell *matCellDef="let c">{{ c.length }}</td>
           </ng-container>
           <ng-container matColumnDef="volume">
-            <th mat-header-cell *matHeaderCellDef>Volumen</th>
+            <th mat-header-cell *matHeaderCellDef>{{ 'adm.col.volume' | t }}</th>
             <td mat-cell *matCellDef="let c">
               {{ asNumber(c.total_volume) | number: '1.2-2' }} BOB
             </td>
           </ng-container>
           <ng-container matColumnDef="compensation">
-            <th mat-header-cell *matHeaderCellDef>Compensación potencial</th>
+            <th mat-header-cell *matHeaderCellDef>{{ 'adm.col.compensation' | t }}</th>
             <td mat-cell *matCellDef="let c" class="compensation">
               {{ asNumber(c.potential_compensation) | number: '1.2-2' }} BOB
             </td>
@@ -204,35 +204,35 @@
       </ng-template>
     </mat-tab>
 
-    <mat-tab label="Cadenas abiertas ({{ chains().length }})">
+    <mat-tab [label]="('adm.tab.chains' | t) + ' (' + chains().length + ')'">
       <ng-template matTabContent>
         <table mat-table [dataSource]="chains()" class="full-width-table">
           <ng-container matColumnDef="chain">
-            <th mat-header-cell *matHeaderCellDef>Cadena</th>
+            <th mat-header-cell *matHeaderCellDef>{{ 'adm.col.chain' | t }}</th>
             <td mat-cell *matCellDef="let c" class="cycle-cell">
               {{ c.companies.join(' → ') }}
             </td>
           </ng-container>
           <ng-container matColumnDef="length">
-            <th mat-header-cell *matHeaderCellDef>Largo</th>
+            <th mat-header-cell *matHeaderCellDef>{{ 'adm.col.length' | t }}</th>
             <td mat-cell *matCellDef="let c">{{ c.length }}</td>
           </ng-container>
           <ng-container matColumnDef="volume">
-            <th mat-header-cell *matHeaderCellDef>Volumen</th>
+            <th mat-header-cell *matHeaderCellDef>{{ 'adm.col.volume' | t }}</th>
             <td mat-cell *matCellDef="let c">
               {{ asNumber(c.total_volume) | number: '1.2-2' }} BOB
             </td>
           </ng-container>
           <ng-container matColumnDef="compensation">
-            <th mat-header-cell *matHeaderCellDef>Compensable</th>
+            <th mat-header-cell *matHeaderCellDef>{{ 'adm.col.compensable' | t }}</th>
             <td mat-cell *matCellDef="let c" class="compensation">
               {{ asNumber(c.potential_compensation) | number: '1.2-2' }} BOB
             </td>
           </ng-container>
           <ng-container matColumnDef="ends_in_cycle">
-            <th mat-header-cell *matHeaderCellDef>Termina en ciclo</th>
+            <th mat-header-cell *matHeaderCellDef>{{ 'adm.col.ends' | t }}</th>
             <td mat-cell *matCellDef="let c">
-              {{ c.ends_in_cycle ? 'Sí' : 'No' }}
+              {{ (c.ends_in_cycle ? 'adm.yes' : 'adm.no') | t }}
             </td>
           </ng-container>
           <tr mat-header-row *matHeaderRowDef="chainColumns"></tr>
@@ -241,46 +241,59 @@
       </ng-template>
     </mat-tab>
 
-    <mat-tab label="Obligaciones abiertas ({{ openObligations().length }})">
+    <mat-tab [label]="('adm.tab.obligations' | t) + ' (' + filteredObligations().length + ')'">
       <ng-template matTabContent>
-        <table mat-table [dataSource]="openObligations()" class="full-width-table">
-          <ng-container matColumnDef="debtor">
-            <th mat-header-cell *matHeaderCellDef>Deudor</th>
-            <td mat-cell *matCellDef="let o">{{ o.debtor.name }}</td>
-          </ng-container>
-          <ng-container matColumnDef="creditor">
-            <th mat-header-cell *matHeaderCellDef>Acreedor</th>
-            <td mat-cell *matCellDef="let o">{{ o.creditor.name }}</td>
-          </ng-container>
-          <ng-container matColumnDef="balance">
-            <th mat-header-cell *matHeaderCellDef>Saldo</th>
-            <td mat-cell *matCellDef="let o">
-              {{ asNumber(o.balance) | number: '1.2-2' }} {{ o.currency }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="due">
-            <th mat-header-cell *matHeaderCellDef>Vence</th>
-            <td mat-cell *matCellDef="let o">{{ o.due_date | date: 'dd/MM/yyyy' }}</td>
-          </ng-container>
-          <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef>Estado</th>
-            <td mat-cell *matCellDef="let o">
-              <span class="status-chip status-{{ o.status }}">
-                {{ statusLabel(o.status) }}
-              </span>
-            </td>
-          </ng-container>
-          <tr mat-header-row *matHeaderRowDef="obligationColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: obligationColumns"></tr>
-        </table>
+        <mat-form-field appearance="outline" class="company-filter">
+          <mat-label>{{ 'adm.filter' | t }}</mat-label>
+          <mat-select [value]="filterCompanyId()" (selectionChange)="filterCompanyId.set($event.value)">
+            <mat-option [value]="null">{{ 'adm.filterAll' | t }}</mat-option>
+            @for (c of companies(); track c.id) {
+              <mat-option [value]="c.id">{{ c.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        @if (filteredObligations().length === 0) {
+          <p class="empty">{{ 'adm.filterEmpty' | t }}</p>
+        } @else {
+          <table mat-table [dataSource]="filteredObligations()" class="full-width-table">
+            <ng-container matColumnDef="debtor">
+              <th mat-header-cell *matHeaderCellDef>{{ 'adm.col.debtor' | t }}</th>
+              <td mat-cell *matCellDef="let o">{{ o.debtor.name }}</td>
+            </ng-container>
+            <ng-container matColumnDef="creditor">
+              <th mat-header-cell *matHeaderCellDef>{{ 'adm.col.creditor' | t }}</th>
+              <td mat-cell *matCellDef="let o">{{ o.creditor.name }}</td>
+            </ng-container>
+            <ng-container matColumnDef="balance">
+              <th mat-header-cell *matHeaderCellDef>{{ 'adm.col.balance' | t }}</th>
+              <td mat-cell *matCellDef="let o">
+                {{ asNumber(o.balance) | number: '1.2-2' }} {{ o.currency }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="due">
+              <th mat-header-cell *matHeaderCellDef>{{ 'adm.col.due' | t }}</th>
+              <td mat-cell *matCellDef="let o">{{ o.due_date | date: 'dd/MM/yyyy' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>{{ 'adm.col.status' | t }}</th>
+              <td mat-cell *matCellDef="let o">
+                <span class="status-chip status-{{ o.status }}">
+                  {{ statusLabel(o.status) }}
+                </span>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="obligationColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: obligationColumns"></tr>
+          </table>
+        }
       </ng-template>
     </mat-tab>
 
-    <mat-tab label="Empresas ({{ companies().length }})">
+    <mat-tab [label]="('adm.tab.companies' | t) + ' (' + companies().length + ')'">
       <ng-template matTabContent>
         <table mat-table [dataSource]="companies()" class="full-width-table">
           <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef>Empresa</th>
+            <th mat-header-cell *matHeaderCellDef>{{ 'adm.col.company' | t }}</th>
             <td mat-cell *matCellDef="let c">{{ c.name }}</td>
           </ng-container>
           <ng-container matColumnDef="nit">
@@ -288,11 +301,11 @@
             <td mat-cell *matCellDef="let c">{{ c.nit }}</td>
           </ng-container>
           <ng-container matColumnDef="legal_type">
-            <th mat-header-cell *matHeaderCellDef>Tipo</th>
+            <th mat-header-cell *matHeaderCellDef>{{ 'adm.col.type' | t }}</th>
             <td mat-cell *matCellDef="let c">{{ c.legal_type }}</td>
           </ng-container>
           <ng-container matColumnDef="sector">
-            <th mat-header-cell *matHeaderCellDef>Rubro</th>
+            <th mat-header-cell *matHeaderCellDef>{{ 'adm.col.sector' | t }}</th>
             <td mat-cell *matCellDef="let c">{{ c.sector_name }}</td>
           </ng-container>
           <tr mat-header-row *matHeaderRowDef="companyColumns"></tr>

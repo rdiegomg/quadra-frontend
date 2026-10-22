@@ -58,3 +58,15 @@ html.dark-theme .brand-name {
 .login-btn {
   margin-left: 4px;
 }
+
+.lang-btn {
+  min-width: 0;
+  padding: 0 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.lang-btn mat-icon {
+  margin-right: 2px;
+}

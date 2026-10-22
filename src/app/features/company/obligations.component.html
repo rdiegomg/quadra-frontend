@@ -1,11 +1,11 @@
 <div class="page">
   <div class="page-head-row">
     <div>
-      <h1 class="page-title">Obligaciones</h1>
-      <p class="page-subtitle">Cuentas por cobrar y por pagar de tu empresa</p>
+      <h1 class="page-title">{{ 'ob.title' | t }}</h1>
+      <p class="page-subtitle">{{ 'ob.subtitle' | t }}</p>
     </div>
     <button mat-stroked-button class="import-btn" (click)="openImport()">
-      <mat-icon>upload_file</mat-icon> Subir planilla
+      <mat-icon>upload_file</mat-icon> {{ 'ob.import' | t }}
     </button>
   </div>
 
@@ -13,38 +13,38 @@
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>
-          <mat-icon>add</mat-icon>&nbsp;Registrar nueva obligación
+          <mat-icon>add</mat-icon>&nbsp;{{ 'ob.new' | t }}
         </mat-panel-title>
       </mat-expansion-panel-header>
 
       <form [formGroup]="form" (ngSubmit)="submit()" class="ob-form">
         <div class="grid">
           <mat-form-field appearance="outline">
-            <mat-label>NIT de la contraparte</mat-label>
+            <mat-label>{{ 'ob.cpNit' | t }}</mat-label>
             <input matInput formControlName="counterparty_nit" placeholder="1000000042" />
             @if (form.controls.counterparty_nit.invalid && form.controls.counterparty_nit.touched) {
-              <mat-error>NIT requerido (mín. 4)</mat-error>
+              <mat-error>{{ 'ob.nitReq' | t }}</mat-error>
             }
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Tipo</mat-label>
+            <mat-label>{{ 'ob.type' | t }}</mat-label>
             <mat-select formControlName="direction">
-              <mat-option value="PAYABLE">Yo debo (por pagar)</mat-option>
-              <mat-option value="RECEIVABLE">Me deben (por cobrar)</mat-option>
+              <mat-option value="PAYABLE">{{ 'ob.typePay' | t }}</mat-option>
+              <mat-option value="RECEIVABLE">{{ 'ob.typeRec' | t }}</mat-option>
             </mat-select>
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Monto</mat-label>
+            <mat-label>{{ 'ob.amount' | t }}</mat-label>
             <input matInput type="number" formControlName="amount" min="0" />
             @if (form.controls.amount.invalid && form.controls.amount.touched) {
-              <mat-error>Monto válido requerido</mat-error>
+              <mat-error>{{ 'ob.amountReq' | t }}</mat-error>
             }
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Moneda</mat-label>
+            <mat-label>{{ 'ob.currency' | t }}</mat-label>
             <mat-select formControlName="currency">
               <mat-option value="BOB">BOB</mat-option>
               <mat-option value="USD">USD</mat-option>
@@ -52,47 +52,47 @@
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>N° factura (opcional)</mat-label>
+            <mat-label>{{ 'ob.reference' | t }}</mat-label>
             <input matInput formControlName="reference" placeholder="1284" />
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Interés % (opcional)</mat-label>
+            <mat-label>{{ 'ob.interest' | t }}</mat-label>
             <input matInput type="number" formControlName="interest_rate" min="0" max="100" />
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Periodicidad</mat-label>
+            <mat-label>{{ 'ob.frequency' | t }}</mat-label>
             <mat-select formControlName="payment_frequency">
-              @for (f of frequencies; track f.value) {
-                <mat-option [value]="f.value">{{ f.label }}</mat-option>
+              @for (f of frequencies; track f) {
+                <mat-option [value]="f">{{ 'freq.' + f | t }}</mat-option>
               }
             </mat-select>
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Fecha de origen</mat-label>
+            <mat-label>{{ 'ob.origin' | t }}</mat-label>
             <input matInput type="date" formControlName="origin_date" />
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Fecha de vencimiento</mat-label>
+            <mat-label>{{ 'ob.due' | t }}</mat-label>
             <input matInput type="date" formControlName="due_date" />
             @if (form.controls.due_date.invalid && form.controls.due_date.touched) {
-              <mat-error>Requerida</mat-error>
+              <mat-error>{{ 'f.requiredF' | t }}</mat-error>
             }
           </mat-form-field>
         </div>
 
         <button mat-flat-button type="submit" [disabled]="saving()">
-          Registrar obligación
+          {{ 'ob.submit' | t }}
         </button>
       </form>
     </mat-expansion-panel>
   </mat-accordion>
 
   <mat-tab-group>
-    <mat-tab label="Por cobrar ({{ receivable().length }})">
+    <mat-tab [label]="('ob.tab.rec' | t) + ' (' + receivable().length + ')'">
       <ng-template matTabContent>
         <ng-container
           [ngTemplateOutlet]="obTable"
@@ -100,7 +100,7 @@
         />
       </ng-template>
     </mat-tab>
-    <mat-tab label="Por pagar ({{ payable().length }})">
+    <mat-tab [label]="('ob.tab.pay' | t) + ' (' + payable().length + ')'">
       <ng-template matTabContent>
         <ng-container
           [ngTemplateOutlet]="obTable"
@@ -114,33 +114,33 @@
     <mat-card class="schedule-card">
       <mat-card-content>
         <div class="schedule-head">
-          <h3>Plan de cuotas — Obligación #{{ sel.id }}</h3>
-          <button mat-icon-button (click)="scheduleObligation.set(null)" aria-label="Cerrar">
+          <h3>{{ 'ob.sched.title' | t: { n: sel.id } }}</h3>
+          <button mat-icon-button (click)="scheduleObligation.set(null)" [attr.aria-label]="'f.close' | t">
             <mat-icon>close</mat-icon>
           </button>
         </div>
         @if (schedulesLoading()) {
-          <p class="empty">Cargando cuotas…</p>
+          <p class="empty">{{ 'ob.sched.loading' | t }}</p>
         } @else if (schedules().length === 0) {
-          <p class="empty">Esta obligación no tiene cuotas registradas.</p>
+          <p class="empty">{{ 'ob.sched.empty' | t }}</p>
         } @else {
           <table mat-table [dataSource]="schedules()" class="full-width-table">
             <ng-container matColumnDef="installment">
-              <th mat-header-cell *matHeaderCellDef>Cuota</th>
+              <th mat-header-cell *matHeaderCellDef>{{ 'ob.sched.col.n' | t }}</th>
               <td mat-cell *matCellDef="let s">{{ s.installment_number }}</td>
             </ng-container>
             <ng-container matColumnDef="sDue">
-              <th mat-header-cell *matHeaderCellDef>Vence</th>
+              <th mat-header-cell *matHeaderCellDef>{{ 'ob.col.due' | t }}</th>
               <td mat-cell *matCellDef="let s">{{ s.due_date | date: 'dd/MM/yyyy' }}</td>
             </ng-container>
             <ng-container matColumnDef="sAmount">
-              <th mat-header-cell *matHeaderCellDef>Monto</th>
+              <th mat-header-cell *matHeaderCellDef>{{ 'ob.col.amount' | t }}</th>
               <td mat-cell *matCellDef="let s">
                 {{ asNumber(s.amount) | number: '1.2-2' }} {{ sel.currency }}
               </td>
             </ng-container>
             <ng-container matColumnDef="sStatus">
-              <th mat-header-cell *matHeaderCellDef>Estado</th>
+              <th mat-header-cell *matHeaderCellDef>{{ 'ob.col.status' | t }}</th>
               <td mat-cell *matCellDef="let s">
                 <span class="status-chip status-{{ s.status }}">
                   {{ installmentLabel(s.status) }}
@@ -158,11 +158,11 @@
 
 <ng-template #obTable let-items="items" let-view="view">
   @if (items.length === 0) {
-    <p class="empty">Sin obligaciones registradas.</p>
+    <p class="empty">{{ 'ob.empty' | t }}</p>
   } @else {
     <table mat-table [dataSource]="items" class="full-width-table">
       <ng-container matColumnDef="counterparty">
-        <th mat-header-cell *matHeaderCellDef>Contraparte</th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'ob.col.cp' | t }}</th>
         <td mat-cell *matCellDef="let o">
           {{ counterpartyOf(o, view).name }}
           <small class="nit">
@@ -175,21 +175,21 @@
       </ng-container>
 
       <ng-container matColumnDef="amount">
-        <th mat-header-cell *matHeaderCellDef>Monto</th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'ob.col.amount' | t }}</th>
         <td mat-cell *matCellDef="let o">
           {{ asNumber(o.amount) | number: '1.2-2' }} {{ o.currency }}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="balance">
-        <th mat-header-cell *matHeaderCellDef>Saldo</th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'ob.col.balance' | t }}</th>
         <td mat-cell *matCellDef="let o">
           {{ asNumber(o.balance) | number: '1.2-2' }} {{ o.currency }}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="due">
-        <th mat-header-cell *matHeaderCellDef>Vence</th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'ob.col.due' | t }}</th>
         <td mat-cell *matCellDef="let o">
           {{ o.due_date | date: 'dd/MM/yyyy' }}
           <small class="due-rel" [class.late]="o.status === 'OVERDUE'">
@@ -199,14 +199,14 @@
       </ng-container>
 
       <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef>Estado</th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'ob.col.status' | t }}</th>
         <td mat-cell *matCellDef="let o">
           <span class="status-chip status-{{ o.status }}">
             {{ labelOf(o) }}
           </span>
           @if (OPEN_STATUSES.includes(o.status)) {
             <small class="chain-chip" [class.in]="o.in_chain">
-              {{ o.in_chain ? 'En cadena' : 'Fuera de la red' }}
+              {{ (o.in_chain ? 'ob.inChain' : 'ob.outChain') | t }}
             </small>
           }
         </td>
@@ -217,13 +217,13 @@
         <td mat-cell *matCellDef="let o">
           @if (canClose(o)) {
             <button mat-button color="primary" (click)="markPaid(o)">
-              Marcar pagada
+              {{ 'ob.markPaid' | t }}
             </button>
-            <button mat-button color="warn" (click)="cancel(o)">Anular</button>
+            <button mat-button color="warn" (click)="cancel(o)">{{ 'ob.cancel' | t }}</button>
           }
           <button
             mat-icon-button
-            aria-label="Ver cuotas"
+            [attr.aria-label]="'ob.aria.schedules' | t"
             [class.schedule-active]="scheduleObligation()?.id === o.id"
             (click)="toggleSchedules(o)"
           >
@@ -231,7 +231,7 @@
           </button>
           <button
             mat-icon-button
-            aria-label="Adjuntar documento"
+            [attr.aria-label]="'ob.aria.attach' | t"
             (click)="attachDocument(o, fileInput)"
           >
             <mat-icon>attach_file</mat-icon>

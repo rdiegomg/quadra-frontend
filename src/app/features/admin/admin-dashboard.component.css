@@ -130,3 +130,14 @@ html.dark-theme .compensation {
   color: var(--mat-sys-on-surface-variant);
   margin: 0;
 }
+
+.company-filter {
+  margin-top: 16px;
+  min-width: 260px;
+}
+
+.empty {
+  padding: 16px 0 8px;
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 0.9rem;
+}

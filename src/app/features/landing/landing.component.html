@@ -1,51 +1,46 @@
 <div class="landing">
   <section class="hero">
     <img [src]="logoSrc()" alt="QUADRA" class="hero-logo" />
-    <h1>Cancelamos deudas entre empresas<br /><span>sin que circule dinero</span></h1>
+    <h1>{{ 'landing.hero1' | t }}<br /><span>{{ 'landing.hero2' | t }}</span></h1>
     <p class="hero-sub">
-      QUADRA es una cámara de compensación de obligaciones empresariales.
-      Detecta los círculos de deuda que se anulan solos dentro de tu red
-      comercial y ejecuta la compensación multilateral.
+      {{ 'landing.sub' | t }}
     </p>
     <div class="hero-cta">
       @if (auth.isAuthenticated()) {
         <a mat-flat-button [routerLink]="homeLink()">
-          <mat-icon>dashboard</mat-icon> Ir a mi panel
+          <mat-icon>dashboard</mat-icon> {{ 'landing.cta.panel' | t }}
         </a>
       } @else {
         <a mat-flat-button routerLink="/register">
-          <mat-icon>business</mat-icon> Registrar mi empresa
+          <mat-icon>business</mat-icon> {{ 'landing.cta.register' | t }}
         </a>
-        <a mat-stroked-button routerLink="/login">Ingresar</a>
+        <a mat-stroked-button routerLink="/login">{{ 'landing.cta.login' | t }}</a>
       }
     </div>
   </section>
 
   <section class="how">
-    <h2>Cómo funciona</h2>
+    <h2>{{ 'landing.how' | t }}</h2>
     <div class="steps">
-      @for (s of steps; track s.title) {
+      @for (s of steps; track s.icon) {
         <div class="step-card">
           <div class="step-icon"><mat-icon>{{ s.icon }}</mat-icon></div>
-          <h3>{{ s.title }}</h3>
-          <p>{{ s.text }}</p>
+          <h3>{{ s.titleKey | t }}</h3>
+          <p>{{ s.textKey | t }}</p>
         </div>
       }
     </div>
   </section>
 
   <section class="why">
-    <h2>Por qué existe</h2>
+    <h2>{{ 'landing.why' | t }}</h2>
     <p class="why-text">
-      Una ferretería le debe a un distribuidor, el distribuidor le debe a un
-      transportista y el transportista le debe a la ferretería. Las tres creen
-      tener un problema de caja. Lo que tienen es un problema de información.
-      QUADRA dibuja el mapa completo y hace visible la deuda que se anula sola.
+      {{ 'landing.whyText' | t }}
     </p>
   </section>
 
   <footer class="landing-footer">
     <span>QUADRA · Santa Cruz de la Sierra, Bolivia</span>
-    <span class="demo-note">PoC de demostración — todas las empresas, NITs, montos y credenciales son ficticios</span>
+    <span class="demo-note">{{ 'landing.demo' | t }}</span>
   </footer>
 </div>

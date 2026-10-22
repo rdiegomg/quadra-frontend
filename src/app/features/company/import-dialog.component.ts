@@ -4,36 +4,35 @@ import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ApiService } from '../../core/api.service';
+import { I18nService, TranslatePipe } from '../../core/i18n';
 import { ImportResult } from '../../core/models';
 
 @Component({
   selector: 'app-import-dialog',
-  imports: [MatDialogModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule],
+  imports: [MatDialogModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, TranslatePipe],
   template: `
-    <h2 mat-dialog-title>Subir planilla de cuentas</h2>
+    <h2 mat-dialog-title>{{ 'imp.title' | t }}</h2>
     <mat-dialog-content>
       <p class="intro">
-        Carga un CSV con tus cuentas por cobrar y por pagar. El NIT de la
-        contraparte debe estar registrado en la red.
+        {{ 'imp.intro' | t }}
       </p>
 
       <div class="format">
-        <strong>Formato de la planilla</strong>
+        <strong>{{ 'imp.fmt' | t }}</strong>
         <code>tipo,nit_contraparte,monto,fecha_emision,fecha_vencimiento,nro_factura</code>
         <code>cobrar,3365120015,15000,2026-09-18,2026-11-18,0815</code>
         <code>pagar,2874510019,8900,2026-09-15,2026-10-15,4621</code>
         <small>
-          tipo: <b>cobrar</b> (me deben) o <b>pagar</b> (debo) · fechas AAAA-MM-DD ·
-          nro_factura y moneda opcionales
+          {{ 'imp.fmtNote' | t }}
         </small>
       </div>
 
       @if (!result()) {
         <button mat-stroked-button class="file-btn" (click)="fileInput.click()" [disabled]="uploading()">
           @if (uploading()) {
-            <mat-spinner diameter="18" /> Subiendo…
+            <mat-spinner diameter="18" /> {{ 'imp.uploading' | t }}
           } @else {
-            <ng-container><mat-icon>upload_file</mat-icon></ng-container> Elegir archivo CSV
+            <ng-container><mat-icon>upload_file</mat-icon></ng-container> {{ 'imp.choose' | t }}
           }
         </button>
         <input #fileInput type="file" accept=".csv" hidden (change)="upload($event)" />
@@ -41,13 +40,13 @@ import { ImportResult } from '../../core/models';
         <div class="result">
           <div class="result-ok">
             <mat-icon>check_circle</mat-icon>
-            <strong>{{ result()!.created }} cuentas importadas</strong>
+            <strong>{{ 'imp.imported' | t: { n: result()!.created } }}</strong>
           </div>
           @if (result()!.skipped.length > 0) {
-            <p class="skipped-title">{{ result()!.skipped.length }} filas omitidas:</p>
+            <p class="skipped-title">{{ 'imp.skipped' | t: { n: result()!.skipped.length } }}</p>
             <ul class="skipped">
               @for (s of result()!.skipped; track s.row) {
-                <li>Fila {{ s.row }} — {{ s.reason }}</li>
+                <li>{{ 'imp.row' | t: { n: s.row } }} — {{ s.reason }}</li>
               }
             </ul>
           }
@@ -60,9 +59,9 @@ import { ImportResult } from '../../core/models';
     </mat-dialog-content>
     <mat-dialog-actions align="end">
       @if (result()) {
-        <button mat-flat-button (click)="close(true)">Listo</button>
+        <button mat-flat-button (click)="close(true)">{{ 'imp.done' | t }}</button>
       } @else {
-        <button mat-button (click)="close(false)">Cancelar</button>
+        <button mat-button (click)="close(false)">{{ 'imp.cancel' | t }}</button>
       }
     </mat-dialog-actions>
   `,
@@ -86,6 +85,7 @@ import { ImportResult } from '../../core/models';
 export class ImportDialogComponent {
   private readonly api = inject(ApiService);
   private readonly ref = inject(MatDialogRef<ImportDialogComponent>);
+  private readonly i18n = inject(I18nService);
 
   readonly uploading = signal(false);
   readonly result = signal<ImportResult | null>(null);
@@ -103,7 +103,7 @@ export class ImportDialogComponent {
       },
       error: (err) => {
         this.uploading.set(false);
-        this.error.set(err.error?.detail ?? 'No se pudo importar la planilla');
+        this.error.set(err.error?.detail ?? this.i18n.t('imp.error'));
       },
     });
   }

@@ -13,6 +13,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ApiService } from '../../core/api.service';
+import { I18nService, TranslatePipe } from '../../core/i18n';
 import { ImportDialogComponent } from './import-dialog.component';
 import {
   InstallmentStatus,
@@ -22,29 +23,15 @@ import {
   PaymentScheduleItem,
 } from '../../core/models';
 
-const FREQUENCIES: { value: PaymentFrequency; label: string }[] = [
-  { value: 'ONE_TIME', label: 'Pago único' },
-  { value: 'MONTHLY', label: 'Mensual' },
-  { value: 'QUARTERLY', label: 'Trimestral' },
-  { value: 'SEMIANNUAL', label: 'Semestral' },
-  { value: 'ANNUAL', label: 'Anual' },
+const FREQUENCIES: PaymentFrequency[] = [
+  'ONE_TIME',
+  'MONTHLY',
+  'QUARTERLY',
+  'SEMIANNUAL',
+  'ANNUAL',
 ];
 
-const STATUS_LABELS: Record<ObligationStatus, string> = {
-  PENDING: 'Pendiente',
-  PARTIAL: 'Parcial',
-  PAID: 'Pagada',
-  OVERDUE: 'Vencida',
-  CANCELLED: 'Cancelada',
-};
-
 const CLOSABLE: ObligationStatus[] = ['PENDING', 'PARTIAL', 'OVERDUE'];
-
-const INSTALLMENT_LABELS: Record<InstallmentStatus, string> = {
-  PENDING: 'Pendiente',
-  PAID: 'Pagada',
-  OVERDUE: 'Vencida',
-};
 
 @Component({
   selector: 'app-obligations',
@@ -64,6 +51,7 @@ const INSTALLMENT_LABELS: Record<InstallmentStatus, string> = {
     MatExpansionModule,
     MatSnackBarModule,
     MatDialogModule,
+    TranslatePipe,
   ],
   templateUrl: './obligations.component.html',
   styleUrl: './obligations.component.css',
@@ -73,6 +61,7 @@ export class ObligationsComponent {
   private readonly fb = inject(FormBuilder);
   private readonly snack = inject(MatSnackBar);
   private readonly dialog = inject(MatDialog);
+  protected readonly i18n = inject(I18nService);
 
   readonly receivable = signal<Obligation[]>([]);
   readonly payable = signal<Obligation[]>([]);
@@ -82,7 +71,6 @@ export class ObligationsComponent {
   readonly schedulesLoading = signal(false);
 
   readonly frequencies = FREQUENCIES;
-  readonly statusLabels = STATUS_LABELS;
   readonly columns = ['counterparty', 'amount', 'balance', 'due', 'status', 'actions'];
   readonly scheduleColumns = ['installment', 'sDue', 'sAmount', 'sStatus'];
   readonly OPEN_STATUSES: ObligationStatus[] = ['PENDING', 'PARTIAL', 'OVERDUE'];
@@ -117,11 +105,11 @@ export class ObligationsComponent {
     today.setHours(0, 0, 0, 0);
     const due = new Date(o.due_date + 'T00:00:00');
     const days = Math.round((due.getTime() - today.getTime()) / 86400000);
-    if (days === 0) return 'Vence hoy';
-    if (days === 1) return 'Vence mañana';
-    if (days > 1) return `Vence en ${days} días`;
-    if (days === -1) return 'Vencida ayer';
-    return `Vencida hace ${-days} días`;
+    if (days === 0) return this.i18n.t('due.today');
+    if (days === 1) return this.i18n.t('due.tomorrow');
+    if (days > 1) return this.i18n.t('due.in', { days });
+    if (days === -1) return this.i18n.t('due.yesterday');
+    return this.i18n.t('due.ago', { days: -days });
   }
 
   openImport(): void {
@@ -131,17 +119,17 @@ export class ObligationsComponent {
       .subscribe((reload) => {
         if (reload) {
           this.reload();
-          this.snack.open('Planilla importada', 'OK', { duration: 3000 });
+          this.snack.open(this.i18n.t('ob.snack.imported'), 'OK', { duration: 3000 });
         }
       });
   }
 
   labelOf(o: Obligation): string {
-    return STATUS_LABELS[o.status];
+    return this.i18n.t(`status.${o.status}`);
   }
 
   installmentLabel(s: InstallmentStatus): string {
-    return INSTALLMENT_LABELS[s];
+    return this.i18n.t(`status.${s}`);
   }
 
   toggleSchedules(o: Obligation): void {
@@ -164,15 +152,17 @@ export class ObligationsComponent {
   }
 
   cancel(o: Obligation): void {
-    if (!window.confirm(`¿Anular la obligación #${o.id}?`)) return;
+    if (!window.confirm(this.i18n.t('ob.confirmCancel', { n: o.id }))) return;
     this.api.updateStatus(o.id, 'CANCELLED').subscribe({
       next: () => {
-        this.snack.open(`Obligación #${o.id} anulada`, 'OK', { duration: 3000 });
+        this.snack.open(this.i18n.t('ob.snack.cancelled', { n: o.id }), 'OK', {
+          duration: 3000,
+        });
         if (this.scheduleObligation()?.id === o.id) this.scheduleObligation.set(null);
         this.reload();
       },
       error: (err) =>
-        this.snack.open(err.error?.detail ?? 'No se pudo anular', 'OK', {
+        this.snack.open(err.error?.detail ?? this.i18n.t('ob.err.cancel'), 'OK', {
           duration: 4000,
         }),
     });
@@ -181,13 +171,13 @@ export class ObligationsComponent {
   markPaid(o: Obligation): void {
     this.api.updateStatus(o.id, 'PAID').subscribe({
       next: () => {
-        this.snack.open(`Obligación #${o.id} marcada como pagada`, 'OK', {
+        this.snack.open(this.i18n.t('ob.snack.paid', { n: o.id }), 'OK', {
           duration: 3000,
         });
         this.reload();
       },
       error: (err) =>
-        this.snack.open(err.error?.detail ?? 'No se pudo actualizar', 'OK', {
+        this.snack.open(err.error?.detail ?? this.i18n.t('ob.err.update'), 'OK', {
           duration: 4000,
         }),
     });
@@ -199,11 +189,11 @@ export class ObligationsComponent {
       if (!file) return;
       this.api.uploadDocument(o.id, file).subscribe({
         next: () =>
-          this.snack.open(`Documento adjuntado a #${o.id}`, 'OK', {
+          this.snack.open(this.i18n.t('ob.snack.doc', { n: o.id }), 'OK', {
             duration: 3000,
           }),
         error: (err) =>
-          this.snack.open(err.error?.detail ?? 'Error al subir', 'OK', {
+          this.snack.open(err.error?.detail ?? this.i18n.t('ob.err.doc'), 'OK', {
             duration: 4000,
           }),
       });
@@ -234,7 +224,7 @@ export class ObligationsComponent {
       .subscribe({
         next: (o) => {
           this.saving.set(false);
-          this.snack.open(`Obligación #${o.id} registrada`, 'OK', {
+          this.snack.open(this.i18n.t('ob.snack.created', { n: o.id }), 'OK', {
             duration: 3000,
           });
           this.form.reset({
@@ -247,7 +237,7 @@ export class ObligationsComponent {
         },
         error: (err) => {
           this.saving.set(false);
-          this.snack.open(err.error?.detail ?? 'No se pudo registrar', 'OK', {
+          this.snack.open(err.error?.detail ?? this.i18n.t('ob.err.create'), 'OK', {
             duration: 4000,
           });
         },
