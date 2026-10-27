@@ -11,6 +11,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { ApiService } from '../../core/api.service';
 import { I18nService, TranslatePipe } from '../../core/i18n';
 import {
+  AdminProposal,
   Chain,
   Company,
   Cycle,
@@ -49,6 +50,7 @@ export class AdminDashboardComponent {
   readonly cycles = signal<Cycle[]>([]);
   readonly chains = signal<Chain[]>([]);
   readonly openObligations = signal<Obligation[]>([]);
+  readonly proposals = signal<AdminProposal[]>([]);
   readonly simulation = signal<SimulationResult | null>(null);
   readonly simulating = signal(false);
   readonly filterCompanyId = signal<number | null>(null);
@@ -64,6 +66,7 @@ export class AdminDashboardComponent {
   readonly cycleColumns = ['cycle', 'length', 'volume', 'compensation'];
   readonly chainColumns = ['chain', 'length', 'volume', 'compensation', 'ends_in_cycle'];
   readonly obligationColumns = ['debtor', 'creditor', 'balance', 'due', 'status'];
+  readonly proposalColumns = ['hProposal', 'hLength', 'hVotes', 'hAmount', 'hStatus', 'hDate'];
 
   constructor() {
     this.api.getNetworkStatistics().subscribe((s) => this.stats.set(s));
@@ -71,6 +74,7 @@ export class AdminDashboardComponent {
     this.api.getCycles().subscribe((c) => this.cycles.set(c));
     this.api.getOpenChains().subscribe((c) => this.chains.set(c));
     this.api.getAdminObligations().subscribe((o) => this.openObligations.set(o));
+    this.api.getAdminProposals().subscribe((p) => this.proposals.set(p));
   }
 
   runSimulation(): void {

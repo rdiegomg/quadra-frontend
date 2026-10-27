@@ -5,10 +5,16 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { RouterLink } from '@angular/router';
 import { ApiService } from '../../core/api.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { I18nService, TranslatePipe } from '../../core/i18n';
-import { Company, CompanySummary, MyChain } from '../../core/models';
+import {
+  Company,
+  CompanySummary,
+  MyChain,
+  Opportunity,
+} from '../../core/models';
 import { ActaDialogComponent } from './acta-dialog.component';
 import { ChainRingComponent } from './chain-ring.component';
 
@@ -22,6 +28,7 @@ import { ChainRingComponent } from './chain-ring.component';
     MatIconModule,
     MatDialogModule,
     MatSnackBarModule,
+    RouterLink,
     ChainRingComponent,
     TranslatePipe,
   ],
@@ -40,6 +47,7 @@ export class DashboardComponent {
   readonly company = signal<Company | null>(null);
   readonly summary = signal<CompanySummary | null>(null);
   readonly chains = signal<MyChain[]>([]);
+  readonly opportunities = signal<Opportunity[]>([]);
   readonly expanded = signal<number | null>(null);
   readonly responding = signal<number | null>(null);
 
@@ -79,6 +87,7 @@ export class DashboardComponent {
   private reload(): void {
     this.api.getMyChains().subscribe((c) => this.chains.set(c));
     this.api.getMySummary().subscribe((s) => this.summary.set(s));
+    this.api.getMyOpportunities().subscribe((o) => this.opportunities.set(o));
   }
 
   respond(chain: MyChain, action: 'accept' | 'reject'): void {

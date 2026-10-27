@@ -31,6 +31,30 @@ h3 {
   line-height: 1.4;
 }
 
+.acta-ref {
+  display: block;
+  font-family: ui-monospace, monospace;
+  font-size: 0.72rem;
+  color: var(--mat-sys-primary);
+  margin-top: 2px;
+}
+
+.empty-filter {
+  padding: 24px;
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.status-EXECUTED {
+  background: rgba(46, 125, 79, 0.14);
+  color: #2e7d4f;
+}
+
+.status-REJECTED {
+  background: rgba(211, 47, 47, 0.12);
+  color: #c62828;
+}
+
 .compensation {
   font-weight: 700;
   color: var(--quadra-copper);

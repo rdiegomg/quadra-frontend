@@ -115,6 +115,12 @@
                 <span>{{ 'dash.fig.fee' | t }}</span>
                 <strong>{{ asNumber(ch.commission) | number: '1.0-0' }} {{ ch.currency }}</strong>
               </div>
+              @if (asNumber(ch.est_savings) > 0) {
+                <div class="cfig">
+                  <span>{{ 'dash.fig.savings' | t }}</span>
+                  <strong class="good">≈ {{ asNumber(ch.est_savings) | number: '1.0-0' }} {{ ch.currency }}</strong>
+                </div>
+              }
             </div>
 
             <p class="chain-note">{{ positionNote(ch) }}</p>
@@ -174,6 +180,46 @@
                   </button>
                 }
               }
+            </div>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  }
+
+  @if (opportunities().length > 0) {
+    <div class="section-head">
+      <h2>{{ 'opp.title' | t }}</h2>
+      <p class="section-sub">{{ 'opp.subtitle' | t }}</p>
+    </div>
+    <div class="chains-list">
+      @for (o of opportunities(); track o.direction + '-' + o.counterparty_id) {
+        <mat-card class="chain-card opportunity-card">
+          <mat-card-content>
+            <div class="chain-head">
+              <div class="chain-badges">
+                <span class="chain-kind open">
+                  <mat-icon>link</mat-icon> {{ 'opp.badge' | t }}
+                </span>
+              </div>
+              <span class="chain-due">
+                {{ 'opp.unlocks' | t: { amt: (asNumber(o.potential_compensation) | number: '1.0-0'), cur: o.currency } }}
+              </span>
+            </div>
+            <p class="chain-participants">
+              {{ (o.direction === 'payable' ? 'opp.ifYouOwe' : 'opp.ifOwesYou') | t: { name: o.counterparty_name } }}
+            </p>
+            <p class="chain-note">
+              {{ o.counterparty_sector }} · {{ 'opp.chainLen' | t: { n: o.chain_length } }}
+            </p>
+            <div class="chain-actions">
+              <a
+                mat-stroked-button
+                routerLink="/obligations"
+                [queryParams]="{ nit: o.counterparty_nit, direction: o.direction }"
+              >
+                <mat-icon>add</mat-icon> {{ 'opp.register' | t }}
+              </a>
             </div>
           </mat-card-content>
         </mat-card>

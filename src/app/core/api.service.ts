@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import {
   Acta,
+  AdminProposal,
   Chain,
   Company,
   CompanySummary,
@@ -18,6 +19,7 @@ import {
   ObligationCreate,
   ObligationEvent,
   ObligationStatus,
+  Opportunity,
   PaymentScheduleItem,
   ProposalState,
   Sector,
@@ -63,6 +65,10 @@ export class ApiService {
     return this.http.get<Acta>(`${this.api}/proposals/${id}/acta`);
   }
 
+  getMyOpportunities(): Observable<Opportunity[]> {
+    return this.http.get<Opportunity[]>(`${this.api}/companies/me/opportunities`);
+  }
+
   importObligationsCsv(file: File): Observable<ImportResult> {
     const form = new FormData();
     form.append('file', file);
@@ -103,6 +109,10 @@ export class ApiService {
 
   getAdminCompanies(): Observable<Company[]> {
     return this.http.get<Company[]>(`${this.api}/admin/companies`);
+  }
+
+  getAdminProposals(): Observable<AdminProposal[]> {
+    return this.http.get<AdminProposal[]>(`${this.api}/admin/proposals`);
   }
 
   getAdminObligations(status?: ObligationStatus): Observable<Obligation[]> {

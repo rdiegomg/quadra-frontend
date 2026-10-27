@@ -12,6 +12,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
+import { ActivatedRoute } from '@angular/router';
 import { ApiService } from '../../core/api.service';
 import { I18nService, TranslatePipe } from '../../core/i18n';
 import { ImportDialogComponent } from './import-dialog.component';
@@ -61,6 +62,7 @@ export class ObligationsComponent {
   private readonly fb = inject(FormBuilder);
   private readonly snack = inject(MatSnackBar);
   private readonly dialog = inject(MatDialog);
+  private readonly route = inject(ActivatedRoute);
   protected readonly i18n = inject(I18nService);
 
   readonly receivable = signal<Obligation[]>([]);
@@ -89,6 +91,16 @@ export class ObligationsComponent {
 
   constructor() {
     this.reload();
+    // Prellenado desde una "Oportunidad" del dashboard (eslabon faltante).
+    const q = this.route.snapshot.queryParamMap;
+    const nit = q.get('nit');
+    const direction = q.get('direction');
+    if (nit) this.form.patchValue({ counterparty_nit: nit });
+    if (direction === 'payable' || direction === 'receivable') {
+      this.form.patchValue({
+        direction: direction.toUpperCase() as 'PAYABLE' | 'RECEIVABLE',
+      });
+    }
   }
 
   reload(): void {

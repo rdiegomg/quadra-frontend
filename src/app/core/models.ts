@@ -169,6 +169,14 @@ export interface NetworkStatistics {
   estimated_commission: string;
   cycles_in_estimate: number;
   chains_in_estimate: number;
+  avg_connections_per_company: string;
+  proposals_pending: number;
+  proposals_executed: number;
+  proposals_rejected: number;
+  acceptance_rate: string | null;
+  decision_rate: string | null;
+  total_compensated: string;
+  realized_commission: string;
   top_debtors: TopCompany[];
   top_creditors: TopCompany[];
   companies_by_sector: Record<string, number>;
@@ -215,6 +223,7 @@ export interface MyChain {
   receivable_forgone: string;
   potential_compensation: string;
   commission: string;
+  est_savings: string;
   status: 'ready' | 'compensable';
   first_due_date: string | null;
   edges: MyChainEdge[];
@@ -263,6 +272,32 @@ export interface Acta {
   tranches: ActaTranche[];
   total_cancelled: string;
   all_accepted: boolean;
+}
+
+export interface Opportunity {
+  direction: 'payable' | 'receivable';
+  counterparty_id: number;
+  counterparty_name: string;
+  counterparty_nit: string;
+  counterparty_sector: string | null;
+  chain_length: number;
+  potential_compensation: string;
+  currency: string;
+}
+
+export interface AdminProposal {
+  id: number;
+  kind: string;
+  status: 'PENDING' | 'EXECUTED' | 'REJECTED';
+  companies: string[];
+  length: number;
+  compensation: string;
+  currency: string;
+  acta_number: string | null;
+  acceptances_done: number;
+  acceptances_total: number;
+  created_at: string | null;
+  executed_at: string | null;
 }
 
 export interface MyNetworkNode {

@@ -143,6 +143,20 @@ const ES: Record<string, string> = {
   'dash.snackExecuted': '¡Compensación ejecutada! Tus saldos se actualizaron y el acta está disponible.',
   'dash.snackRejected': 'Rechazaste la propuesta — la cadena quedó excluida',
   'dash.snackError': 'No se pudo registrar la respuesta',
+  'dash.fig.savings': 'Ahorro financiero est.',
+
+  // oportunidades (eslabón faltante)
+  'opp.title': 'Oportunidades',
+  'opp.subtitle':
+    'Cadenas abiertas donde sos la punta: registrando la deuda faltante, el círculo se cierra solo.',
+  'opp.badge': 'Eslabón faltante',
+  'opp.unlocks': 'desbloquea hasta {amt} {cur}',
+  'opp.ifYouOwe':
+    'Si le debes plata a {name}, registrá esa deuda y la cadena se cierra en círculo.',
+  'opp.ifOwesYou':
+    'Si {name} te debe plata, registrá ese cobro y la cadena se cierra en círculo.',
+  'opp.chainLen': 'cadena de {n} empresas',
+  'opp.register': 'Registrar obligación',
   'w.chain': 'cadena',
   'w.chains': 'cadenas',
   'ring.cp': 'Contraparte',
@@ -282,6 +296,23 @@ const ES: Record<string, string> = {
   'adm.filter': 'Filtrar por empresa',
   'adm.filterAll': 'Todas las empresas',
   'adm.filterEmpty': 'Sin obligaciones para esta empresa.',
+  'adm.g.connections': 'Conexiones / empresa',
+  'adm.g.connectionsSub': 'Meta del modelo: más de 3',
+  'adm.g.acceptance': 'Aceptación de propuestas',
+  'adm.g.acceptanceSub': '{e} ejecutadas · {r} rechazadas · {p} pendientes',
+  'adm.g.executed': 'Ciclos completados',
+  'adm.g.executedSub': '{amt} BOB de deuda cancelada',
+  'adm.g.revenue': 'Ingreso realizado',
+  'adm.g.revenueSub': 'Comisión 1.5% efectivamente cobrada',
+  'adm.tab.history': 'Historial',
+  'adm.hist.empty': 'Todavía no hay propuestas registradas.',
+  'adm.hist.col.proposal': 'Cadena / acta',
+  'adm.hist.col.votes': 'Votos',
+  'adm.hist.col.amount': 'Monto',
+  'adm.hist.col.date': 'Fecha',
+  'prop.PENDING': 'Pendiente',
+  'prop.EXECUTED': 'Compensada',
+  'prop.REJECTED': 'Rechazada',
 
   // admin network map
   'anet.title': 'Red empresarial',
@@ -474,6 +505,20 @@ const EN: Record<string, string> = {
   'dash.snackExecuted': 'Compensation executed! Your balances were updated and the deed is available.',
   'dash.snackRejected': 'You rejected the proposal — the chain was excluded',
   'dash.snackError': 'Could not register your response',
+  'dash.fig.savings': 'Est. financial savings',
+
+  // opportunities (missing link)
+  'opp.title': 'Opportunities',
+  'opp.subtitle':
+    'Open chains where you are the endpoint: registering the missing debt closes the circle by itself.',
+  'opp.badge': 'Missing link',
+  'opp.unlocks': 'unlocks up to {amt} {cur}',
+  'opp.ifYouOwe':
+    'If you owe {name}, register that debt and the chain closes into a circle.',
+  'opp.ifOwesYou':
+    'If {name} owes you, register that receivable and the chain closes into a circle.',
+  'opp.chainLen': 'chain of {n} companies',
+  'opp.register': 'Register obligation',
   'w.chain': 'chain',
   'w.chains': 'chains',
   'ring.cp': 'Counterparty',
@@ -613,6 +658,23 @@ const EN: Record<string, string> = {
   'adm.filter': 'Filter by company',
   'adm.filterAll': 'All companies',
   'adm.filterEmpty': 'No obligations for this company.',
+  'adm.g.connections': 'Connections / company',
+  'adm.g.connectionsSub': 'Model target: more than 3',
+  'adm.g.acceptance': 'Proposal acceptance',
+  'adm.g.acceptanceSub': '{e} executed · {r} rejected · {p} pending',
+  'adm.g.executed': 'Completed cycles',
+  'adm.g.executedSub': '{amt} BOB of debt cancelled',
+  'adm.g.revenue': 'Realized revenue',
+  'adm.g.revenueSub': '1.5% fee effectively collected',
+  'adm.tab.history': 'History',
+  'adm.hist.empty': 'No proposals recorded yet.',
+  'adm.hist.col.proposal': 'Chain / deed',
+  'adm.hist.col.votes': 'Votes',
+  'adm.hist.col.amount': 'Amount',
+  'adm.hist.col.date': 'Date',
+  'prop.PENDING': 'Pending',
+  'prop.EXECUTED': 'Compensated',
+  'prop.REJECTED': 'Rejected',
 
   // admin network map
   'anet.title': 'Business network',
