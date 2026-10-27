@@ -253,6 +253,37 @@ html.dark-theme .chain-kind {
   color: #2563eb;
 }
 
+.chain-status.pending {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(237, 108, 2, 0.12);
+  color: #c25e00;
+}
+
+.chain-status.executed {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(46, 125, 79, 0.16);
+  color: #2e7d4f;
+}
+
+.chain-status.rejected {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(211, 47, 47, 0.12);
+  color: #c62828;
+}
+
+.chain-status .mat-icon,
+.chain-status mat-icon {
+  font-size: 15px;
+  width: 15px;
+  height: 15px;
+}
+
 .chain-due {
   font-size: 0.8rem;
   color: var(--mat-sys-on-surface-variant);
@@ -411,4 +442,8 @@ html.dark-theme .chain-kind {
   font-size: 0.85rem;
   font-weight: 600;
   color: #2e7d4f;
+}
+
+.reject-btn {
+  color: var(--mat-sys-error);
 }

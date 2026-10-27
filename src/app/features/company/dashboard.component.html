@@ -69,7 +69,7 @@
   } @else {
     <div class="chains-list">
       @for (ch of chains(); track $index) {
-        <mat-card class="chain-card" [class.expanded]="expanded() === $index" [class.accepted]="accepted().has($index)">
+        <mat-card class="chain-card" [class.expanded]="expanded() === $index" [class.accepted]="ch.proposal_status === 'EXECUTED'">
           <mat-card-content>
             <div class="chain-head">
               <div class="chain-badges">
@@ -80,6 +80,16 @@
                 <span class="chain-status" [class.open]="ch.status === 'compensable'">
                   {{ (ch.status === 'ready' ? 'dash.status.ready' : 'dash.status.comp') | t }}
                 </span>
+                @if (ch.proposal_status === 'EXECUTED') {
+                  <span class="chain-status executed"><mat-icon>task_alt</mat-icon> {{ 'dash.status.executed' | t }}</span>
+                } @else if (ch.proposal_status === 'REJECTED') {
+                  <span class="chain-status rejected"><mat-icon>cancel</mat-icon> {{ 'dash.status.rejected' | t }}</span>
+                } @else if (ch.proposal_status === 'PENDING') {
+                  <span class="chain-status pending">
+                    <mat-icon>how_to_vote</mat-icon>
+                    {{ 'dash.status.votes' | t: { done: ch.acceptances_done, total: ch.acceptances_total } }}
+                  </span>
+                }
               </div>
               @if (ch.first_due_date) {
                 <span class="chain-due">{{ 'dash.firstDue' | t: { date: (ch.first_due_date | date: 'd MMM y') } }}</span>
@@ -148,12 +158,21 @@
               <button mat-button (click)="toggleDetail($index)">
                 {{ (expanded() === $index ? 'dash.hideForm' : 'dash.seeForm') | t }}
               </button>
-              @if (!accepted().has($index)) {
-                <button mat-flat-button (click)="acceptChain($index)">
-                  <mat-icon>check</mat-icon> {{ 'dash.accept' | t }}
+              @if (ch.proposal_status === 'EXECUTED') {
+                <button mat-stroked-button (click)="openActa(ch)">
+                  <mat-icon>description</mat-icon> {{ 'dash.acta' | t }}
                 </button>
-              } @else {
-                <span class="accepted-tag"><mat-icon>check_circle</mat-icon> {{ 'dash.accepted' | t }}</span>
+              } @else if (ch.proposal_status === 'PENDING') {
+                @if (ch.my_decision === 'ACCEPTED') {
+                  <span class="accepted-tag"><mat-icon>check_circle</mat-icon> {{ 'dash.youAccepted' | t }}</span>
+                } @else {
+                  <button mat-flat-button (click)="respond(ch, 'accept')" [disabled]="responding() !== null">
+                    <mat-icon>check</mat-icon> {{ 'dash.accept' | t }}
+                  </button>
+                  <button mat-button class="reject-btn" (click)="respond(ch, 'reject')" [disabled]="responding() !== null">
+                    {{ 'dash.reject' | t }}
+                  </button>
+                }
               }
             </div>
           </mat-card-content>

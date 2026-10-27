@@ -219,6 +219,50 @@ export interface MyChain {
   first_due_date: string | null;
   edges: MyChainEdge[];
   currency: string;
+  proposal_id: number | null;
+  proposal_status: 'PENDING' | 'EXECUTED' | 'REJECTED' | null;
+  acceptances_done: number;
+  acceptances_total: number;
+  my_decision: 'ACCEPTED' | 'REJECTED' | null;
+  executed_at: string | null;
+}
+
+export interface ProposalState {
+  proposal_id: number;
+  status: 'PENDING' | 'EXECUTED' | 'REJECTED';
+  acceptances_done: number;
+  acceptances_total: number;
+  my_decision: 'ACCEPTED' | 'REJECTED' | null;
+  executed_at: string | null;
+}
+
+export interface ActaParty {
+  id: number;
+  name: string | null;
+  nit: string | null;
+  legal_type: string | null;
+}
+
+export interface ActaTranche {
+  debtor_id: number;
+  creditor_id: number;
+  debtor_name: string;
+  creditor_name: string;
+  balance_before: string;
+  cancelled: string;
+  residual: string;
+}
+
+export interface Acta {
+  acta_number: string;
+  proposal_id: number;
+  kind: string;
+  executed_at: string | null;
+  currency: string;
+  companies: ActaParty[];
+  tranches: ActaTranche[];
+  total_cancelled: string;
+  all_accepted: boolean;
 }
 
 export interface MyNetworkNode {

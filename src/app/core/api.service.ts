@@ -3,6 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import {
+  Acta,
   Chain,
   Company,
   CompanySummary,
@@ -18,6 +19,7 @@ import {
   ObligationEvent,
   ObligationStatus,
   PaymentScheduleItem,
+  ProposalState,
   Sector,
   SimulationResult,
 } from './models';
@@ -51,6 +53,14 @@ export class ApiService {
 
   getMyNetwork(): Observable<MyNetwork> {
     return this.http.get<MyNetwork>(`${this.api}/companies/me/network`);
+  }
+
+  respondToProposal(id: number, action: 'accept' | 'reject'): Observable<ProposalState> {
+    return this.http.post<ProposalState>(`${this.api}/proposals/${id}/respond`, { action });
+  }
+
+  getActa(id: number): Observable<Acta> {
+    return this.http.get<Acta>(`${this.api}/proposals/${id}/acta`);
   }
 
   importObligationsCsv(file: File): Observable<ImportResult> {

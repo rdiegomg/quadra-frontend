@@ -2,12 +2,14 @@ import { DatePipe, DecimalPipe } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ApiService } from '../../core/api.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { I18nService, TranslatePipe } from '../../core/i18n';
 import { Company, CompanySummary, MyChain } from '../../core/models';
+import { ActaDialogComponent } from './acta-dialog.component';
 import { ChainRingComponent } from './chain-ring.component';
 
 @Component({
@@ -18,6 +20,7 @@ import { ChainRingComponent } from './chain-ring.component';
     MatButtonModule,
     MatCardModule,
     MatIconModule,
+    MatDialogModule,
     MatSnackBarModule,
     ChainRingComponent,
     TranslatePipe,
@@ -30,6 +33,7 @@ export class DashboardComponent {
   protected readonly auth = inject(AuthService);
   protected readonly i18n = inject(I18nService);
   private readonly snack = inject(MatSnackBar);
+  private readonly dialog = inject(MatDialog);
 
   readonly sectors = signal<Map<string, string>>(new Map());
 
@@ -37,7 +41,7 @@ export class DashboardComponent {
   readonly summary = signal<CompanySummary | null>(null);
   readonly chains = signal<MyChain[]>([]);
   readonly expanded = signal<number | null>(null);
-  readonly accepted = signal<Set<number>>(new Set());
+  readonly responding = signal<number | null>(null);
 
   readonly compensableTotal = computed(() =>
     this.chains().reduce(
@@ -58,8 +62,7 @@ export class DashboardComponent {
 
   constructor() {
     this.api.getMyCompany().subscribe((c) => this.company.set(c));
-    this.api.getMySummary().subscribe((s) => this.summary.set(s));
-    this.api.getMyChains().subscribe((c) => this.chains.set(c));
+    this.reload();
     this.api.getMyNetwork().subscribe((n) => {
       const map = new Map<string, string>();
       n.nodes.forEach((nd) => {
@@ -73,9 +76,41 @@ export class DashboardComponent {
     this.expanded.set(this.expanded() === i ? null : i);
   }
 
-  acceptChain(i: number): void {
-    this.accepted.update((s) => new Set(s).add(i));
-    this.snack.open(this.i18n.t('dash.snackAccept'), 'OK', { duration: 4000 });
+  private reload(): void {
+    this.api.getMyChains().subscribe((c) => this.chains.set(c));
+    this.api.getMySummary().subscribe((s) => this.summary.set(s));
+  }
+
+  respond(chain: MyChain, action: 'accept' | 'reject'): void {
+    if (!chain.proposal_id || this.responding() !== null) return;
+    this.responding.set(chain.proposal_id);
+    this.api.respondToProposal(chain.proposal_id, action).subscribe({
+      next: (state) => {
+        this.responding.set(null);
+        const key =
+          action === 'accept'
+            ? state.status === 'EXECUTED'
+              ? 'dash.snackExecuted'
+              : 'dash.snackAccepted'
+            : 'dash.snackRejected';
+        this.snack.open(this.i18n.t(key), 'OK', { duration: 5000 });
+        this.reload();
+      },
+      error: (err) => {
+        this.responding.set(null);
+        this.snack.open(err.error?.detail ?? this.i18n.t('dash.snackError'), 'OK', {
+          duration: 5000,
+        });
+        this.reload();
+      },
+    });
+  }
+
+  openActa(chain: MyChain): void {
+    if (!chain.proposal_id) return;
+    this.api.getActa(chain.proposal_id).subscribe((acta) => {
+      this.dialog.open(ActaDialogComponent, { data: acta, width: '640px' });
+    });
   }
 
   chainTitle(c: MyChain): string {
