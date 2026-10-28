@@ -277,6 +277,14 @@ html.dark-theme .chain-kind {
   color: #c62828;
 }
 
+.chain-status.stale {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(97, 97, 97, 0.14);
+  color: var(--mat-sys-on-surface-variant);
+}
+
 .chain-status .mat-icon,
 .chain-status mat-icon {
   font-size: 15px;

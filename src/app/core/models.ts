@@ -229,7 +229,7 @@ export interface MyChain {
   edges: MyChainEdge[];
   currency: string;
   proposal_id: number | null;
-  proposal_status: 'PENDING' | 'EXECUTED' | 'REJECTED' | null;
+  proposal_status: 'PENDING' | 'EXECUTED' | 'REJECTED' | 'STALE' | null;
   acceptances_done: number;
   acceptances_total: number;
   my_decision: 'ACCEPTED' | 'REJECTED' | null;
@@ -238,7 +238,7 @@ export interface MyChain {
 
 export interface ProposalState {
   proposal_id: number;
-  status: 'PENDING' | 'EXECUTED' | 'REJECTED';
+  status: 'PENDING' | 'EXECUTED' | 'REJECTED' | 'STALE';
   acceptances_done: number;
   acceptances_total: number;
   my_decision: 'ACCEPTED' | 'REJECTED' | null;
@@ -288,7 +288,7 @@ export interface Opportunity {
 export interface AdminProposal {
   id: number;
   kind: string;
-  status: 'PENDING' | 'EXECUTED' | 'REJECTED';
+  status: 'PENDING' | 'EXECUTED' | 'REJECTED' | 'STALE';
   companies: string[];
   length: number;
   compensation: string;

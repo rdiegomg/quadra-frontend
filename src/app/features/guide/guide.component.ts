@@ -73,15 +73,15 @@ import { I18nService } from '../../core/i18n';
               <div class="step">
                 <span class="step-num">4</span>
                 <div>
-                  <h3>Todos aceptan</h3>
-                  <p>La cadena se cierra cuando todas las empresas involucradas aceptan la propuesta. Si una no acepta, la cadena no se ejecuta.</p>
+                  <h3>Todos votan</h3>
+                  <p>Cada empresa acepta o rechaza desde su cuenta. En la tarjeta ves el progreso en vivo ("4 de 6 aceptaron"). Solo si <strong>todas</strong> aceptan se ejecuta; una negativa deja la cadena fuera. Si los saldos del tramo cambian antes de cerrar, la propuesta caduca.</p>
                 </div>
               </div>
               <div class="step">
                 <span class="step-num">5</span>
                 <div>
-                  <h3>Se formaliza y listo</h3>
-                  <p>Se firma el acta de compensación, las deudas quedan legalmente extinguidas y cada empresa solo paga la comisión por la deuda cancelada.</p>
+                  <h3>Se ejecuta y se emite el acta</h3>
+                  <p>Al completarse la aceptación, los saldos bajan de verdad en el momento (lo compensado se extingue, el residuo sigue vivo) y QUADRA emite el <strong>acta de compensación</strong> — descargable e imprimible, con todas las partes, tramos y montos. Cada empresa paga la comisión solo por lo cancelado.</p>
                 </div>
               </div>
             </div>
@@ -103,6 +103,14 @@ import { I18nService } from '../../core/i18n';
               <div class="term">
                 <h3><mat-icon>link</mat-icon> Eslabón</h3>
                 <p>Cada deuda individual dentro de una cadena. Si falta un eslabón (el "?" del mapa), la cadena no cierra — por eso conviene invitar a más empresas a la red.</p>
+              </div>
+              <div class="term">
+                <h3><mat-icon>tips_and_updates</mat-icon> Oportunidad</h3>
+                <p>Si sos la primera o última punta de una cadena abierta, QUADRA te muestra qué deuda faltante cerraría el círculo ("si le debés a X" o "si X te debe"). Al registrarla, el círculo aparece solo y se puede compensar más deuda.</p>
+              </div>
+              <div class="term">
+                <h3><mat-icon>description</mat-icon> Acta de compensación</h3>
+                <p>El documento que formaliza el acuerdo cuando todas las empresas aceptaron: número de acta, fecha, partes con NIT, tramos compensados y saldos residuales. Se descarga desde la cadena compensada.</p>
               </div>
               <div class="term">
                 <h3><mat-icon>savings</mat-icon> Monto compensable</h3>
@@ -128,7 +136,7 @@ import { I18nService } from '../../core/i18n';
                 <mat-icon>dashboard</mat-icon>
                 <div>
                   <h3>Mi empresa</h3>
-                  <p>Tu ficha con KPIs (por cobrar, por pagar, posición neta, compensable) y <strong>"Tus cadenas"</strong>: las propuestas donde participas, con el anillo que muestra cómo se forma cada una. Ahí aceptas o revisas cada eslabón.</p>
+                  <p>Tu ficha con KPIs (por cobrar, por pagar, posición neta, compensable), <strong>"Tus cadenas"</strong> con el anillo de cada propuesta y sus votos en vivo, y la sección <strong>"Oportunidades"</strong>: los eslabones faltantes que cerrarían círculos contigo como punta. Al compensarse una cadena, queda visible con su acta.</p>
                 </div>
               </div>
               <div class="stop">
@@ -182,7 +190,13 @@ import { I18nService } from '../../core/i18n';
                 <mat-expansion-panel-header>
                   <mat-panel-title>¿Qué pasa si una empresa de la cadena no acepta?</mat-panel-title>
                 </mat-expansion-panel-header>
-                <p>La cadena no se ejecuta. La compensación es voluntaria y requiere el acuerdo de todos los participantes.</p>
+                <p>La propuesta queda rechazada y la cadena no se ejecuta — la compensación es voluntaria y requiere el acuerdo de todos. Y si los saldos del tramo cambian mientras se vota (alguien pagó, por ejemplo), la propuesta caduca en vez de ejecutarse sobre deudas que ya no existen.</p>
+              </mat-expansion-panel>
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>¿Qué es una "oportunidad"?</mat-panel-title>
+                </mat-expansion-panel-header>
+                <p>Cuando sos la punta de una cadena abierta, QUADRA te dice qué deuda cerraría el círculo: "si le debés a esta empresa" o "si esta empresa te debe". Si esa deuda existe en la realidad — vos ya conocés a esa contraparte — la registrás y el círculo se cierra solo, desbloqueando la compensación para toda la cadena.</p>
               </mat-expansion-panel>
               <mat-expansion-panel>
                 <mat-expansion-panel-header>
@@ -202,8 +216,9 @@ import { I18nService } from '../../core/i18n';
 
         <p class="demo-note">
           <mat-icon>science</mat-icon>
-          Esta es una demo con datos ficticios: empresas, deudas, cadenas y
-          propuestas son simuladas con fines ilustrativos.
+          Demo con datos ficticios: las empresas y deudas son simuladas y las demás
+          empresas aceptan automáticamente para poder mostrar el flujo completo.
+          El resto es real: tu decisión, la ejecución sobre saldos y el acta.
         </p>
       } @else {
         <header class="guide-hero">
@@ -263,15 +278,15 @@ import { I18nService } from '../../core/i18n';
               <div class="step">
                 <span class="step-num">4</span>
                 <div>
-                  <h3>Everyone accepts</h3>
-                  <p>The chain closes when all companies involved accept the proposal. If one doesn't accept, the chain is not executed.</p>
+                  <h3>Everyone votes</h3>
+                  <p>Each company accepts or rejects from its own account. The card shows live progress ("4 of 6 accepted"). The chain only executes if <strong>everyone</strong> accepts; a rejection leaves it out. If the tranche's balances change before closing, the proposal expires.</p>
                 </div>
               </div>
               <div class="step">
                 <span class="step-num">5</span>
                 <div>
-                  <h3>It's formalized and done</h3>
-                  <p>The compensation deed is signed, the debts are legally extinguished and each company only pays the fee on the cancelled debt.</p>
+                  <h3>It executes and the deed is issued</h3>
+                  <p>Once acceptance is complete, balances drop for real right away (the compensated part is extinguished, the residual stays alive) and QUADRA issues the <strong>compensation deed</strong> — downloadable and printable, with all parties, tranches and amounts. Each company pays the fee only on what was cancelled.</p>
                 </div>
               </div>
             </div>
@@ -293,6 +308,14 @@ import { I18nService } from '../../core/i18n';
               <div class="term">
                 <h3><mat-icon>link</mat-icon> Link</h3>
                 <p>Each individual debt inside a chain. If a link is missing (the "?" on the map), the chain doesn't close — that's why inviting more companies to the network pays off.</p>
+              </div>
+              <div class="term">
+                <h3><mat-icon>tips_and_updates</mat-icon> Opportunity</h3>
+                <p>If you're the first or last endpoint of an open chain, QUADRA shows you which missing debt would close the circle ("if you owe X" or "if X owes you"). Register it and the circle appears on its own, unlocking more compensation.</p>
+              </div>
+              <div class="term">
+                <h3><mat-icon>description</mat-icon> Compensation deed</h3>
+                <p>The document formalizing the agreement once all companies accepted: deed number, date, parties with tax IDs, compensated tranches and residual balances. Downloadable from the compensated chain.</p>
               </div>
               <div class="term">
                 <h3><mat-icon>savings</mat-icon> Compensable amount</h3>
@@ -318,7 +341,7 @@ import { I18nService } from '../../core/i18n';
                 <mat-icon>dashboard</mat-icon>
                 <div>
                   <h3>My company</h3>
-                  <p>Your profile card with KPIs (receivable, payable, net position, compensable) and <strong>"Your chains"</strong>: the proposals you participate in, with the ring showing how each one forms. That's where you accept or review each link.</p>
+                  <p>Your profile card with KPIs (receivable, payable, net position, compensable), <strong>"Your chains"</strong> with each proposal's ring and live votes, and the <strong>"Opportunities"</strong> section: the missing links that would close circles with you as an endpoint. A compensated chain stays visible with its deed.</p>
                 </div>
               </div>
               <div class="stop">
@@ -372,7 +395,13 @@ import { I18nService } from '../../core/i18n';
                 <mat-expansion-panel-header>
                   <mat-panel-title>What if a company in the chain doesn't accept?</mat-panel-title>
                 </mat-expansion-panel-header>
-                <p>The chain is not executed. Compensation is voluntary and requires every participant's agreement.</p>
+                <p>The proposal is rejected and the chain doesn't execute — compensation is voluntary and needs everyone's agreement. And if the tranche's balances change while voting (someone paid, for example), the proposal expires instead of executing on debts that no longer exist.</p>
+              </mat-expansion-panel>
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>What is an "opportunity"?</mat-panel-title>
+                </mat-expansion-panel-header>
+                <p>When you're an endpoint of an open chain, QUADRA tells you which debt would close the circle: "if you owe this company" or "if this company owes you". If that debt exists in reality — you already know that counterparty — you register it and the circle closes by itself, unlocking compensation for the whole chain.</p>
               </mat-expansion-panel>
               <mat-expansion-panel>
                 <mat-expansion-panel-header>
@@ -392,8 +421,9 @@ import { I18nService } from '../../core/i18n';
 
         <p class="demo-note">
           <mat-icon>science</mat-icon>
-          This is a demo with fictional data: companies, debts, chains and
-          proposals are simulated for illustrative purposes.
+          Demo with fictional data: companies and debts are simulated and the
+          other companies auto-accept so the full flow can be shown. The rest is
+          real: your decision, the balance execution and the deed.
         </p>
       }
     </div>

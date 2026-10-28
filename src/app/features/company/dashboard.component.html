@@ -84,6 +84,8 @@
                   <span class="chain-status executed"><mat-icon>task_alt</mat-icon> {{ 'dash.status.executed' | t }}</span>
                 } @else if (ch.proposal_status === 'REJECTED') {
                   <span class="chain-status rejected"><mat-icon>cancel</mat-icon> {{ 'dash.status.rejected' | t }}</span>
+                } @else if (ch.proposal_status === 'STALE') {
+                  <span class="chain-status stale"><mat-icon>schedule</mat-icon> {{ 'dash.status.stale' | t }}</span>
                 } @else if (ch.proposal_status === 'PENDING') {
                   <span class="chain-status pending">
                     <mat-icon>how_to_vote</mat-icon>

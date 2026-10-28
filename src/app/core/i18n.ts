@@ -135,6 +135,7 @@ const ES: Record<string, string> = {
   'dash.status.votes': '{done}/{total} aceptaron',
   'dash.status.executed': 'Compensada',
   'dash.status.rejected': 'Rechazada',
+  'dash.status.stale': 'Caducada — el tramo cambió',
   'dash.empty.title': 'Todavía no hay cadenas para tu empresa',
   'dash.empty.text':
     'Cuando el motor encuentre círculos o cadenas de deuda donde participes, aparecerán aquí con la propuesta de compensación.',
@@ -313,6 +314,7 @@ const ES: Record<string, string> = {
   'prop.PENDING': 'Pendiente',
   'prop.EXECUTED': 'Compensada',
   'prop.REJECTED': 'Rechazada',
+  'prop.STALE': 'Caducada',
 
   // admin network map
   'anet.title': 'Red empresarial',
@@ -497,6 +499,7 @@ const EN: Record<string, string> = {
   'dash.status.votes': '{done}/{total} accepted',
   'dash.status.executed': 'Compensated',
   'dash.status.rejected': 'Rejected',
+  'dash.status.stale': 'Expired — the tranche changed',
   'dash.empty.title': 'No chains for your company yet',
   'dash.empty.text':
     'When the engine finds debt circles or chains you participate in, they will appear here with the compensation proposal.',
@@ -675,6 +678,7 @@ const EN: Record<string, string> = {
   'prop.PENDING': 'Pending',
   'prop.EXECUTED': 'Compensated',
   'prop.REJECTED': 'Rejected',
+  'prop.STALE': 'Expired',
 
   // admin network map
   'anet.title': 'Business network',
