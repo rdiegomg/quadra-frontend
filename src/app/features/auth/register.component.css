@@ -23,7 +23,9 @@
   flex-direction: column;
   justify-content: center;
   gap: 14px;
-  background: linear-gradient(160deg, #23293a 0%, #1b1e29 55%, #2b1e15 100%);
+  background:
+    linear-gradient(160deg, rgba(35, 41, 58, 0.9) 0%, rgba(27, 30, 41, 0.82) 55%, rgba(43, 30, 21, 0.9) 100%),
+    url('/assets/bg-skyline-v.webp') center / cover no-repeat;
   color: #ece7e2;
 }
 

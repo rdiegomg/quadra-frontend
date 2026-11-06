@@ -12,6 +12,11 @@
   padding: 72px 24px 64px;
   background:
     radial-gradient(ellipse 60% 50% at 50% 0%, rgba(181, 101, 63, 0.14), transparent 70%),
+    linear-gradient(
+      color-mix(in srgb, var(--mat-sys-surface) 86%, transparent),
+      color-mix(in srgb, var(--mat-sys-surface) 78%, transparent)
+    ),
+    url('/assets/bg-city-network.webp') center / cover no-repeat,
     var(--mat-sys-surface);
 }
 
@@ -130,9 +135,17 @@
 
 .why {
   max-width: 760px;
-  margin: 0 auto;
-  padding: 48px 24px 72px;
+  margin: 0 auto 48px;
+  padding: 48px 32px 56px;
   text-align: center;
+  border-radius: 20px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  background:
+    linear-gradient(
+      color-mix(in srgb, var(--mat-sys-surface) 90%, transparent),
+      color-mix(in srgb, var(--mat-sys-surface) 82%, transparent)
+    ),
+    url('/assets/bg-skyline.webp') center / cover no-repeat;
 }
 
 .why-text {
