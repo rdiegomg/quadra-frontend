@@ -11,6 +11,16 @@
   /* Overrides Material sys para acercar el primario al cobre del logo */
   --mat-sys-primary: var(--quadra-copper);
   --mat-sys-on-primary: #ffffff;
+
+  /* Tema claro con superficies calidas (off-white crema, no blanco puro) */
+  --mat-sys-surface: #faf6f1;
+  --mat-sys-surface-dim: #e9e2d8;
+  --mat-sys-surface-bright: #fdfbf8;
+  --mat-sys-surface-container-lowest: #fdfbf8;
+  --mat-sys-surface-container-low: #f5f0e8;
+  --mat-sys-surface-container: #f0e9df;
+  --mat-sys-surface-container-high: #eae2d6;
+  --mat-sys-surface-container-highest: #e3dbcd;
 }
 
 html.dark-theme {
@@ -24,24 +34,44 @@ html.dark-theme {
   box-sizing: border-box;
 }
 
-/* Fondo global del sitio — la imagen cambia por seccion via body[data-bg] */
+/* Fondo global del sitio — la imagen cambia por seccion via body[data-bg].
+   Vive en body::before para poder filtrarla por tema: en claro se invierte
+   a una version clara de la misma ilustracion; body::after es el velo. */
 body {
   --page-bg: url('/assets/bg-skyline.webp');
-  background:
-    linear-gradient(
-      color-mix(in srgb, var(--mat-sys-surface) 90%, transparent),
-      color-mix(in srgb, var(--mat-sys-surface) 86%, transparent)
-    ),
-    var(--page-bg) center / cover no-repeat fixed;
 }
 
-html.dark-theme body {
-  background:
-    linear-gradient(
-      color-mix(in srgb, var(--mat-sys-surface) 78%, transparent),
-      color-mix(in srgb, var(--mat-sys-surface) 72%, transparent)
-    ),
-    var(--page-bg) center / cover no-repeat fixed;
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+body::before {
+  z-index: -2;
+  background: var(--page-bg) center / cover no-repeat;
+  filter: invert(0.93) hue-rotate(180deg) saturate(0.5) brightness(1.04);
+}
+
+body::after {
+  z-index: -1;
+  background: linear-gradient(
+    rgba(246, 240, 232, 0.62),
+    rgba(238, 228, 214, 0.56)
+  );
+}
+
+html.dark-theme body::before {
+  filter: none;
+}
+
+html.dark-theme body::after {
+  background: linear-gradient(
+    color-mix(in srgb, var(--mat-sys-surface) 80%, transparent),
+    color-mix(in srgb, var(--mat-sys-surface) 74%, transparent)
+  );
 }
 
 body[data-bg='landing'] {

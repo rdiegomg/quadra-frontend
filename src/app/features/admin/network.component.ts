@@ -5,13 +5,16 @@ import {
   ElementRef,
   OnDestroy,
   ViewChild,
+  computed,
   effect,
   inject,
   signal,
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
 import cytoscape, { Core, NodeSingular, StylesheetJson } from 'cytoscape';
 import { forkJoin } from 'rxjs';
 import { ApiService } from '../../core/api.service';
@@ -29,7 +32,15 @@ interface NodeDetail {
 
 @Component({
   selector: 'app-network',
-  imports: [DecimalPipe, MatButtonModule, MatCardModule, MatIconModule, TranslatePipe],
+  imports: [
+    DecimalPipe,
+    MatButtonModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatSelectModule,
+    TranslatePipe,
+  ],
   templateUrl: './network.component.html',
   styleUrl: './network.component.css',
 })
@@ -49,6 +60,20 @@ export class NetworkComponent implements AfterViewInit, OnDestroy {
   readonly onlyCycles = signal(false);
   readonly selectedCycleIndex = signal<number | null>(null);
   readonly selectedNode = signal<NodeDetail | null>(null);
+  readonly companyFilterId = signal<string | null>(null);
+
+  readonly companyOptions = computed(() =>
+    (this.graph()?.nodes ?? [])
+      .map((n) => ({ id: n.data.id, name: n.data.label }))
+      .sort((a, b) => a.name.localeCompare(b.name)),
+  );
+
+  readonly filteredCycles = computed(() => {
+    const id = this.companyFilterId();
+    return this.cycles()
+      .map((cycle, index) => ({ cycle, index }))
+      .filter(({ cycle }) => !id || cycle.company_ids.map(String).includes(id));
+  });
 
   constructor() {
     forkJoin({
@@ -129,6 +154,31 @@ export class NetworkComponent implements AfterViewInit, OnDestroy {
   clearHighlight(): void {
     this.selectedCycleIndex.set(null);
     this.cy?.elements().removeClass('hl faded');
+    const id = this.companyFilterId();
+    if (id !== null && this.cy) {
+      const node = this.cy.getElementById(id);
+      if (node.nonempty()) {
+        this.cy.elements().difference(node.closedNeighborhood()).addClass('faded');
+        node.addClass('hl');
+      }
+    }
+  }
+
+  selectCompany(id: string | null): void {
+    this.companyFilterId.set(id);
+    this.selectedCycleIndex.set(null);
+    if (!this.cy) return;
+    this.cy.elements().removeClass('hl faded');
+    if (id === null) {
+      this.cy.fit(undefined, 40);
+      return;
+    }
+    const node = this.cy.getElementById(id);
+    if (node.empty()) return;
+    const hood = node.closedNeighborhood();
+    this.cy.elements().difference(hood).addClass('faded');
+    node.addClass('hl');
+    this.cy.animate({ fit: { eles: hood, padding: 80 } });
   }
 
   closeNodeDetail(): void {

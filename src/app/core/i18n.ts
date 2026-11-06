@@ -334,6 +334,7 @@ const ES: Record<string, string> = {
   'anet.panelHint': 'Compensación simulada = mínimo balance del ciclo. Haz clic para resaltar.',
   'anet.cycleMeta': '{n} empresas · compensa',
   'anet.clear': 'Limpiar resaltado',
+  'anet.filterEmpty': 'Sin ciclos para esta empresa.',
 
   // import dialog
   'imp.title': 'Subir planilla de cuentas',
@@ -699,6 +700,7 @@ const EN: Record<string, string> = {
   'anet.panelHint': 'Simulated compensation = minimum cycle balance. Click to highlight.',
   'anet.cycleMeta': '{n} companies · cancels',
   'anet.clear': 'Clear highlight',
+  'anet.filterEmpty': 'No cycles for this company.',
 
   // import dialog
   'imp.title': 'Upload accounts spreadsheet',

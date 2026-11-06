@@ -7,6 +7,18 @@
       </p>
     </div>
     <div class="controls">
+      <mat-form-field appearance="outline" class="company-filter" subscriptSizing="dynamic">
+        <mat-label>{{ 'adm.filter' | t }}</mat-label>
+        <mat-select
+          [value]="companyFilterId()"
+          (selectionChange)="selectCompany($event.value)"
+        >
+          <mat-option [value]="null">{{ 'adm.filterAll' | t }}</mat-option>
+          @for (c of companyOptions(); track c.id) {
+            <mat-option [value]="c.id">{{ c.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
       <button mat-stroked-button (click)="fit()">
         <mat-icon>center_focus_strong</mat-icon> {{ 'net.fit' | t }}
       </button>
@@ -55,23 +67,25 @@
       </div>
 
       <aside class="cycles-panel">
-        <h2>{{ 'anet.cyclesTitle' | t }} ({{ cycles().length }})</h2>
+        <h2>{{ 'anet.cyclesTitle' | t }} ({{ filteredCycles().length }})</h2>
         <p class="panel-hint">
           {{ 'anet.panelHint' | t }}
         </p>
         <div class="cycle-list">
-          @for (c of cycles(); track $index) {
+          @for (entry of filteredCycles(); track entry.index) {
             <button
               class="cycle-item"
-              [class.selected]="selectedCycleIndex() === $index"
-              (click)="selectCycle($index)"
+              [class.selected]="selectedCycleIndex() === entry.index"
+              (click)="selectCycle(entry.index)"
             >
-              <span class="cycle-path">{{ c.companies.join(' → ') }}</span>
+              <span class="cycle-path">{{ entry.cycle.companies.join(' → ') }}</span>
               <span class="cycle-meta">
-                {{ 'anet.cycleMeta' | t: { n: c.length } }}
-                <strong>{{ c.potential_compensation | number: '1.0-0' }} BOB</strong>
+                {{ 'anet.cycleMeta' | t: { n: entry.cycle.length } }}
+                <strong>{{ entry.cycle.potential_compensation | number: '1.0-0' }} BOB</strong>
               </span>
             </button>
+          } @empty {
+            <p class="empty-cycles">{{ 'anet.filterEmpty' | t }}</p>
           }
         </div>
         <button
