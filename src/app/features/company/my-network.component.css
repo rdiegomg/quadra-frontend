@@ -75,7 +75,7 @@
   background: transparent;
 }
 
-html.dark-theme .leg-line.open {
+:host-context(html.dark-theme) .leg-line.open {
   border-color: #8fa2c7;
 }
 

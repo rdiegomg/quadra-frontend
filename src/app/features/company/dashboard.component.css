@@ -104,7 +104,7 @@
   color: var(--quadra-copper);
 }
 
-html.dark-theme .kpi.highlight strong {
+:host-context(html.dark-theme) .kpi.highlight strong {
   color: var(--quadra-copper-light);
 }
 
@@ -224,7 +224,7 @@ html.dark-theme .kpi.highlight strong {
   color: var(--quadra-copper);
 }
 
-html.dark-theme .chain-kind {
+:host-context(html.dark-theme) .chain-kind {
   color: var(--quadra-copper-light);
 }
 

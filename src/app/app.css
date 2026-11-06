@@ -30,7 +30,7 @@
   color: var(--quadra-ink);
 }
 
-html.dark-theme .brand-name {
+:host-context(html.dark-theme) .brand-name {
   color: #ece7e2;
 }
 

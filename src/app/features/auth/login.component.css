@@ -89,7 +89,7 @@ h1 {
   color: var(--quadra-ink);
 }
 
-html.dark-theme h1 {
+:host-context(html.dark-theme) h1 {
   color: #ece7e2;
 }
 

@@ -25,7 +25,7 @@
   margin-bottom: 14px;
 }
 
-html.dark-theme .eyebrow {
+:host-context(html.dark-theme) .eyebrow {
   color: var(--quadra-copper-light);
 }
 
@@ -57,7 +57,7 @@ html.dark-theme .eyebrow {
   color: var(--quadra-copper);
 }
 
-html.dark-theme .section h2 mat-icon {
+:host-context(html.dark-theme) .section h2 mat-icon {
   color: var(--quadra-copper-light);
 }
 
@@ -185,7 +185,7 @@ html.dark-theme .section h2 mat-icon {
   flex-shrink: 0;
 }
 
-html.dark-theme .stop > mat-icon {
+:host-context(html.dark-theme) .stop > mat-icon {
   color: var(--quadra-copper-light);
 }
 

@@ -83,6 +83,6 @@ table {
   font-weight: 600;
 }
 
-html.dark-theme .chain-chip.in {
+:host-context(html.dark-theme) .chain-chip.in {
   color: var(--quadra-copper-light);
 }

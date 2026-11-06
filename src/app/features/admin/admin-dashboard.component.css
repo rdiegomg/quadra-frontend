@@ -60,7 +60,7 @@ h3 {
   color: var(--quadra-copper);
 }
 
-html.dark-theme .compensation {
+:host-context(html.dark-theme) .compensation {
   color: var(--quadra-copper-light);
 }
 

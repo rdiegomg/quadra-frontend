@@ -30,7 +30,7 @@
   color: var(--quadra-ink);
 }
 
-html.dark-theme .hero h1 {
+:host-context(html.dark-theme) .hero h1 {
   color: #ece7e2;
 }
 
@@ -81,8 +81,8 @@ html.dark-theme .hero h1 {
   color: var(--quadra-ink);
 }
 
-html.dark-theme .how h2,
-html.dark-theme .why h2 {
+:host-context(html.dark-theme) .how h2,
+:host-context(html.dark-theme) .why h2 {
   color: #ece7e2;
 }
 
