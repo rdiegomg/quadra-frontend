@@ -2,7 +2,8 @@
   position: sticky;
   top: 0;
   z-index: 10;
-  background: var(--mat-sys-surface-container);
+  background: color-mix(in srgb, var(--mat-sys-surface-container) 82%, transparent);
+  backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--mat-sys-outline-variant);
   padding: 0 16px;
   gap: 8px;

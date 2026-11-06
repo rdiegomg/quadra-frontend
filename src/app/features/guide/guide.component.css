@@ -13,12 +13,8 @@
   padding: 52px 28px;
   border-radius: 20px;
   border: 1px solid var(--mat-sys-outline-variant);
-  background:
-    linear-gradient(
-      color-mix(in srgb, var(--mat-sys-surface) 86%, transparent),
-      color-mix(in srgb, var(--mat-sys-surface) 78%, transparent)
-    ),
-    url('/assets/bg-network-h.webp') center / cover no-repeat;
+  background: color-mix(in srgb, var(--mat-sys-surface) 72%, transparent);
+  backdrop-filter: blur(14px);
 }
 
 .eyebrow {

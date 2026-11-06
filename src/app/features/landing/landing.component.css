@@ -11,13 +11,7 @@
   text-align: center;
   padding: 72px 24px 64px;
   background:
-    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(181, 101, 63, 0.14), transparent 70%),
-    linear-gradient(
-      color-mix(in srgb, var(--mat-sys-surface) 86%, transparent),
-      color-mix(in srgb, var(--mat-sys-surface) 78%, transparent)
-    ),
-    url('/assets/bg-city-network.webp') center / cover no-repeat,
-    var(--mat-sys-surface);
+    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(181, 101, 63, 0.18), transparent 70%);
 }
 
 .hero-logo {
@@ -140,12 +134,8 @@
   text-align: center;
   border-radius: 20px;
   border: 1px solid var(--mat-sys-outline-variant);
-  background:
-    linear-gradient(
-      color-mix(in srgb, var(--mat-sys-surface) 90%, transparent),
-      color-mix(in srgb, var(--mat-sys-surface) 82%, transparent)
-    ),
-    url('/assets/bg-skyline.webp') center / cover no-repeat;
+  background: color-mix(in srgb, var(--mat-sys-surface) 72%, transparent);
+  backdrop-filter: blur(14px);
 }
 
 .why-text {

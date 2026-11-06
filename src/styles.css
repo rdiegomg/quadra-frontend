@@ -24,6 +24,42 @@ html.dark-theme {
   box-sizing: border-box;
 }
 
+/* Fondo global del sitio — la imagen cambia por seccion via body[data-bg] */
+body {
+  --page-bg: url('/assets/bg-skyline.webp');
+  background:
+    linear-gradient(
+      color-mix(in srgb, var(--mat-sys-surface) 90%, transparent),
+      color-mix(in srgb, var(--mat-sys-surface) 86%, transparent)
+    ),
+    var(--page-bg) center / cover no-repeat fixed;
+}
+
+html.dark-theme body {
+  background:
+    linear-gradient(
+      color-mix(in srgb, var(--mat-sys-surface) 78%, transparent),
+      color-mix(in srgb, var(--mat-sys-surface) 72%, transparent)
+    ),
+    var(--page-bg) center / cover no-repeat fixed;
+}
+
+body[data-bg='landing'] {
+  --page-bg: url('/assets/bg-city-network.webp');
+}
+body[data-bg='login'] {
+  --page-bg: url('/assets/bg-buildings-v.webp');
+}
+body[data-bg='register'] {
+  --page-bg: url('/assets/bg-skyline-v.webp');
+}
+body[data-bg='guide'] {
+  --page-bg: url('/assets/bg-network-h.webp');
+}
+body[data-bg='app'] {
+  --page-bg: url('/assets/bg-skyline.webp');
+}
+
 a {
   color: var(--mat-sys-primary);
 }

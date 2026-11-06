@@ -24,8 +24,8 @@
   justify-content: center;
   gap: 14px;
   background:
-    linear-gradient(160deg, rgba(35, 41, 58, 0.9) 0%, rgba(27, 30, 41, 0.82) 55%, rgba(43, 30, 21, 0.9) 100%),
-    url('/assets/bg-buildings-v.webp') center / cover no-repeat;
+    linear-gradient(160deg, rgba(35, 41, 58, 0.88) 0%, rgba(27, 30, 41, 0.8) 55%, rgba(43, 30, 21, 0.88) 100%);
+  backdrop-filter: blur(10px);
   color: #ece7e2;
 }
 
