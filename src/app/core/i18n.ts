@@ -15,6 +15,7 @@ const ES: Record<string, string> = {
   'nav.logout': 'Cerrar sesión',
   'nav.theme': 'Cambiar tema',
   'nav.lang': 'English',
+  'nav.menu': 'Menú',
 
   // landing
   'landing.hero1': 'Cancelamos deudas entre empresas',
@@ -382,6 +383,7 @@ const EN: Record<string, string> = {
   'nav.logout': 'Sign out',
   'nav.theme': 'Toggle theme',
   'nav.lang': 'Español',
+  'nav.menu': 'Menu',
 
   // landing
   'landing.hero1': 'We cancel debts between companies',

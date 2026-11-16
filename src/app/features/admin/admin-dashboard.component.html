@@ -224,6 +224,7 @@
   <mat-tab-group>
     <mat-tab [label]="('adm.tab.cycles' | t) + ' (' + cycles().length + ')'">
       <ng-template matTabContent>
+        <div class="table-scroll">
         <table mat-table [dataSource]="cycles()" class="full-width-table">
           <ng-container matColumnDef="cycle">
             <th mat-header-cell *matHeaderCellDef>{{ 'adm.col.cycle' | t }}</th>
@@ -250,11 +251,13 @@
           <tr mat-header-row *matHeaderRowDef="cycleColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: cycleColumns"></tr>
         </table>
+        </div>
       </ng-template>
     </mat-tab>
 
     <mat-tab [label]="('adm.tab.chains' | t) + ' (' + chains().length + ')'">
       <ng-template matTabContent>
+        <div class="table-scroll">
         <table mat-table [dataSource]="chains()" class="full-width-table">
           <ng-container matColumnDef="chain">
             <th mat-header-cell *matHeaderCellDef>{{ 'adm.col.chain' | t }}</th>
@@ -287,6 +290,7 @@
           <tr mat-header-row *matHeaderRowDef="chainColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: chainColumns"></tr>
         </table>
+        </div>
       </ng-template>
     </mat-tab>
 
@@ -304,6 +308,7 @@
         @if (filteredObligations().length === 0) {
           <p class="empty">{{ 'adm.filterEmpty' | t }}</p>
         } @else {
+          <div class="table-scroll">
           <table mat-table [dataSource]="filteredObligations()" class="full-width-table">
             <ng-container matColumnDef="debtor">
               <th mat-header-cell *matHeaderCellDef>{{ 'adm.col.debtor' | t }}</th>
@@ -334,12 +339,14 @@
             <tr mat-header-row *matHeaderRowDef="obligationColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: obligationColumns"></tr>
           </table>
+          </div>
         }
       </ng-template>
     </mat-tab>
 
     <mat-tab [label]="('adm.tab.companies' | t) + ' (' + companies().length + ')'">
       <ng-template matTabContent>
+        <div class="table-scroll">
         <table mat-table [dataSource]="companies()" class="full-width-table">
           <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef>{{ 'adm.col.company' | t }}</th>
@@ -360,6 +367,7 @@
           <tr mat-header-row *matHeaderRowDef="companyColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: companyColumns"></tr>
         </table>
+        </div>
       </ng-template>
     </mat-tab>
 
@@ -368,6 +376,7 @@
         @if (proposals().length === 0) {
           <p class="empty-filter">{{ 'adm.hist.empty' | t }}</p>
         } @else {
+          <div class="table-scroll">
           <table mat-table [dataSource]="proposals()" class="full-width-table">
             <ng-container matColumnDef="hProposal">
               <th mat-header-cell *matHeaderCellDef>{{ 'adm.hist.col.proposal' | t }}</th>
@@ -409,6 +418,7 @@
             <tr mat-header-row *matHeaderRowDef="proposalColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: proposalColumns"></tr>
           </table>
+          </div>
         }
       </ng-template>
     </mat-tab>

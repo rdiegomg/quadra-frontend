@@ -6,16 +6,62 @@
 
   <span class="spacer"></span>
 
-  @if (auth.isAuthenticated()) {
-    @if (auth.isAdmin()) {
-      <a mat-button routerLink="/admin" routerLinkActive="active-link">{{ 'nav.admin' | t }}</a>
-      <a mat-button routerLink="/admin/red" routerLinkActive="active-link">{{ 'nav.network' | t }}</a>
+  <span class="nav-links">
+    @if (auth.isAuthenticated()) {
+      @if (auth.isAdmin()) {
+        <a mat-button routerLink="/admin" routerLinkActive="active-link">{{ 'nav.admin' | t }}</a>
+        <a mat-button routerLink="/admin/red" routerLinkActive="active-link">{{ 'nav.network' | t }}</a>
+      } @else {
+        <a mat-button routerLink="/dashboard" routerLinkActive="active-link">{{ 'nav.company' | t }}</a>
+        <a mat-button routerLink="/obligations" routerLinkActive="active-link">{{ 'nav.obligations' | t }}</a>
+        <a mat-button routerLink="/mi-red" routerLinkActive="active-link">{{ 'nav.mynetwork' | t }}</a>
+      }
+      <a mat-button routerLink="/guia" routerLinkActive="active-link">{{ 'nav.guide' | t }}</a>
     } @else {
-      <a mat-button routerLink="/dashboard" routerLinkActive="active-link">{{ 'nav.company' | t }}</a>
-      <a mat-button routerLink="/obligations" routerLinkActive="active-link">{{ 'nav.obligations' | t }}</a>
-      <a mat-button routerLink="/mi-red" routerLinkActive="active-link">{{ 'nav.mynetwork' | t }}</a>
+      <a mat-button routerLink="/guia" routerLinkActive="active-link">{{ 'nav.guide' | t }}</a>
+      <a mat-button routerLink="/register">{{ 'nav.register' | t }}</a>
+      <a mat-flat-button routerLink="/login" class="login-btn">{{ 'nav.login' | t }}</a>
     }
-    <a mat-button routerLink="/guia" routerLinkActive="active-link">{{ 'nav.guide' | t }}</a>
+  </span>
+
+  <button mat-icon-button class="nav-menu-btn" [matMenuTriggerFor]="navMenu" [attr.aria-label]="'nav.menu' | t">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <mat-menu #navMenu="matMenu">
+    @if (auth.isAuthenticated()) {
+      @if (auth.isAdmin()) {
+        <a mat-menu-item routerLink="/admin">
+          <mat-icon>admin_panel_settings</mat-icon>{{ 'nav.admin' | t }}
+        </a>
+        <a mat-menu-item routerLink="/admin/red">
+          <mat-icon>hub</mat-icon>{{ 'nav.network' | t }}
+        </a>
+      } @else {
+        <a mat-menu-item routerLink="/dashboard">
+          <mat-icon>business</mat-icon>{{ 'nav.company' | t }}
+        </a>
+        <a mat-menu-item routerLink="/obligations">
+          <mat-icon>receipt_long</mat-icon>{{ 'nav.obligations' | t }}
+        </a>
+        <a mat-menu-item routerLink="/mi-red">
+          <mat-icon>lan</mat-icon>{{ 'nav.mynetwork' | t }}
+        </a>
+      }
+    }
+    <a mat-menu-item routerLink="/guia">
+      <mat-icon>menu_book</mat-icon>{{ 'nav.guide' | t }}
+    </a>
+    @if (!auth.isAuthenticated()) {
+      <a mat-menu-item routerLink="/register">
+        <mat-icon>how_to_reg</mat-icon>{{ 'nav.register' | t }}
+      </a>
+      <a mat-menu-item routerLink="/login">
+        <mat-icon>login</mat-icon>{{ 'nav.login' | t }}
+      </a>
+    }
+  </mat-menu>
+
+  @if (auth.isAuthenticated()) {
     <button mat-icon-button [matMenuTriggerFor]="userMenu" aria-label="Cuenta">
       <mat-icon>account_circle</mat-icon>
     </button>
@@ -31,10 +77,6 @@
         <span>{{ 'nav.logout' | t }}</span>
       </button>
     </mat-menu>
-  } @else {
-    <a mat-button routerLink="/guia" routerLinkActive="active-link">{{ 'nav.guide' | t }}</a>
-    <a mat-button routerLink="/register">{{ 'nav.register' | t }}</a>
-    <a mat-flat-button routerLink="/login" class="login-btn">{{ 'nav.login' | t }}</a>
   }
 
   <button

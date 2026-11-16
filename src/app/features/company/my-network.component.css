@@ -10,6 +10,27 @@
   }
 }
 
+@media (max-width: 640px) {
+  .map-card {
+    min-height: 440px;
+  }
+
+  .me-bar {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px 12px;
+  }
+
+  .me-pos {
+    margin-left: 0;
+    width: 100%;
+    text-align: left;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+}
+
 .map-card {
   position: relative;
   min-height: 600px;

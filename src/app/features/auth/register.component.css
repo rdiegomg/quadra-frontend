@@ -141,3 +141,18 @@ button[type='submit'] {
     display: none;
   }
 }
+
+@media (max-width: 560px) {
+  .auth-page {
+    padding: 16px 12px;
+  }
+
+  .auth-card mat-card-content {
+    padding: 24px 18px;
+  }
+
+  .row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}

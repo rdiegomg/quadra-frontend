@@ -124,6 +124,7 @@
         } @else if (schedules().length === 0) {
           <p class="empty">{{ 'ob.sched.empty' | t }}</p>
         } @else {
+          <div class="table-scroll">
           <table mat-table [dataSource]="schedules()" class="full-width-table">
             <ng-container matColumnDef="installment">
               <th mat-header-cell *matHeaderCellDef>{{ 'ob.sched.col.n' | t }}</th>
@@ -150,6 +151,7 @@
             <tr mat-header-row *matHeaderRowDef="scheduleColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: scheduleColumns"></tr>
           </table>
+          </div>
         }
       </mat-card-content>
     </mat-card>
@@ -160,6 +162,7 @@
   @if (items.length === 0) {
     <p class="empty">{{ 'ob.empty' | t }}</p>
   } @else {
+    <div class="table-scroll">
     <table mat-table [dataSource]="items" class="full-width-table">
       <ng-container matColumnDef="counterparty">
         <th mat-header-cell *matHeaderCellDef>{{ 'ob.col.cp' | t }}</th>
@@ -243,5 +246,6 @@
       <tr mat-header-row *matHeaderRowDef="columns"></tr>
       <tr mat-row *matRowDef="let row; columns: columns"></tr>
     </table>
+    </div>
   }
 </ng-template>

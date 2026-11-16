@@ -30,6 +30,7 @@ import { TranslatePipe } from '../../core/i18n';
       </ul>
 
       <h3>{{ 'acta.tranches' | t }}</h3>
+      <div class="tranches-scroll">
       <table class="tranches">
         <thead>
           <tr>
@@ -52,6 +53,7 @@ import { TranslatePipe } from '../../core/i18n';
           }
         </tbody>
       </table>
+      </div>
 
       <div class="acta-total">
         <span>{{ 'acta.total' | t }}</span>
@@ -70,7 +72,7 @@ import { TranslatePipe } from '../../core/i18n';
     </mat-dialog-actions>
   `,
   styles: `
-    .acta-doc { min-width: 540px; }
+    .acta-doc { width: min(540px, 100%); box-sizing: border-box; }
     .acta-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
     .acta-head h2 { margin: 0; font-size: 1.15rem; letter-spacing: 0.02em; }
     .acta-num { font-family: ui-monospace, monospace; font-weight: 700; color: var(--mat-sys-primary); }
@@ -79,7 +81,8 @@ import { TranslatePipe } from '../../core/i18n';
     .parties { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
     .parties li { display: flex; flex-direction: column; }
     .muted { font-size: 0.75rem; color: var(--mat-sys-on-surface-variant); }
-    .tranches { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    .tranches-scroll { overflow-x: auto; }
+    .tranches { width: 100%; min-width: 420px; border-collapse: collapse; font-size: 0.8rem; }
     .tranches th { text-align: left; font-weight: 600; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--mat-sys-on-surface-variant); border-bottom: 1px solid var(--mat-sys-outline-variant); padding: 6px 8px; }
     .tranches td { padding: 8px; border-bottom: 1px solid var(--mat-sys-outline-variant); }
     .num { text-align: right; font-variant-numeric: tabular-nums; }

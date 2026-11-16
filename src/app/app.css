@@ -71,3 +71,41 @@
 .lang-btn mat-icon {
   margin-right: 2px;
 }
+
+/* ---- Responsive ---- */
+.nav-links {
+  display: contents;
+}
+
+.nav-menu-btn {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .app-toolbar {
+    padding: 0 8px;
+    gap: 2px;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .nav-menu-btn {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand-logo {
+    height: 34px;
+  }
+
+  .brand-name {
+    display: none;
+  }
+
+  .lang-btn {
+    padding: 0 4px;
+  }
+}

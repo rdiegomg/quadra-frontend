@@ -214,4 +214,25 @@
     max-height: 340px;
     min-height: 0;
   }
+
+  .company-filter {
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .graph-canvas {
+    height: 60vh;
+    min-height: 340px;
+  }
+
+  .node-card {
+    width: min(260px, calc(100% - 24px));
+  }
+
+  .legend {
+    flex-wrap: wrap;
+    gap: 8px;
+    max-width: calc(100% - 24px);
+  }
 }
