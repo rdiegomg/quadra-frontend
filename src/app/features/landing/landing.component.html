@@ -41,6 +41,8 @@
 
   <footer class="landing-footer">
     <span>QUADRA · Santa Cruz de la Sierra, Bolivia</span>
-    <span class="demo-note">{{ 'landing.demo' | t }}</span>
+    @if (demoMode) {
+      <span class="demo-note">{{ 'landing.demo' | t }}</span>
+    }
   </footer>
 </div>

@@ -10,6 +10,7 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
 import { I18nService, TranslatePipe } from '../../core/i18n';
 import { ThemeService } from '../../core/theme.service';
+import { environment } from '../../../environments/environment';
 import { computed } from '@angular/core';
 
 @Component({
@@ -34,6 +35,7 @@ export class LoginComponent {
   protected readonly i18n = inject(I18nService);
   private readonly theme = inject(ThemeService);
 
+  readonly demoMode = environment.demoMode;
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
   readonly hidePassword = signal(true);

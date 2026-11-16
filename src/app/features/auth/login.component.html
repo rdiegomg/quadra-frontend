@@ -62,9 +62,11 @@
           {{ 'login.noaccount' | t }}
           <a routerLink="/register">{{ 'login.create' | t }}</a>
         </p>
-        <p class="demo-hint">
-          {{ 'login.demo' | t }}
-        </p>
+        @if (demoMode) {
+          <p class="demo-hint">
+            {{ 'login.demo' | t }}
+          </p>
+        }
       </mat-card-content>
     </mat-card>
   </div>

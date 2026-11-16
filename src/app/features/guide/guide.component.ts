@@ -4,6 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { I18nService } from '../../core/i18n';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-guide',
@@ -150,7 +151,7 @@ import { I18nService } from '../../core/i18n';
                 <mat-icon>attach_file</mat-icon>
                 <div>
                   <h3>Documentos</h3>
-                  <p>Adjunta contratos y facturas a cada obligación para respaldar que la deuda es real (simulado en la demo).</p>
+                  <p>Adjunta contratos y facturas a cada obligación para respaldar que la deuda es real@if (demoMode) { (simulado en la demo) }.</p>
                 </div>
               </div>
               <div class="stop">
@@ -214,12 +215,14 @@ import { I18nService } from '../../core/i18n';
           </mat-card-content>
         </mat-card>
 
-        <p class="demo-note">
-          <mat-icon>science</mat-icon>
-          Demo con datos ficticios: las empresas y deudas son simuladas y las demás
-          empresas aceptan automáticamente para poder mostrar el flujo completo.
-          El resto es real: tu decisión, la ejecución sobre saldos y el acta.
-        </p>
+        @if (demoMode) {
+          <p class="demo-note">
+            <mat-icon>science</mat-icon>
+            Demo con datos ficticios: las empresas y deudas son simuladas y las demás
+            empresas aceptan automáticamente para poder mostrar el flujo completo.
+            El resto es real: tu decisión, la ejecución sobre saldos y el acta.
+          </p>
+        }
       } @else {
         <header class="guide-hero">
           <span class="eyebrow">QUADRA Guide</span>
@@ -355,7 +358,7 @@ import { I18nService } from '../../core/i18n';
                 <mat-icon>attach_file</mat-icon>
                 <div>
                   <h3>Documents</h3>
-                  <p>Attach contracts and invoices to each obligation to back up that the debt is real (simulated in the demo).</p>
+                  <p>Attach contracts and invoices to each obligation to back up that the debt is real@if (demoMode) { (simulated in the demo) }.</p>
                 </div>
               </div>
               <div class="stop">
@@ -419,12 +422,14 @@ import { I18nService } from '../../core/i18n';
           </mat-card-content>
         </mat-card>
 
-        <p class="demo-note">
-          <mat-icon>science</mat-icon>
-          Demo with fictional data: companies and debts are simulated and the
-          other companies auto-accept so the full flow can be shown. The rest is
-          real: your decision, the balance execution and the deed.
-        </p>
+        @if (demoMode) {
+          <p class="demo-note">
+            <mat-icon>science</mat-icon>
+            Demo with fictional data: companies and debts are simulated and the
+            other companies auto-accept so the full flow can be shown. The rest is
+            real: your decision, the balance execution and the deed.
+          </p>
+        }
       }
     </div>
   `,
@@ -432,4 +437,5 @@ import { I18nService } from '../../core/i18n';
 })
 export class GuideComponent {
   protected readonly i18n = inject(I18nService);
+  readonly demoMode = environment.demoMode;
 }

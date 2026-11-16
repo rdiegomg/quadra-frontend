@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
 import { TranslatePipe } from '../../core/i18n';
 import { ThemeService } from '../../core/theme.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-landing',
@@ -15,6 +16,7 @@ import { ThemeService } from '../../core/theme.service';
 export class LandingComponent {
   protected readonly auth = inject(AuthService);
   protected readonly theme = inject(ThemeService);
+  readonly demoMode = environment.demoMode;
 
   readonly logoSrc = computed(() =>
     this.theme.isDark() ? 'assets/logo-dark.jpeg' : 'assets/logo-light.png',
