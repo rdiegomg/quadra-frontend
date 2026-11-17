@@ -34,9 +34,23 @@
 
   <section class="why">
     <h2>{{ 'landing.why' | t }}</h2>
-    <p class="why-text">
-      {{ 'landing.whyText' | t }}
-    </p>
+    <div class="why-grid">
+      <div class="why-card">
+        <mat-icon>visibility</mat-icon>
+        <h3>{{ 'landing.why.vision.t' | t }}</h3>
+        <p>{{ 'landing.why.vision.x' | t }}</p>
+      </div>
+      <div class="why-card">
+        <mat-icon>flag</mat-icon>
+        <h3>{{ 'landing.why.mision.t' | t }}</h3>
+        <p>{{ 'landing.why.mision.x' | t }}</p>
+      </div>
+      <div class="why-card">
+        <mat-icon>volunteer_activism</mat-icon>
+        <h3>{{ 'landing.why.valor.t' | t }}</h3>
+        <p>{{ 'landing.why.valor.x' | t }}</p>
+      </div>
+    </div>
   </section>
 
   <footer class="landing-footer">

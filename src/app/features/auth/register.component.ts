@@ -14,7 +14,18 @@ import { I18nService, TranslatePipe } from '../../core/i18n';
 import { Sector } from '../../core/models';
 import { ThemeService } from '../../core/theme.service';
 
-const LEGAL_TYPES = ['SRL', 'SA', 'SCA', 'OTRO'];
+const LEGAL_TYPES = [
+  'SRL',
+  'LTDA',
+  'SA',
+  'SCA',
+  'SCS',
+  'UNIPERSONAL',
+  'SOC. COLECTIVA',
+  'ASOC. ACCIDENTAL',
+  'SUCURSAL',
+  'OTRO',
+];
 
 @Component({
   selector: 'app-register',

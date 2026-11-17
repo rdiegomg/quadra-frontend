@@ -68,7 +68,7 @@ import { environment } from '../../../environments/environment';
                 <span class="step-num">3</span>
                 <div>
                   <h3>Recibes tu propuesta</h3>
-                  <p>Cada empresa ve solo lo suyo: cuánto se le cancela de deuda, cuánto deja de cobrar y la comisión. Nadie ve los datos de nadie.</p>
+                  <p>Cada empresa ve solo lo suyo: cuánto se le cancela de deuda y cuánto deja de cobrar. Nadie ve los datos de nadie.</p>
                 </div>
               </div>
               <div class="step">
@@ -82,7 +82,7 @@ import { environment } from '../../../environments/environment';
                 <span class="step-num">5</span>
                 <div>
                   <h3>Se ejecuta y se emite el acta</h3>
-                  <p>Al completarse la aceptación, los saldos bajan de verdad en el momento (lo compensado se extingue, el residuo sigue vivo) y QUADRA emite el <strong>acta de compensación</strong> — descargable e imprimible, con todas las partes, tramos y montos. Cada empresa paga la comisión solo por lo cancelado.</p>
+                  <p>Al completarse la aceptación, los saldos bajan de verdad en el momento (lo compensado se extingue, el residuo sigue vivo) y QUADRA emite el <strong>acta de compensación</strong> — descargable e imprimible, con todas las partes, tramos y montos. Todo incluido en la suscripción mensual, sin comisiones porcentuales.</p>
                 </div>
               </div>
             </div>
@@ -118,8 +118,8 @@ import { environment } from '../../../environments/environment';
                 <p>El mínimo de las deudas de la cadena: lo máximo que se puede cancelar sin afectar la posición neta de los intermediarios.</p>
               </div>
               <div class="term">
-                <h3><mat-icon>percent</mat-icon> Comisión</h3>
-                <p>QUADRA cobra ~1.5% solo sobre la deuda efectivamente cancelada. Si no se compensa nada, no se cobra nada.</p>
+                <h3><mat-icon>card_membership</mat-icon> Suscripción</h3>
+                <p>El acceso es por suscripción mensual fija: sin comisiones porcentuales ni costos escondidos. Todo lo que se compensa es ahorro tuyo.</p>
               </div>
               <div class="term">
                 <h3><mat-icon>lock</mat-icon> Identidad protegida</h3>
@@ -183,9 +183,9 @@ import { environment } from '../../../environments/environment';
             <mat-accordion>
               <mat-expansion-panel>
                 <mat-expansion-panel-header>
-                  <mat-panel-title>¿Tengo que pagar algo por adelantado?</mat-panel-title>
+                  <mat-panel-title>¿Cómo se paga QUADRA?</mat-panel-title>
                 </mat-expansion-panel-header>
-                <p>No. La comisión (~1.5%) solo se cobra sobre la deuda que efectivamente se cancela cuando la cadena se cierra. Cargar obligaciones y recibir propuestas es gratis.</p>
+                <p>Por suscripción mensual fija, sin comisiones porcentuales ni intereses. Cargar obligaciones, recibir propuestas y votar están incluidos — todo lo que se compensa es ahorro tuyo.</p>
               </mat-expansion-panel>
               <mat-expansion-panel>
                 <mat-expansion-panel-header>
@@ -275,7 +275,7 @@ import { environment } from '../../../environments/environment';
                 <span class="step-num">3</span>
                 <div>
                   <h3>You get your proposal</h3>
-                  <p>Each company only sees its own: how much debt gets cancelled, how much it stops collecting and the fee. Nobody sees anyone else's data.</p>
+                  <p>Each company only sees its own: how much debt gets cancelled and how much it stops collecting. Nobody sees anyone else's data.</p>
                 </div>
               </div>
               <div class="step">
@@ -289,7 +289,7 @@ import { environment } from '../../../environments/environment';
                 <span class="step-num">5</span>
                 <div>
                   <h3>It executes and the deed is issued</h3>
-                  <p>Once acceptance is complete, balances drop for real right away (the compensated part is extinguished, the residual stays alive) and QUADRA issues the <strong>compensation deed</strong> — downloadable and printable, with all parties, tranches and amounts. Each company pays the fee only on what was cancelled.</p>
+                  <p>Once acceptance is complete, balances drop for real right away (the compensated part is extinguished, the residual stays alive) and QUADRA issues the <strong>compensation deed</strong> — downloadable and printable, with all parties, tranches and amounts. All included in the monthly subscription — no percentage fees.</p>
                 </div>
               </div>
             </div>
@@ -325,8 +325,8 @@ import { environment } from '../../../environments/environment';
                 <p>The minimum of the chain's debts: the most that can be cancelled without affecting the intermediaries' net position.</p>
               </div>
               <div class="term">
-                <h3><mat-icon>percent</mat-icon> Fee</h3>
-                <p>QUADRA charges ~1.5% only on the debt actually cancelled. If nothing is compensated, nothing is charged.</p>
+                <h3><mat-icon>card_membership</mat-icon> Subscription</h3>
+                <p>Access is a fixed monthly subscription: no percentage fees, no hidden costs. Whatever gets compensated is savings you keep.</p>
               </div>
               <div class="term">
                 <h3><mat-icon>lock</mat-icon> Protected identity</h3>
@@ -390,9 +390,9 @@ import { environment } from '../../../environments/environment';
             <mat-accordion>
               <mat-expansion-panel>
                 <mat-expansion-panel-header>
-                  <mat-panel-title>Do I have to pay anything upfront?</mat-panel-title>
+                  <mat-panel-title>How is QUADRA paid?</mat-panel-title>
                 </mat-expansion-panel-header>
-                <p>No. The fee (~1.5%) is only charged on the debt actually cancelled when the chain closes. Uploading obligations and receiving proposals is free.</p>
+                <p>Through a fixed monthly subscription — no percentage fees, no interest. Uploading obligations, receiving proposals and voting are all included; whatever gets compensated is savings you keep.</p>
               </mat-expansion-panel>
               <mat-expansion-panel>
                 <mat-expansion-panel-header>

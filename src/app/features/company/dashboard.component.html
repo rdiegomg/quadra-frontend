@@ -113,10 +113,6 @@
                   <strong>{{ asNumber(ch.receivable_forgone) | number: '1.0-0' }} {{ ch.currency }}</strong>
                 </div>
               }
-              <div class="cfig">
-                <span>{{ 'dash.fig.fee' | t }}</span>
-                <strong>{{ asNumber(ch.commission) | number: '1.0-0' }} {{ ch.currency }}</strong>
-              </div>
               @if (asNumber(ch.est_savings) > 0) {
                 <div class="cfig">
                   <span>{{ 'dash.fig.savings' | t }}</span>
